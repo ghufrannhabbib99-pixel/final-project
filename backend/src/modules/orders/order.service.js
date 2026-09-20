@@ -19,6 +19,9 @@ const updateOrder = async (id, orderData) => {
 const deleteOrder = async (id) => {
   return await orderRepository.deleteOrder(id);
 };
+const getOrdersByUserId = async (userId) => {
+  return await orderRepository.getOrdersByUserId(userId);
+};
 
 module.exports = {
   getAllOrders,
@@ -26,4 +29,5 @@ module.exports = {
   createOrder,
   updateOrder,
   deleteOrder,
+  getOrdersByUserId,
 };

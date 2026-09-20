@@ -107,10 +107,23 @@ const deleteProduct = async (id) => {
   return result.rows[0];
 };
 
+const getProductsByArtisanId = async (artisanId) => {
+  const result = await db.query(
+    `SELECT *
+     FROM products
+     WHERE artisan_id = $1
+     ORDER BY id DESC`,
+    [artisanId]
+  );
+
+  return result.rows;
+};
+
 module.exports = {
   getAllProducts,
   getProductById,
   createProduct,
   updateProduct,
   deleteProduct,
+  getProductsByArtisanId,
 };

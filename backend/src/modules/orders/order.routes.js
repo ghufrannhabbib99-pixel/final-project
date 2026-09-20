@@ -11,6 +11,25 @@ const router = express.Router();
 
 router.get("/", orderController.getAllOrders);
 
+router.get(
+  "/user/:userId",
+  orderController.getOrdersByUserId
+);
+
+router.get("/:id", orderController.getOrderById);
+
+router.post(
+  "/",
+  validateCreateOrder,
+  orderController.createOrder
+);
+
+router.patch(
+  "/:id",
+  validateUpdateOrder,
+  orderController.updateOrder
+);
+
 router.get("/:id", orderController.getOrderById);
 
 router.post(

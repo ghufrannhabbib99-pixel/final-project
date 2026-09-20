@@ -20,10 +20,15 @@ const deleteProduct = async (id) => {
   return await productRepository.deleteProduct(id);
 };
 
+const getProductsByArtisanId = async (artisanId) => {
+  return await productRepository.getProductsByArtisanId(artisanId);
+};
+
 module.exports = {
   getAllProducts,
   getProductById,
   createProduct,
   updateProduct,
   deleteProduct,
+  getProductsByArtisanId,
 };

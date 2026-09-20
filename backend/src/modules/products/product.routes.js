@@ -11,6 +11,11 @@ const router = express.Router();
 
 router.get("/", productController.getAllProducts);
 
+router.get(
+  "/artisan/:artisanId",
+  productController.getProductsByArtisanId
+);
+
 router.get("/:id", productController.getProductById);
 
 router.post(

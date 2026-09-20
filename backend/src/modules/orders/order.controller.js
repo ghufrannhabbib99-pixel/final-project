@@ -96,6 +96,21 @@ const deleteOrder = async (req, res) => {
     });
   }
 };
+const getOrdersByUserId = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const orders = await orderService.getOrdersByUserId(userId);
+
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Failed to fetch user orders",
+    });
+  }
+};
 
 module.exports = {
   getAllOrders,
@@ -103,4 +118,5 @@ module.exports = {
   createOrder,
   updateOrder,
   deleteOrder,
+  getOrdersByUserId,
 };

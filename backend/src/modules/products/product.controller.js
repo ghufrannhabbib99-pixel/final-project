@@ -97,10 +97,28 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+const getProductsByArtisanId = async (req, res) => {
+  try {
+    const { artisanId } = req.params;
+
+    const products =
+      await productService.getProductsByArtisanId(artisanId);
+
+    res.status(200).json(products);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Failed to fetch artisan products",
+    });
+  }
+};
+
 module.exports = {
   getAllProducts,
   getProductById,
   createProduct,
   updateProduct,
   deleteProduct,
+  getProductsByArtisanId,
 };
