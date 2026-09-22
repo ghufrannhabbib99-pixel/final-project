@@ -10,6 +10,10 @@ import ArtisanProfile from "./pages/ArtisanProfile/ArtisanProfile";
 import Cart from "./pages/Cart/Cart";
 import Checkout from "./pages/Checkout/Checkout";
 import MyOrders from "./pages/MyOrders/MyOrders";
+import Home from "./pages/Home/Home";
+import Products from "./pages/Products/Products";
+import ProductDetails from "./pages/ProductDetails/ProductDetails";
+import Login from "./pages/Login/Login";
 
 import Dashboard from "./Artisan/Dashboard/Dashboard";
 import Profile from "./Artisan/Profile/Profile";
@@ -17,14 +21,29 @@ import MyProducts from "./Artisan/MyProducts/MyProducts";
 import AddProduct from "./Artisan/MyProducts/AddProduct";
 import EditProduct from "./Artisan/MyProducts/EditProduct";
 import ArtisanMyOrders from "./Artisan/MyOrders/MyOrders";
+import Navbar from "./components/Navbar/Navbar";
+import Footer from "./components/Footer/Footer";
 
 function App() {
   return (
     <BrowserRouter>
+      <Navbar />
       <Routes>
         <Route
           path="/"
-          element={<Navigate to="/artisans" replace />}
+          element={<Home />}
+        />
+        <Route
+          path="/products"
+          element={<Products />}
+        />
+        <Route
+          path="/products/:id"
+          element={<ProductDetails />}
+        />
+        <Route
+          path="/login"
+          element={<Login />}
         />
 
         <Route
@@ -82,6 +101,7 @@ function App() {
           element={<ArtisanMyOrders />}
         />
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }
