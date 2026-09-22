@@ -46,33 +46,41 @@ const createArtisan = async (artisanData) => {
 };
 
 const updateArtisan = async (id, artisanData) => {
-  const {
-    craft_name,
-    bio,
-    city,
-    experience_years,
-    profile_image,
-  } = artisanData;
+  const allowedFields = [
+    "craft_name",
+    "bio",
+    "city",
+    "experience_years",
+    "profile_image",
+  ];
+
+  const fields = [];
+  const values = [];
+
+  for (const field of allowedFields) {
+    if (artisanData[field] !== undefined) {
+      fields.push(field);
+      values.push(artisanData[field]);
+    }
+  }
+
+  if (fields.length === 0) {
+    return null;
+  }
+
+  const setClause = fields
+    .map((field, index) => `${field} = $${index + 1}`)
+    .join(", ");
+
+  values.push(id);
 
   const result = await db.query(
     `UPDATE artisans
-     SET
-       craft_name = $1,
-       bio = $2,
-       city = $3,
-       experience_years = $4,
-       profile_image = $5,
-       updated_at = CURRENT_TIMESTAMP
-     WHERE id = $6
+     SET ${setClause},
+         updated_at = CURRENT_TIMESTAMP
+     WHERE id = $${values.length}
      RETURNING *`,
-    [
-      craft_name,
-      bio,
-      city,
-      experience_years,
-      profile_image,
-      id,
-    ]
+    values
   );
 
   return result.rows[0];

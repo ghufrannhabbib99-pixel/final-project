@@ -2,7 +2,13 @@ const db = require("../../config/db");
 
 const getAllOrderItems = async () => {
   const result = await db.query(
-    "SELECT * FROM order_items ORDER BY id DESC"
+    `SELECT
+      oi.*,
+      o.user_id
+     FROM order_items oi
+     JOIN orders o
+       ON oi.order_id = o.id
+     ORDER BY oi.id DESC`
   );
 
   return result.rows;
@@ -10,7 +16,13 @@ const getAllOrderItems = async () => {
 
 const getOrderItemById = async (id) => {
   const result = await db.query(
-    "SELECT * FROM order_items WHERE id = $1",
+    `SELECT
+      oi.*,
+      o.user_id
+     FROM order_items oi
+     JOIN orders o
+       ON oi.order_id = o.id
+     WHERE oi.id = $1`,
     [id]
   );
 

@@ -19,10 +19,13 @@ const updateOrder = async (id, orderData) => {
 const deleteOrder = async (id) => {
   return await orderRepository.deleteOrder(id);
 };
+
 const getOrdersByUserId = async (userId) => {
   return await orderRepository.getOrdersByUserId(userId);
 };
-
+const getOrderOwner = async (orderId) => {
+  return await orderRepository.getOrderOwner(orderId);
+};
 module.exports = {
   getAllOrders,
   getOrderById,
@@ -30,4 +33,5 @@ module.exports = {
   updateOrder,
   deleteOrder,
   getOrdersByUserId,
+  getOrderOwner,
 };

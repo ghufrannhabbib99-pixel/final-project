@@ -10,11 +10,23 @@ const {
   deleteReview,
 } = require("./review.controller");
 
-const validateReview = require("./review.validation");
+const {
+  validateCreateReview,
+  validateUpdateReview,
+} = require("./review.validation");
+
+const {
+  authenticate,
+} = require("../auth/auth.middleware");
 
 const router = express.Router();
 
-router.get("/", getAllReviews);
+// Public routes
+
+router.get(
+  "/",
+  getAllReviews
+);
 
 router.get(
   "/product/:productId",
@@ -31,20 +43,28 @@ router.get(
   getReviewById
 );
 
+// Authenticated users
+
 router.post(
   "/",
-  validateReview,
+  authenticate,
+  validateCreateReview,
   createReview
 );
 
-router.put(
+router.patch(
   "/:id",
-  validateReview,
+  authenticate,
+  validateUpdateReview,
   updateReview
 );
 
+// Authenticated users
+// Ownership is checked inside the controller
+
 router.delete(
   "/:id",
+  authenticate,
   deleteReview
 );
 

@@ -1,28 +1,27 @@
 const validateCreateOrder = (req, res, next) => {
   const {
-    user_id,
     total_amount,
-    shipping_address,
+    status,
   } = req.body;
 
-  if (!user_id || total_amount === undefined) {
+  if (total_amount === undefined || total_amount === null) {
     return res.status(400).json({
-      message: "user_id and total_amount are required",
+      message: "total_amount is required",
     });
   }
 
-  if (Number(total_amount) < 0) {
+  if (Number(total_amount) <= 0) {
     return res.status(400).json({
-      message: "total_amount cannot be negative",
+      message: "total_amount must be greater than 0",
     });
   }
 
   if (
-    shipping_address !== undefined &&
-    typeof shipping_address !== "string"
+    status !== undefined &&
+    !["pending", "processing", "shipped", "delivered", "cancelled"].includes(status)
   ) {
     return res.status(400).json({
-      message: "shipping_address must be a string",
+      message: "Invalid order status",
     });
   }
 
@@ -30,35 +29,19 @@ const validateCreateOrder = (req, res, next) => {
 };
 
 const validateUpdateOrder = (req, res, next) => {
-  const {
-    status,
-    shipping_address,
-  } = req.body;
+  const { status } = req.body;
 
-  if (
-    status === undefined &&
-    shipping_address === undefined
-  ) {
+  if (!status) {
     return res.status(400).json({
-      message: "At least one field is required for update",
+      message: "status is required",
     });
   }
 
   if (
-    status !== undefined &&
-    typeof status !== "string"
+    !["pending", "processing", "shipped", "delivered", "cancelled"].includes(status)
   ) {
     return res.status(400).json({
-      message: "status must be a string",
-    });
-  }
-
-  if (
-    shipping_address !== undefined &&
-    typeof shipping_address !== "string"
-  ) {
-    return res.status(400).json({
-      message: "shipping_address must be a string",
+      message: "Invalid order status",
     });
   }
 
