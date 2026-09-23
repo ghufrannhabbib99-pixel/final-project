@@ -7,22 +7,46 @@ function Products() {
   };
 
   return (
-    <main className="px-6 py-10">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Products</h1>
+    <main className="min-h-screen bg-[#FDF0D5]">
 
-        <p className="mt-2 text-gray-600">
-          Explore handmade products created by Iraqi artisans.
+      {/* Hero */}
+      <section className="px-6 gap-6 py-16 text-center">
+        <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#780000]">
+          Discover Iraqi Craftsmanship
         </p>
-      </div>
 
-      <div className="mb-8">
-        <SearchBar onSearch={handleSearch} />
-      </div>
+        <h1 className="mt-4 text-4xl font-bold text-[#003049] md:text-5xl">
+          Handmade Products
+        </h1>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {/* Products will be displayed here after connecting the API */}
-      </div>
+        <p className="mx-auto mt-4 max-w-2xl text-[#003049]/70 text-center translate-x-150">
+          Discover unique handmade products created by talented Iraqi artisans.
+        </p>
+      </section>
+
+      {/* Products Section */}
+      <section className="px-6 pb-16">
+        <div className="mx-auto max-w-7xl">
+
+          {/* Products Header */}
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-[#003049]">
+              Products
+            </h2>
+
+            <p className="mx-auto mt-2 max-w-xl text-[#003049]/70 text-center">
+              Explore our collection of handmade Iraqi crafts.
+            </p>
+          </div>
+
+          {/* Search */}
+          <div className="mt-8 flex justify-center">
+            <SearchBar onSearch={handleSearch} />
+          </div>
+
+        </div>
+      </section>
+
     </main>
   );
 }
