@@ -22,6 +22,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Customer Pages */}
         <Route
           path="/"
           element={<Navigate to="/artisans" replace />}
@@ -52,6 +53,7 @@ function App() {
           element={<MyOrders />}
         />
 
+        {/* Artisan Pages */}
         <Route
           path="/artisan/dashboard"
           element={<Dashboard />}
