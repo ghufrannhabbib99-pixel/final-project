@@ -99,6 +99,18 @@ const getOrdersByUserId = async (userId) => {
 
   return result.rows;
 };
+const getOrderOwner = async (orderId) => {
+  const result = await db.query(
+    `SELECT
+      id,
+      user_id
+     FROM orders
+     WHERE id = $1`,
+    [orderId]
+  );
+
+  return result.rows[0];
+};
 module.exports = {
   getAllOrders,
   getOrderById,
@@ -106,4 +118,5 @@ module.exports = {
   updateOrder,
   deleteOrder,
   getOrdersByUserId,
+  getOrderOwner,
 };

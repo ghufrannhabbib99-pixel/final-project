@@ -4,6 +4,7 @@
   margin: 0;
   box-sizing: border-box;
 }
+
 html,
 body {
   width: 100%;
@@ -11,8 +12,6 @@ body {
   overflow-x: hidden;
   font-family: Arial, sans-serif;
 }
-
-
 
 button {
   font-family: inherit;

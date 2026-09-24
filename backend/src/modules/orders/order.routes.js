@@ -7,43 +7,58 @@ const {
   validateUpdateOrder,
 } = require("./order.validation");
 
+const {
+  authenticate,
+  authorize,
+} = require("../auth/auth.middleware");
+
 const router = express.Router();
 
-router.get("/", orderController.getAllOrders);
+// Admin: Get all orders
+router.get(
+  "/",
+  authenticate,
+  authorize("admin"),
+  orderController.getAllOrders
+);
 
+// Authenticated user: Get orders by user ID
 router.get(
   "/user/:userId",
+  authenticate,
   orderController.getOrdersByUserId
 );
 
-router.get("/:id", orderController.getOrderById);
+// Authenticated user: Get order details
+router.get(
+  "/:id",
+  authenticate,
+  orderController.getOrderById
+);
 
+// Authenticated user: Create order
 router.post(
   "/",
+  authenticate,
   validateCreateOrder,
   orderController.createOrder
 );
 
+// Admin: Update order status
 router.patch(
   "/:id",
+  authenticate,
+  authorize("admin"),
   validateUpdateOrder,
   orderController.updateOrder
 );
 
-router.get("/:id", orderController.getOrderById);
-
-router.post(
-  "/",
-  validateCreateOrder,
-  orderController.createOrder
-);
-
-router.patch(
+// Admin: Delete order
+router.delete(
   "/:id",
-  validateUpdateOrder,
-  orderController.updateOrder
+  authenticate,
+  authorize("admin"),
+  orderController.deleteOrder
 );
-
-router.delete("/:id", orderController.deleteOrder);
 
 module.exports = router;

@@ -13,7 +13,10 @@ const createOrderItem = async (itemData) => {
 };
 
 const updateOrderItem = async (id, itemData) => {
-  return await orderItemRepository.updateOrderItem(id, itemData);
+  return await orderItemRepository.updateOrderItem(
+    id,
+    itemData
+  );
 };
 
 const deleteOrderItem = async (id) => {

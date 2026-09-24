@@ -29,6 +29,7 @@ function App() {
     <BrowserRouter>
       <Navbar />
       <Routes>
+        {/* Customer Pages */}
         <Route
           path="/"
           element={<Home />}
@@ -71,6 +72,7 @@ function App() {
           element={<MyOrders />}
         />
 
+        {/* Artisan Pages */}
         <Route
           path="/artisan/dashboard"
           element={<Dashboard />}

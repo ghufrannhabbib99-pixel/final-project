@@ -26,6 +26,15 @@ const getOrderById = async (req, res) => {
       });
     }
 
+    if (
+      req.user.role !== "admin" &&
+      order.user_id !== req.user.userId
+    ) {
+      return res.status(403).json({
+        message: "Access denied",
+      });
+    }
+
     res.status(200).json(order);
   } catch (error) {
     console.error(error);
@@ -38,7 +47,12 @@ const getOrderById = async (req, res) => {
 
 const createOrder = async (req, res) => {
   try {
-    const order = await orderService.createOrder(req.body);
+    const orderData = {
+      ...req.body,
+      user_id: req.user.userId,
+    };
+
+    const order = await orderService.createOrder(orderData);
 
     res.status(201).json(order);
   } catch (error) {
@@ -96,9 +110,19 @@ const deleteOrder = async (req, res) => {
     });
   }
 };
+
 const getOrdersByUserId = async (req, res) => {
   try {
     const { userId } = req.params;
+
+    if (
+      req.user.role !== "admin" &&
+      Number(userId) !== Number(req.user.userId)
+    ) {
+      return res.status(403).json({
+        message: "Access denied",
+      });
+    }
 
     const orders = await orderService.getOrdersByUserId(userId);
 

@@ -42,7 +42,16 @@ const getArtisanById = async (req, res) => {
 
 const createArtisan = async (req, res) => {
   try {
-    const artisan = await artisanService.createArtisan(req.body);
+    const artisanData = {
+      ...req.body,
+      user_id: req.user.role === "admin"
+        ? req.body.user_id
+        : req.user.userId,
+    };
+
+    const artisan = await artisanService.createArtisan(
+      artisanData
+    );
 
     res.status(201).json({
       message: "Artisan created successfully",
@@ -61,13 +70,28 @@ const updateArtisan = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const artisan = await artisanService.updateArtisan(id, req.body);
+    const existingArtisan =
+      await artisanService.getArtisanById(id);
 
-    if (!artisan) {
+    if (!existingArtisan) {
       return res.status(404).json({
         message: "Artisan not found",
       });
     }
+
+    if (
+      req.user.role !== "admin" &&
+      Number(existingArtisan.user_id) !== Number(req.user.userId)
+    ) {
+      return res.status(403).json({
+        message: "Access denied",
+      });
+    }
+
+    const artisan = await artisanService.updateArtisan(
+      id,
+      req.body
+    );
 
     res.status(200).json({
       message: "Artisan updated successfully",
@@ -86,13 +110,25 @@ const deleteArtisan = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const artisan = await artisanService.deleteArtisan(id);
+    const existingArtisan =
+      await artisanService.getArtisanById(id);
 
-    if (!artisan) {
+    if (!existingArtisan) {
       return res.status(404).json({
         message: "Artisan not found",
       });
     }
+
+    if (
+      req.user.role !== "admin" &&
+      Number(existingArtisan.user_id) !== Number(req.user.userId)
+    ) {
+      return res.status(403).json({
+        message: "Access denied",
+      });
+    }
+
+    const artisan = await artisanService.deleteArtisan(id);
 
     res.status(200).json({
       message: "Artisan deleted successfully",
