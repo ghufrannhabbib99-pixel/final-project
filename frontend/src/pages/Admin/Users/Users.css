@@ -1,0 +1,95 @@
+.admin-users {
+  width: 100%;
+}
+
+.users-main {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+.users-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.users-count {
+  min-width: 150px;
+  padding: 20px 24px;
+}
+
+/* Search */
+
+.users-toolbar {
+  margin-bottom: 32px;
+  padding: 24px;
+}
+
+.users-search {
+  width: 100%;
+  max-width: 500px;
+}
+
+.users-search input {
+  height: 48px;
+  padding: 0 16px;
+}
+
+/* Table */
+
+.users-table-wrapper {
+  width: 100%;
+}
+
+.users-table-header {
+  padding: 24px;
+}
+
+.users-table-wrapper table {
+  min-width: 850px;
+}
+
+.users-empty-state {
+  height: 260px;
+  padding: 40px 20px;
+}
+
+.users-empty-icon {
+  width: 56px;
+  height: 56px;
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+  .users-main {
+    padding: 24px;
+  }
+
+  .users-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .users-count {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .users-main {
+    padding: 20px 16px;
+  }
+
+  .users-toolbar {
+    padding: 20px;
+  }
+
+  .users-table-header {
+    padding: 20px;
+  }
+}

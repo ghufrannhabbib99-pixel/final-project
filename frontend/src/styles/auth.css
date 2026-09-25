@@ -1,0 +1,47 @@
+.auth-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: fit-content;
+  margin: 0 auto 28px;
+  text-decoration: none;
+}
+
+.auth-logo-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #003049;
+  color: #fdf0d5;
+  font-size: 20px;
+  transition: transform 0.3s;
+}
+
+.auth-logo:hover .auth-logo-icon {
+  transform: rotate(6deg);
+}
+
+.auth-logo-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.auth-logo-text h1 {
+  margin: 0;
+  color: #780000;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+
+.auth-logo-text span {
+  color: #003049;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+}
