@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import productImages from "../../data/productImages";
 
 function MyProducts() {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ function MyProducts() {
           `http://localhost:5000/api/products/artisan/${artisanId}`
         );
 
-        setProducts(response.data);
+        setProducts(response.data.data || response.data || []);
       } catch (error) {
         console.error(error);
         setError("Failed to load products");
@@ -246,6 +247,12 @@ function MyProducts() {
                 const stock = Number(product.stock_quantity) || 0;
                 const isOutOfStock = stock <= 0;
 
+                // نفس صور productImages المستخدمة بالصفحات العامة
+                const productImage =
+                  product.image ||
+                  productImages[product.name] ||
+                  null;
+
                 return (
                   <article
                     key={product.id}
@@ -253,9 +260,9 @@ function MyProducts() {
                   >
                     {/* Image */}
                     <div className="relative h-60 overflow-hidden bg-gradient-to-br from-[#FDF0D5] to-[#669BBC]/20">
-                      {product.image ? (
+                      {productImage ? (
                         <img
-                          src={product.image}
+                          src={productImage}
                           alt={product.name || "Product"}
                           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />

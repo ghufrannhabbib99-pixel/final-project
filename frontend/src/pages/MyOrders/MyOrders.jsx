@@ -1,65 +1,32 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 function MyOrders() {
-  // غيّرها إلى false لما تريد ترجع للـ backend
-  const DEMO_MODE = true;
-
-  const demoOrders = [
-    {
-      id: 1001,
-      total_amount: 85000,
-      status: "completed",
-      created_at: "2026-09-20T10:30:00",
-    },
-    {
-      id: 1002,
-      total_amount: 45000,
-      status: "shipped",
-      created_at: "2026-09-21T14:15:00",
-    },
-    {
-      id: 1003,
-      total_amount: 120000,
-      status: "confirmed",
-      created_at: "2026-09-22T09:45:00",
-    },
-    {
-      id: 1004,
-      total_amount: 30000,
-      status: "pending",
-      created_at: "2026-09-23T16:20:00",
-    },
-    {
-      id: 1005,
-      total_amount: 60000,
-      status: "cancelled",
-      created_at: "2026-09-24T11:10:00",
-    },
-  ];
-
-  const [orders, setOrders] = useState(() => (DEMO_MODE ? demoOrders : []));
-  const [loading, setLoading] = useState(() => !DEMO_MODE);
-  const [error, setError] = useState("");
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const userId = 1;
 
   useEffect(() => {
-    if (DEMO_MODE) {
-      return;
-    }
-
     const fetchOrders = async () => {
       try {
         const response = await axios.get(
           `http://localhost:5000/api/orders/user/${userId}`
         );
 
-        setOrders(response.data);
+        const data = Array.isArray(response.data)
+          ? response.data
+          : response.data?.data || [];
+
+        setOrders(data);
       } catch (error) {
-        console.error(error);
-        setError("Failed to load orders");
+        console.error("Failed to load orders:", error);
+
+        // إذا ماكو طلبات أو الـ backend ما رجع بيانات
+        // نخلي الصفحة فارغة بدل رسالة خطأ
+        setOrders([]);
       } finally {
         setLoading(false);
       }
@@ -94,14 +61,19 @@ function MyOrders() {
     switch (status) {
       case "completed":
         return "Completed";
+
       case "shipped":
         return "Shipped";
+
       case "confirmed":
         return "Confirmed";
+
       case "pending":
         return "Pending";
+
       case "cancelled":
         return "Cancelled";
+
       default:
         return status;
     }
@@ -137,6 +109,7 @@ function MyOrders() {
     return (
       <div className="min-h-screen bg-[#FDF0D5] px-6 py-10">
         <div className="mx-auto max-w-6xl">
+
           <div className="h-10 w-64 animate-pulse rounded-lg bg-gray-200" />
 
           <div className="mt-8 grid gap-6 md:grid-cols-3">
@@ -156,29 +129,7 @@ function MyOrders() {
               />
             ))}
           </div>
-        </div>
-      </div>
-    );
-  }
 
-  if (error) {
-    return (
-      <div className="min-h-screen bg-[#FDF0D5] px-6 py-10">
-        <div className="mx-auto max-w-3xl rounded-3xl bg-white p-10 text-center shadow-xl">
-          <h2 className="text-2xl font-bold text-[#780000]">
-            Something went wrong
-          </h2>
-
-          <p className="mt-3 text-gray-600">
-            {error}
-          </p>
-
-          <Link
-            to="/artisans"
-            className="mt-6 inline-block rounded-xl bg-[#003049] px-6 py-3 font-semibold text-white transition hover:-translate-y-1 hover:bg-[#00263b]"
-          >
-            Continue Shopping
-          </Link>
         </div>
       </div>
     );
@@ -190,6 +141,7 @@ function MyOrders() {
 
         {/* Header */}
         <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+
           <div>
             <p className="text-sm font-semibold uppercase tracking-wider text-[#669BBC]">
               Customer Workspace
@@ -210,22 +162,8 @@ function MyOrders() {
           >
             ← Continue Shopping
           </Link>
+
         </div>
-
-        {/* Demo Mode Notice */}
-        {DEMO_MODE && (
-          <div className="mt-6 rounded-2xl border border-[#669BBC] bg-[#669BBC]/10 px-5 py-4">
-            <div className="flex items-center gap-3">
-              <span className="rounded-full bg-[#003049] px-3 py-1 text-xs font-bold text-white">
-                DEMO
-              </span>
-
-              <p className="text-sm font-medium text-[#003049]">
-                You are viewing demo orders. Backend is not being used.
-              </p>
-            </div>
-          </div>
-        )}
 
         {/* Summary Cards */}
         <div className="mt-8 grid gap-5 md:grid-cols-3">
@@ -266,9 +204,21 @@ function MyOrders() {
         <div className="mt-8 space-y-6">
 
           {orders.length === 0 ? (
+
+            /* Empty Orders */
             <div className="rounded-3xl bg-white p-12 text-center shadow-xl">
-              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#FDF0D5] text-3xl">
-                🛍️
+
+              {/* Lottie Empty Box */}
+              <div className="mx-auto h-32 w-32">
+                <DotLottieReact
+                  src="/animations/empty-box.lottie"
+                  loop
+                  autoplay
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                  }}
+                />
               </div>
 
               <h2 className="mt-5 text-2xl font-bold text-[#003049]">
@@ -285,13 +235,19 @@ function MyOrders() {
               >
                 Explore Artisans
               </Link>
+
             </div>
+
           ) : (
+
+            /* Orders List */
             orders.map((order) => (
+
               <div
                 key={order.id}
                 className="rounded-3xl bg-white p-6 shadow-xl transition hover:-translate-y-1"
               >
+
                 {/* Order Header */}
                 <div className="flex flex-col gap-4 border-b border-gray-100 pb-5 sm:flex-row sm:items-center sm:justify-between">
 
@@ -334,11 +290,15 @@ function MyOrders() {
                     </p>
 
                     <p className="mt-1 font-semibold text-[#003049]">
-                      {new Date(order.created_at).toLocaleDateString()}
+                      {new Date(
+                        order.created_at
+                      ).toLocaleDateString()}
                     </p>
 
                     <p className="text-sm text-gray-500">
-                      {new Date(order.created_at).toLocaleTimeString([], {
+                      {new Date(
+                        order.created_at
+                      ).toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
                       })}
@@ -359,12 +319,14 @@ function MyOrders() {
                     </div>
 
                     <div className="relative h-2 rounded-full bg-gray-200">
+
                       <div
                         className="absolute left-0 top-0 h-2 rounded-full bg-[#669BBC] transition-all duration-500"
                         style={{
                           width: getProgressWidth(order.status),
                         }}
                       />
+
                     </div>
 
                   </div>
@@ -378,6 +340,7 @@ function MyOrders() {
                 )}
 
               </div>
+
             ))
           )}
 

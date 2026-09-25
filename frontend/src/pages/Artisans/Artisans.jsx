@@ -1,12 +1,26 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import ArtisanCard from "../../components/ArtisanCard/ArtisanCard";
+import VariableProximity from "../../components/VariableProximity/VariableProximity";
+import SplitText from "../../components/SplitText/SplitText";
+
+const artisanImages = {
+  "خزاف عراقي": "/images/artisans/potter.jpg",
+  "نجار عراقي": "/images/artisans/carpenter.jpg",
+  "خياط عراقي": "/images/artisans/tailor.jpg",
+  "صانع سعف عراقي": "/images/artisans/palm-artisan.jpg",
+  "مطرزة عراقية": "/images/artisans/embroiderer.jpg",
+  "صانع نحاس عراقي": "/images/artisans/coppersmith.jpg",
+};
 
 function Artisans() {
   const [artisans, setArtisans] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
+
+  // Reference for VariableProximity title
+  const titleContainerRef = useRef(null);
 
   useEffect(() => {
     const fetchArtisans = async () => {
@@ -17,7 +31,17 @@ function Artisans() {
 
         console.log(response.data);
 
-        setArtisans(response.data.data);
+        const artisansWithImages = response.data.data.map(
+          (artisan) => ({
+            ...artisan,
+            profile_image:
+              artisan.profile_image ||
+              artisanImages[artisan.craft_name] ||
+              null,
+          })
+        );
+
+        setArtisans(artisansWithImages);
       } catch (error) {
         console.error(error);
         setError("Failed to load artisans");
@@ -33,12 +57,19 @@ function Artisans() {
     const searchValue = search.toLowerCase().trim();
 
     return (
-      artisan.craft_name?.toLowerCase().includes(searchValue) ||
-      artisan.city?.toLowerCase().includes(searchValue) ||
-      artisan.bio?.toLowerCase().includes(searchValue)
+      artisan.craft_name
+        ?.toLowerCase()
+        .includes(searchValue) ||
+      artisan.city
+        ?.toLowerCase()
+        .includes(searchValue) ||
+      artisan.bio
+        ?.toLowerCase()
+        .includes(searchValue)
     );
   });
 
+  // Loading
   if (loading) {
     return (
       <main className="min-h-screen bg-[#FDF0D5] px-4 py-16 sm:px-6 lg:px-8">
@@ -64,6 +95,7 @@ function Artisans() {
     );
   }
 
+  // Error
   if (error) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#FDF0D5] px-4">
@@ -86,24 +118,57 @@ function Artisans() {
     <main className="min-h-screen bg-[#FDF0D5]">
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-[#FDF0D5] px-4 py-16 sm:px-6 lg:px-8">
+        {/* Decorative circles */}
         <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#669BBC]/10" />
 
         <div className="absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-[#780000]/5" />
 
         <div className="relative mx-auto max-w-7xl">
           <div className="max-w-3xl">
+            {/* Small title */}
             <p className="mb-3 text-sm font-bold tracking-[0.3em] text-[#780000]">
               OUR ARTISANS
             </p>
 
-            <h1 className="text-4xl font-bold leading-tight text-[#003049] sm:text-5xl lg:text-6xl">
-              Meet the talented artisans
-            </h1>
+            {/* Variable Proximity Title */}
+            <div
+              ref={titleContainerRef}
+              className="relative"
+            >
+              <VariableProximity
+                label="Meet the talented artisans"
+                className="text-4xl font-bold leading-tight text-[#003049] sm:text-5xl lg:text-6xl"
+                fromFontVariationSettings="'wght' 600, 'opsz' 48"
+                toFontVariationSettings="'wght' 1000, 'opsz' 72"
+                containerRef={titleContainerRef}
+                radius={180}
+                falloff="linear"
+              />
+            </div>
 
-            <p className="mt-5 max-w-2xl text-lg leading-8 text-[#669BBC]">
-              Discover unique handmade products created by skilled local
-              artisans and inspired by Iraqi culture and heritage.
-            </p>
+            {/* Description */}
+           <div className="mt-5 max-w-2xl">
+  <SplitText
+    text="Discover unique handmade products created by skilled local artisans and inspired by Iraqi culture and heritage."
+    tag="p"
+    className="text-lg leading-8 text-[#669BBC] sm:text-xl"
+    delay={25}
+    duration={0.8}
+    ease="power3.out"
+    splitType="words"
+    from={{
+      opacity: 0,
+      y: 30,
+    }}
+    to={{
+      opacity: 1,
+      y: 0,
+    }}
+    threshold={0.1}
+    rootMargin="-80px"
+    textAlign="left"
+  />
+</div>
           </div>
         </div>
       </section>
@@ -111,7 +176,6 @@ function Artisans() {
       {/* Artisans Section */}
       <section className="px-4 pb-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
-
           {/* Header + Search */}
           <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -153,7 +217,9 @@ function Artisans() {
             </div>
           ) : (
             <div className="rounded-3xl bg-white/70 px-6 py-16 text-center shadow-md">
-              <div className="mb-5 text-6xl">🔎</div>
+              <div className="mb-5 text-6xl">
+                🔎
+              </div>
 
               <h2 className="text-2xl font-bold text-[#003049]">
                 No artisans found

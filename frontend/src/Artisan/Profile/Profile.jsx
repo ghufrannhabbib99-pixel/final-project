@@ -2,6 +2,15 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
+const artisanImages = {
+  "خزاف عراقي": "/images/artisans/potter.jpg",
+  "نجار عراقي": "/images/artisans/carpenter.jpg",
+  "خياط عراقي": "/images/artisans/tailor.jpg",
+  "صانع سعف عراقي": "/images/artisans/palm-artisan.jpg",
+  "مطرزة عراقية": "/images/artisans/embroiderer.jpg",
+  "صانع نحاس عراقي": "/images/artisans/coppersmith.jpg",
+};
+
 function Profile() {
   const [artisan, setArtisan] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -27,6 +36,11 @@ function Profile() {
 
     fetchProfile();
   }, []);
+
+  const profileImage =
+    artisanImages[artisan?.craft_name] ||
+    artisan?.profile_image ||
+    null;
 
   if (loading) {
     return (
@@ -137,12 +151,13 @@ function Profile() {
       <section className="px-4 pb-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-8 lg:grid-cols-3">
+
             {/* Profile Image Card */}
             <div className="overflow-hidden rounded-3xl bg-white shadow-xl">
               <div className="group relative h-80 overflow-hidden bg-[#669BBC]">
-                {artisan.profile_image ? (
+                {profileImage ? (
                   <img
-                    src={artisan.profile_image}
+                    src={profileImage}
                     alt={artisan.craft_name || "Artisan"}
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />

@@ -1,1 +1,231 @@
 @import "tailwindcss";
+
+
+/* =========================================
+   ALHERFA - Global Animations
+   ========================================= */
+
+/* Fade In */
+@keyframes alherfa-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* Fade In + Slide Up */
+@keyframes alherfa-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade In + Slide Down */
+@keyframes alherfa-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scale In */
+@keyframes alherfa-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Soft Floating */
+@keyframes alherfa-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* Soft Pulse */
+@keyframes alherfa-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.72;
+  }
+}
+
+/* Shimmer */
+@keyframes alherfa-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* =========================================
+   Animation Utility Classes
+   ========================================= */
+
+.alherfa-fade-in {
+  animation: alherfa-fade-in 0.5s ease-out both;
+}
+
+.alherfa-slide-up {
+  animation: alherfa-slide-up 0.55s ease-out both;
+}
+
+.alherfa-slide-down {
+  animation: alherfa-slide-down 0.5s ease-out both;
+}
+
+.alherfa-scale-in {
+  animation: alherfa-scale-in 0.45s ease-out both;
+}
+
+.alherfa-float {
+  animation: alherfa-float 3.5s ease-in-out infinite;
+}
+
+.alherfa-pulse {
+  animation: alherfa-pulse 2.5s ease-in-out infinite;
+}
+
+/* =========================================
+   Hover Effects
+   ========================================= */
+
+.alherfa-hover-lift {
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.alherfa-hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 30px rgba(0, 48, 73, 0.12);
+}
+
+.alherfa-hover-scale {
+  overflow: hidden;
+}
+
+.alherfa-hover-scale img {
+  transition: transform 0.45s ease;
+}
+
+.alherfa-hover-scale:hover img {
+  transform: scale(1.05);
+}
+
+/* =========================================
+   Animated Underline
+   ========================================= */
+
+.alherfa-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.alherfa-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 2px;
+  background: #c1121f;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.3s ease;
+}
+
+.alherfa-underline:hover::after {
+  transform: scaleX(1);
+}
+
+/* =========================================
+   Staggered Animations
+   ========================================= */
+
+.alherfa-delay-1 {
+  animation-delay: 0.08s;
+}
+
+.alherfa-delay-2 {
+  animation-delay: 0.16s;
+}
+
+.alherfa-delay-3 {
+  animation-delay: 0.24s;
+}
+
+.alherfa-delay-4 {
+  animation-delay: 0.32s;
+}
+
+.alherfa-delay-5 {
+  animation-delay: 0.4s;
+}
+
+.alherfa-delay-6 {
+  animation-delay: 0.48s;
+}
+
+/* =========================================
+   Shimmer Effect
+   ========================================= */
+
+.alherfa-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.22) 50%,
+    transparent 100%
+  );
+
+  background-size: 200% 100%;
+  animation: alherfa-shimmer 2s linear infinite;
+}
+
+/* =========================================
+   Accessibility
+   ========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

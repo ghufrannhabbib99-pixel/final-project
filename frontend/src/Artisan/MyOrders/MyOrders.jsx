@@ -1,34 +1,86 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+
+const DEMO_MODE = true;
+
+const demoOrders = [
+  {
+    id: 1001,
+    status: "completed",
+    total: 85000,
+    createdAt: "2026-09-20T10:30:00",
+  },
+  {
+    id: 1002,
+    status: "shipped",
+    total: 45000,
+    createdAt: "2026-09-21T14:15:00",
+  },
+  {
+    id: 1003,
+    status: "confirmed",
+    total: 120000,
+    createdAt: "2026-09-22T09:45:00",
+  },
+  {
+    id: 1004,
+    status: "pending",
+    total: 30000,
+    createdAt: "2026-09-23T16:20:00",
+  },
+  {
+    id: 1005,
+    status: "cancelled",
+    total: 60000,
+    createdAt: "2026-09-24T11:10:00",
+  },
+];
 
 function MyOrders() {
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [orders, setOrders] = useState(() => (DEMO_MODE ? demoOrders : []));
+  const [loading, setLoading] = useState(!DEMO_MODE);
   const [error, setError] = useState("");
 
   const userId = 1;
 
-  // =========================
-  // Fetch Orders
-  // =========================
   useEffect(() => {
+    if (DEMO_MODE) {
+      return;
+    }
+
     const fetchOrders = async () => {
       try {
         setLoading(true);
         setError("");
 
+        const token = localStorage.getItem("token");
+
         const response = await axios.get(
-          `http://localhost:5000/api/orders/user/${userId}`
+          `http://localhost:5000/api/orders/user/${userId}`,
+          {
+            headers: token
+              ? {
+                  Authorization: `Bearer ${token}`,
+                }
+              : {},
+          }
         );
 
-        setOrders(response.data);
-      } catch (error) {
-        console.error(error);
+        const ordersData =
+          response.data?.data ||
+          response.data?.orders ||
+          response.data ||
+          [];
+
+        setOrders(Array.isArray(ordersData) ? ordersData : []);
+      } catch (err) {
+        console.error("Failed to fetch orders:", err);
 
         setError(
-          error.response?.data?.message ||
-            "Failed to load orders."
+          err.response?.data?.message ||
+            "Failed to load your orders. Please try again."
         );
       } finally {
         setLoading(false);
@@ -38,486 +90,335 @@ function MyOrders() {
     fetchOrders();
   }, []);
 
-  // =========================
-  // Update Order Status
-  // =========================
-  const updateOrderStatus = async (orderId, status) => {
-    try {
-      await axios.patch(
-        `http://localhost:5000/api/orders/${orderId}`,
-        {
-          status,
-        }
-      );
-
-      setOrders((currentOrders) =>
-        currentOrders.map((order) =>
-          order.id === orderId
-            ? {
-                ...order,
-                status,
-              }
-            : order
-        )
-      );
-    } catch (error) {
-      console.error(error);
-
-      alert("Failed to update order status");
-    }
-  };
-
-  // =========================
-  // Status Style
-  // =========================
-  const getStatusStyle = (status) => {
-    switch (status?.toLowerCase()) {
-      case "confirmed":
-        return "bg-blue-100 text-[#003049] border-blue-200";
+  const getStatusText = (status) => {
+    switch (status) {
+      case "completed":
+        return "Completed";
 
       case "shipped":
-        return "bg-[#669BBC]/15 text-[#003049] border-[#669BBC]/30";
+        return "Shipped";
 
-      case "completed":
-        return "bg-green-100 text-green-700 border-green-200";
-
-      case "cancelled":
-        return "bg-red-100 text-[#780000] border-red-200";
+      case "confirmed":
+        return "Confirmed";
 
       case "pending":
+        return "Pending";
+
+      case "cancelled":
+        return "Cancelled";
+
       default:
-        return "bg-yellow-100 text-yellow-700 border-yellow-200";
+        return status || "Unknown";
     }
   };
 
-  // =========================
-  // Loading
-  // =========================
+  const getStatusStyle = (status) => {
+    switch (status) {
+      case "completed":
+        return "bg-green-100 text-green-700";
+
+      case "shipped":
+        return "bg-blue-100 text-blue-700";
+
+      case "confirmed":
+        return "bg-yellow-100 text-yellow-700";
+
+      case "pending":
+        return "bg-orange-100 text-orange-700";
+
+      case "cancelled":
+        return "bg-red-100 text-red-700";
+
+      default:
+        return "bg-gray-100 text-gray-700";
+    }
+  };
+
+  const getProgress = (status) => {
+    switch (status) {
+      case "pending":
+        return 25;
+
+      case "confirmed":
+        return 50;
+
+      case "shipped":
+        return 75;
+
+      case "completed":
+        return 100;
+
+      case "cancelled":
+        return 100;
+
+      default:
+        return 0;
+    }
+  };
+
+  const formatDate = (date) => {
+    if (!date) return "-";
+
+    return new Date(date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
+  const totalOrders = orders.length;
+
+  const completedOrders = orders.filter(
+    (order) => order.status === "completed"
+  ).length;
+
+  const activeOrders = orders.filter(
+    (order) =>
+      order.status !== "completed" && order.status !== "cancelled"
+  ).length;
+
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#FDF0D5] px-4 py-12 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl">
-
-          <div className="mb-10 animate-pulse">
-            <div className="h-4 w-32 rounded bg-[#669BBC]/20" />
-
-            <div className="mt-4 h-12 w-72 rounded bg-[#003049]/20" />
-
-            <div className="mt-3 h-5 w-96 max-w-full rounded bg-[#669BBC]/20" />
+      <div className="min-h-screen bg-[#FDF0D5]">
+        <div className="mx-auto max-w-7xl px-4 py-12">
+          <div className="mb-10">
+            <div className="h-10 w-56 animate-pulse rounded-xl bg-white/70" />
+            <div className="mt-3 h-5 w-80 animate-pulse rounded-lg bg-white/60" />
           </div>
 
-          <div className="grid gap-6">
-            <div className="h-56 animate-pulse rounded-3xl bg-white shadow-xl" />
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3].map((item) => (
+              <div
+                key={item}
+                className="h-32 animate-pulse rounded-3xl bg-white shadow-lg"
+              />
+            ))}
+          </div>
 
-            <div className="h-56 animate-pulse rounded-3xl bg-white shadow-xl" />
-
-            <div className="h-56 animate-pulse rounded-3xl bg-white shadow-xl" />
+          <div className="mt-8 space-y-5">
+            {[1, 2, 3].map((item) => (
+              <div
+                key={item}
+                className="h-48 animate-pulse rounded-3xl bg-white shadow-lg"
+              />
+            ))}
           </div>
         </div>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#FDF0D5]">
+    <div className="min-h-screen bg-[#FDF0D5]">
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="mb-10">
+          <Link
+            to="/artisans"
+            className="mb-5 inline-flex items-center gap-2 text-sm font-semibold text-[#003049] transition hover:text-[#C1121F]"
+          >
+            ← Continue Shopping
+          </Link>
 
-      {/* =========================
-          HEADER
-      ========================= */}
-      <section className="relative overflow-hidden px-4 py-12 sm:px-6 lg:px-8">
+          <h1 className="text-4xl font-black text-[#003049] sm:text-5xl">
+            My Orders
+          </h1>
 
-        <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#669BBC]/10" />
-
-        <div className="absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-[#780000]/5" />
-
-        <div className="relative mx-auto max-w-6xl">
-
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-
-            <div>
-              <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#780000]">
-                Artisan Workspace
-              </p>
-
-              <h1 className="mt-3 text-4xl font-extrabold tracking-tight text-[#003049] sm:text-5xl">
-                My Orders
-              </h1>
-
-              <p className="mt-3 max-w-2xl text-base leading-7 text-[#669BBC] sm:text-lg">
-                Manage customer orders and keep track of their
-                progress from confirmation to completion.
-              </p>
-            </div>
-
-            <Link
-              to="/artisan/dashboard"
-              className="inline-flex w-fit items-center gap-2 rounded-xl border border-[#003049]/15 bg-white px-5 py-3 font-semibold text-[#003049] shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
-            >
-              <span className="text-lg">←</span>
-              Dashboard
-            </Link>
-          </div>
+          <p className="mt-3 text-gray-600">
+            Track and manage all your orders in one place.
+          </p>
         </div>
-      </section>
 
-      {/* =========================
-          CONTENT
-      ========================= */}
-      <section className="px-4 pb-16 sm:px-6 lg:px-8">
+        {/* Error */}
+        {error && (
+          <div className="mb-8 rounded-2xl border border-red-200 bg-red-50 p-4 text-red-700">
+            {error}
+          </div>
+        )}
 
-        <div className="mx-auto max-w-6xl">
-
-          <div className="grid gap-8 lg:grid-cols-3">
-
-            {/* =========================
-                ORDERS
-            ========================= */}
-            <div className="lg:col-span-2">
-
-              {/* Error */}
-              {error && (
-                <div className="mb-6 rounded-2xl border border-[#780000]/20 bg-[#780000]/5 p-5">
-                  <div className="flex items-start gap-3">
-
-                    <span className="text-xl">
-                      ⚠️
-                    </span>
-
-                    <div>
-                      <p className="font-semibold text-[#780000]">
-                        Unable to load orders
-                      </p>
-
-                      <p className="mt-1 text-sm text-[#780000]/80">
-                        {error}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Orders Header */}
-              <div className="mb-6 flex items-center justify-between">
-
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#780000]">
-                    Orders
-                  </p>
-
-                  <h2 className="mt-1 text-2xl font-bold text-[#003049]">
-                    Customer Orders
-                  </h2>
-                </div>
-
-                <div className="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-[#003049] shadow-sm">
-                  {orders.length}{" "}
-                  {orders.length === 1
-                    ? "Order"
-                    : "Orders"}
-                </div>
-              </div>
-
-              {/* Empty */}
-              {orders.length === 0 ? (
-                <div className="rounded-3xl bg-white px-6 py-16 text-center shadow-xl">
-
-                  <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#FDF0D5] text-4xl">
-                    📦
-                  </div>
-
-                  <h2 className="mt-6 text-2xl font-bold text-[#003049]">
-                    No Orders Found
-                  </h2>
-
-                  <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-[#669BBC]">
-                    You don't have any customer orders yet.
-                    Orders will appear here when customers
-                    purchase your products.
-                  </p>
-
-                  <Link
-                    to="/artisan/products"
-                    className="mt-6 inline-flex rounded-xl bg-[#780000] px-6 py-3 font-semibold text-[#FDF0D5] transition duration-300 hover:-translate-y-1 hover:bg-[#C1121F] hover:shadow-lg"
-                  >
-                    View My Products
-                  </Link>
-                </div>
-              ) : (
-                <div className="space-y-5">
-
-                  {orders.map((order) => (
-                    <div
-                      key={order.id}
-                      className="overflow-hidden rounded-3xl bg-white shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-xl"
-                    >
-
-                      {/* Order Header */}
-                      <div className="border-b border-[#669BBC]/15 px-6 py-5 sm:px-7">
-
-                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-
-                          <div>
-                            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#780000]">
-                              Order
-                            </p>
-
-                            <h3 className="mt-1 text-2xl font-bold text-[#003049]">
-                              #{order.id}
-                            </h3>
-                          </div>
-
-                          <span
-                            className={`w-fit rounded-full border px-4 py-2 text-xs font-bold capitalize ${getStatusStyle(
-                              order.status
-                            )}`}
-                          >
-                            {order.status || "pending"}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Order Details */}
-                      <div className="px-6 py-6 sm:px-7">
-
-                        <div className="grid gap-5 sm:grid-cols-2">
-
-                          {/* Total */}
-                          <div className="rounded-2xl bg-[#FDF0D5]/60 p-5">
-                            <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#669BBC]">
-                              Total Amount
-                            </p>
-
-                            <p className="mt-2 text-2xl font-extrabold text-[#780000]">
-                              {Number(
-                                order.total_amount || 0
-                              ).toLocaleString()}{" "}
-                              <span className="text-sm font-bold">
-                                IQD
-                              </span>
-                            </p>
-                          </div>
-
-                          {/* Date */}
-                          <div className="rounded-2xl bg-[#FDF0D5]/60 p-5">
-                            <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#669BBC]">
-                              Created At
-                            </p>
-
-                            <p className="mt-2 font-semibold text-[#003049]">
-                              {new Date(
-                                order.created_at
-                              ).toLocaleDateString()}
-                            </p>
-
-                            <p className="mt-1 text-sm text-[#669BBC]">
-                              {new Date(
-                                order.created_at
-                              ).toLocaleTimeString()}
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* Status Controls */}
-                        <div className="mt-6">
-
-                          <p className="mb-3 text-xs font-bold uppercase tracking-[0.15em] text-[#669BBC]">
-                            Update Order Status
-                          </p>
-
-                          <div className="flex flex-wrap gap-3">
-
-                            <button
-                              type="button"
-                              onClick={() =>
-                                updateOrderStatus(
-                                  order.id,
-                                  "confirmed"
-                                )
-                              }
-                              disabled={
-                                order.status ===
-                                "confirmed"
-                              }
-                              className="rounded-xl bg-[#003049] px-4 py-2.5 text-sm font-semibold text-white transition duration-300 hover:-translate-y-0.5 hover:bg-[#669BBC] hover:shadow-md disabled:cursor-not-allowed disabled:opacity-40"
-                            >
-                              Confirm
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() =>
-                                updateOrderStatus(
-                                  order.id,
-                                  "shipped"
-                                )
-                              }
-                              disabled={
-                                order.status ===
-                                "shipped"
-                              }
-                              className="rounded-xl bg-[#669BBC] px-4 py-2.5 text-sm font-semibold text-white transition duration-300 hover:-translate-y-0.5 hover:bg-[#003049] hover:shadow-md disabled:cursor-not-allowed disabled:opacity-40"
-                            >
-                              Shipped
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() =>
-                                updateOrderStatus(
-                                  order.id,
-                                  "completed"
-                                )
-                              }
-                              disabled={
-                                order.status ===
-                                "completed"
-                              }
-                              className="rounded-xl bg-green-600 px-4 py-2.5 text-sm font-semibold text-white transition duration-300 hover:-translate-y-0.5 hover:bg-green-700 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-40"
-                            >
-                              Completed
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() =>
-                                updateOrderStatus(
-                                  order.id,
-                                  "cancelled"
-                                )
-                              }
-                              disabled={
-                                order.status ===
-                                "cancelled"
-                              }
-                              className="rounded-xl bg-[#780000] px-4 py-2.5 text-sm font-semibold text-white transition duration-300 hover:-translate-y-0.5 hover:bg-[#C1121F] hover:shadow-md disabled:cursor-not-allowed disabled:opacity-40"
-                            >
-                              Cancel
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* =========================
-                SIDEBAR
-            ========================= */}
-            <aside className="space-y-6">
-
-              {/* Quick Navigation */}
-              <div className="rounded-3xl bg-white p-7 shadow-xl">
-
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#780000]">
-                  Navigation
+        {/* Summary Cards */}
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Total Orders */}
+          <div className="rounded-3xl bg-white p-6 shadow-xl transition duration-300 hover:-translate-y-1">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-semibold text-gray-500">
+                  Total Orders
                 </p>
 
-                <h3 className="mt-2 text-xl font-bold text-[#003049]">
-                  Artisan Workspace
-                </h3>
-
-                <div className="mt-5 space-y-3">
-
-                  <Link
-                    to="/artisan/dashboard"
-                    className="flex items-center justify-between rounded-xl bg-[#FDF0D5] px-4 py-3 font-semibold text-[#003049] transition duration-300 hover:-translate-y-0.5 hover:shadow-md"
-                  >
-                    <span>Dashboard</span>
-                    <span>→</span>
-                  </Link>
-
-                  <Link
-                    to="/artisan/profile"
-                    className="flex items-center justify-between rounded-xl bg-[#FDF0D5] px-4 py-3 font-semibold text-[#003049] transition duration-300 hover:-translate-y-0.5 hover:shadow-md"
-                  >
-                    <span>My Profile</span>
-                    <span>→</span>
-                  </Link>
-
-                  <Link
-                    to="/artisan/products"
-                    className="flex items-center justify-between rounded-xl bg-[#FDF0D5] px-4 py-3 font-semibold text-[#003049] transition duration-300 hover:-translate-y-0.5 hover:shadow-md"
-                  >
-                    <span>My Products</span>
-                    <span>→</span>
-                  </Link>
-                </div>
-              </div>
-
-              {/* Order Status Guide */}
-              <div className="rounded-3xl bg-[#003049] p-7 text-[#FDF0D5] shadow-xl">
-
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#780000] text-3xl">
-                  📦
-                </div>
-
-                <h2 className="mt-6 text-2xl font-bold">
-                  Order Status
-                </h2>
-
-                <div className="mt-5 space-y-4 text-sm">
-
-                  <div className="flex items-center gap-3">
-                    <span className="h-3 w-3 rounded-full bg-yellow-400" />
-                    <span className="text-[#FDF0D5]/80">
-                      Pending
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <span className="h-3 w-3 rounded-full bg-blue-400" />
-                    <span className="text-[#FDF0D5]/80">
-                      Confirmed
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <span className="h-3 w-3 rounded-full bg-[#669BBC]" />
-                    <span className="text-[#FDF0D5]/80">
-                      Shipped
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <span className="h-3 w-3 rounded-full bg-green-400" />
-                    <span className="text-[#FDF0D5]/80">
-                      Completed
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <span className="h-3 w-3 rounded-full bg-[#C1121F]" />
-                    <span className="text-[#FDF0D5]/80">
-                      Cancelled
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Tip */}
-              <div className="rounded-3xl bg-white p-7 shadow-md">
-
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FDF0D5] text-2xl">
-                  💡
-                </div>
-
-                <h3 className="mt-5 text-xl font-bold text-[#003049]">
-                  Helpful Tip
-                </h3>
-
-                <p className="mt-3 text-sm leading-6 text-[#669BBC]">
-                  Keep your order status updated so customers
-                  always know what is happening with their
-                  purchases.
+                <p className="mt-2 text-4xl font-black text-[#003049]">
+                  {totalOrders}
                 </p>
               </div>
-            </aside>
+
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#FDF0D5] text-2xl">
+                📦
+              </div>
+            </div>
+          </div>
+
+          {/* Completed */}
+          <div className="rounded-3xl bg-white p-6 shadow-xl transition duration-300 hover:-translate-y-1">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-semibold text-gray-500">
+                  Completed
+                </p>
+
+                <p className="mt-2 text-4xl font-black text-green-600">
+                  {completedOrders}
+                </p>
+              </div>
+
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-green-100 text-2xl">
+                ✓
+              </div>
+            </div>
+          </div>
+
+          {/* Active */}
+          <div className="rounded-3xl bg-white p-6 shadow-xl transition duration-300 hover:-translate-y-1">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-semibold text-gray-500">
+                  Active Orders
+                </p>
+
+                <p className="mt-2 text-4xl font-black text-[#C1121F]">
+                  {activeOrders}
+                </p>
+              </div>
+
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-red-100 text-2xl">
+                🚚
+              </div>
+            </div>
           </div>
         </div>
-      </section>
-    </main>
+
+        {/* Orders */}
+        <div className="mt-10">
+          <div className="mb-5 flex items-center justify-between">
+            <h2 className="text-2xl font-black text-[#003049]">
+              Your Orders
+            </h2>
+
+            <span className="rounded-full bg-white px-4 py-2 text-sm font-bold text-[#003049] shadow">
+              {orders.length} Orders
+            </span>
+          </div>
+
+          {orders.length === 0 ? (
+            /* Empty Orders */
+            <div className="rounded-3xl bg-white p-10 text-center shadow-xl sm:p-12">
+              {/* Lottie Empty Box */}
+              <div className="mx-auto h-40 w-40">
+                <DotLottieReact
+                  src="/animations/empty-box.lottie"
+                  loop
+                  autoplay
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                  }}
+                />
+              </div>
+
+              <h2 className="mt-4 text-2xl font-black text-[#003049]">
+                No orders yet
+              </h2>
+
+              <p className="mt-2 text-gray-600">
+                Start shopping from our talented artisans.
+              </p>
+
+              <Link
+                to="/artisans"
+                className="mt-6 inline-flex rounded-xl bg-[#003049] px-6 py-3 font-bold text-white transition duration-300 hover:-translate-y-0.5 hover:bg-[#00263a]"
+              >
+                Explore Artisans
+              </Link>
+            </div>
+          ) : (
+            <div className="space-y-5">
+              {orders.map((order) => {
+                const progress = getProgress(order.status);
+
+                return (
+                  <article
+                    key={order.id}
+                    className="rounded-3xl bg-white p-6 shadow-xl transition duration-300 hover:-translate-y-1"
+                  >
+                    {/* Top */}
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                      <div>
+                        <p className="text-sm font-semibold text-gray-500">
+                          Order #{order.id}
+                        </p>
+
+                        <h3 className="mt-1 text-xl font-black text-[#003049]">
+                          {Number(order.total || 0).toLocaleString()} IQD
+                        </h3>
+
+                        <p className="mt-1 text-sm text-gray-500">
+                          {formatDate(
+                            order.createdAt ||
+                              order.created_at ||
+                              order.date
+                          )}
+                        </p>
+                      </div>
+
+                      <span
+                        className={`w-fit rounded-full px-4 py-2 text-sm font-bold ${getStatusStyle(
+                          order.status
+                        )}`}
+                      >
+                        {getStatusText(order.status)}
+                      </span>
+                    </div>
+
+                    {/* Progress */}
+                    {order.status !== "cancelled" && (
+                      <div className="mt-7">
+                        <div className="mb-2 flex items-center justify-between text-xs font-semibold text-gray-500">
+                          <span>Order Progress</span>
+
+                          <span>{progress}%</span>
+                        </div>
+
+                        <div className="h-3 overflow-hidden rounded-full bg-gray-100">
+                          <div
+                            className="h-full rounded-full bg-[#003049] transition-all duration-700"
+                            style={{
+                              width: `${progress}%`,
+                            }}
+                          />
+                        </div>
+
+                        <div className="mt-2 flex justify-between text-xs text-gray-400">
+                          <span>Pending</span>
+                          <span>Confirmed</span>
+                          <span>Shipped</span>
+                          <span>Completed</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Cancelled */}
+                    {order.status === "cancelled" && (
+                      <div className="mt-6 rounded-2xl bg-red-50 p-4 text-sm font-semibold text-red-700">
+                        This order has been cancelled.
+                      </div>
+                    )}
+                  </article>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
 

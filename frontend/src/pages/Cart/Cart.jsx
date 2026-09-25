@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import productImages from "../../data/productImages";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -122,9 +124,21 @@ const Cart = () => {
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
           <div>
-            <h1 className="text-4xl font-black text-[#003049]">
-              Shopping Cart 🛒
-            </h1>
+            <h1 className="flex items-center gap-3 text-4xl font-black text-[#003049]">
+  Shopping Cart
+
+  <span className="inline-block h-14 w-14">
+    <DotLottieReact
+      src="/animations/shopping-cart.lottie"
+      loop
+      autoplay
+      style={{
+        width: "100%",
+        height: "100%",
+      }}
+    />
+  </span>
+</h1>
 
             <p className="mt-2 text-gray-600">
               You have {totalItems}{" "}
@@ -157,17 +171,17 @@ const Cart = () => {
                   {/* Image */}
                   <div className="flex h-52 w-full items-center justify-center bg-[#FDF0D5] sm:h-auto sm:w-52">
 
-                    {item.image ? (
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <div className="text-6xl">
-                        🛍️
-                      </div>
-                    )}
+                    {item.image || productImages[item.name] ? (
+  <img
+    src={item.image || productImages[item.name]}
+    alt={item.name}
+    className="h-full w-full object-cover"
+  />
+) : (
+  <div className="text-6xl">
+    🛍️
+  </div>
+)}
 
                   </div>
 

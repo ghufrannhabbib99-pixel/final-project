@@ -38,15 +38,21 @@ function Dashboard() {
       {/* Main Content */}
       <section className="px-4 pb-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
+
           {/* Main Navigation Cards */}
           <div className="grid gap-6 md:grid-cols-3">
+
             {/* Profile */}
             <Link
               to="/artisan/profile"
               className="group rounded-3xl bg-white p-7 shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
             >
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#FDF0D5] text-3xl transition-transform duration-300 group-hover:scale-110">
-                👤
+              <div className="h-14 w-14 overflow-hidden rounded-2xl bg-[#FDF0D5] transition-transform duration-300 group-hover:scale-110">
+                <img
+                  src="/images/artisans/potter.jpg"
+                  alt="Artisan Profile"
+                  className="h-full w-full object-cover"
+                />
               </div>
 
               <h2 className="mt-6 text-2xl font-bold text-[#003049]">
@@ -71,8 +77,12 @@ function Dashboard() {
               to="/artisan/products"
               className="group rounded-3xl bg-white p-7 shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
             >
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#FDF0D5] text-3xl transition-transform duration-300 group-hover:scale-110">
-                🧺
+              <div className="h-14 w-14 overflow-hidden rounded-2xl bg-[#FDF0D5] transition-transform duration-300 group-hover:scale-110">
+                <img
+                  src="/images/products/ceramics/vase.jpg"
+                  alt="Products"
+                  className="h-full w-full object-cover"
+                />
               </div>
 
               <h2 className="mt-6 text-2xl font-bold text-[#003049]">
@@ -97,8 +107,12 @@ function Dashboard() {
               to="/artisan/orders"
               className="group rounded-3xl bg-white p-7 shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
             >
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#FDF0D5] text-3xl transition-transform duration-300 group-hover:scale-110">
-                📦
+              <div className="h-14 w-14 overflow-hidden rounded-2xl bg-[#FDF0D5] transition-transform duration-300 group-hover:scale-110">
+                <img
+                  src="/images/products/copper/copper-tray.jpg"
+                  alt="Orders"
+                  className="h-full w-full object-cover"
+                />
               </div>
 
               <h2 className="mt-6 text-2xl font-bold text-[#003049]">
@@ -122,6 +136,7 @@ function Dashboard() {
           {/* Quick Actions */}
           <div className="mt-10 overflow-hidden rounded-3xl bg-[#003049] p-7 shadow-xl sm:p-9">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+
               <div>
                 <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#669BBC]">
                   Quick Actions
@@ -154,13 +169,20 @@ function Dashboard() {
             </h2>
 
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
+
+              {/* Browse Artisans */}
               <Link
                 to="/artisans"
                 className="group flex items-center justify-between rounded-2xl bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
                 <div className="flex items-center gap-4">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#FDF0D5]">
-                    🎨
+
+                  <div className="h-11 w-11 overflow-hidden rounded-xl bg-[#FDF0D5]">
+                    <img
+                      src="/images/artisans/embroiderer.jpg"
+                      alt="Browse Artisans"
+                      className="h-full w-full object-cover"
+                    />
                   </div>
 
                   <div>
@@ -179,13 +201,19 @@ function Dashboard() {
                 </span>
               </Link>
 
+              {/* Shopping Cart */}
               <Link
                 to="/cart"
                 className="group flex items-center justify-between rounded-2xl bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
               >
                 <div className="flex items-center gap-4">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#FDF0D5]">
-                    🛒
+
+                  <div className="h-11 w-11 overflow-hidden rounded-xl bg-[#FDF0D5]">
+                    <img
+                      src="/images/products/palm/palm-basket.jpg"
+                      alt="Shopping Cart"
+                      className="h-full w-full object-cover"
+                    />
                   </div>
 
                   <div>
@@ -203,8 +231,10 @@ function Dashboard() {
                   →
                 </span>
               </Link>
+
             </div>
           </div>
+
         </div>
       </section>
     </main>

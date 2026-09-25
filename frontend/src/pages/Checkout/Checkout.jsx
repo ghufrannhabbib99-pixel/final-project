@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import productImages from "../../data/productImages";
 
 function Checkout() {
   const navigate = useNavigate();
@@ -149,48 +150,63 @@ function Checkout() {
                 </p>
               </div>
 
-              {cartItems.map((item) => (
-                <article
-                  key={item.id}
-                  className="flex flex-col gap-5 rounded-2xl bg-white/70 p-5 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl sm:flex-row sm:items-center"
-                >
-                  {/* Product Placeholder */}
-                  <div className="flex h-28 w-full shrink-0 items-center justify-center rounded-xl bg-[#669BBC] sm:w-28">
-                    <span className="text-lg font-bold text-[#FDF0D5]">
-                      Alherfa
-                    </span>
-                  </div>
+              {cartItems.map((item) => {
+                const productImage =
+                  item.image || productImages[item.name] || null;
 
-                  {/* Product Info */}
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold text-[#003049]">
-                      {item.name}
-                    </h3>
+                return (
+                  <article
+                    key={item.id}
+                    className="flex flex-col gap-5 rounded-2xl bg-white/70 p-5 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl sm:flex-row sm:items-center"
+                  >
+                    {/* Product Image */}
+                    <div className="h-28 w-full shrink-0 overflow-hidden rounded-xl bg-[#669BBC] sm:w-28">
+                      {productImage ? (
+                        <img
+                          src={productImage}
+                          alt={item.name}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center">
+                          <span className="text-lg font-bold text-[#FDF0D5]">
+                            Alherfa
+                          </span>
+                        </div>
+                      )}
+                    </div>
 
-                    <p className="mt-1 text-[#669BBC]">
-                      Quantity: {item.quantity}
-                    </p>
+                    {/* Product Info */}
+                    <div className="flex-1">
+                      <h3 className="text-xl font-bold text-[#003049]">
+                        {item.name}
+                      </h3>
 
-                    <p className="mt-2 font-semibold text-[#780000]">
-                      {Number(item.price).toLocaleString()} IQD each
-                    </p>
-                  </div>
+                      <p className="mt-1 text-[#669BBC]">
+                        Quantity: {item.quantity}
+                      </p>
 
-                  {/* Subtotal */}
-                  <div className="text-right">
-                    <p className="text-sm text-[#669BBC]">
-                      Subtotal
-                    </p>
+                      <p className="mt-2 font-semibold text-[#780000]">
+                        {Number(item.price).toLocaleString()} IQD each
+                      </p>
+                    </div>
 
-                    <p className="mt-1 text-lg font-bold text-[#003049]">
-                      {(
-                        Number(item.price) * Number(item.quantity)
-                      ).toLocaleString()}{" "}
-                      IQD
-                    </p>
-                  </div>
-                </article>
-              ))}
+                    {/* Subtotal */}
+                    <div className="text-right">
+                      <p className="text-sm text-[#669BBC]">
+                        Subtotal
+                      </p>
+
+                      <p className="mt-1 text-lg font-bold text-[#003049]">
+                        {(
+                          Number(item.price) * Number(item.quantity)
+                        ).toLocaleString()}{" "}
+                        IQD
+                      </p>
+                    </div>
+                  </article>
+                );
+              })}
             </section>
 
             {/* Summary */}

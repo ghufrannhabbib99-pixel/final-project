@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import productImages from "../../data/productImages";
 
 function EditProduct() {
   const { id } = useParams();
@@ -102,7 +103,14 @@ function EditProduct() {
           description: formData.description.trim(),
           price: Number(formData.price),
           stock_quantity: Number(formData.stock_quantity),
-          image: formData.image.trim(),
+
+          // إذا المستخدم دخل صورة نستخدمها،
+          // وإذا لا نستخدم صورة المنتج الافتراضية
+          image:
+            formData.image.trim() ||
+            productImages[formData.name.trim()] ||
+            "",
+
           category_id: formData.category_id
             ? Number(formData.category_id)
             : null,
@@ -123,6 +131,14 @@ function EditProduct() {
       setSaving(false);
     }
   };
+
+  // =========================
+  // Default Product Image
+  // =========================
+  const previewImage =
+    formData.image.trim() ||
+    productImages[formData.name.trim()] ||
+    null;
 
   // =========================
   // Loading
@@ -152,9 +168,7 @@ function EditProduct() {
   return (
     <main className="min-h-screen bg-[#FDF0D5]">
 
-      {/* =========================
-          HEADER
-      ========================= */}
+      {/* HEADER */}
       <section className="relative overflow-hidden px-4 py-12 sm:px-6 lg:px-8">
         <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#669BBC]/10" />
 
@@ -189,17 +203,13 @@ function EditProduct() {
         </div>
       </section>
 
-      {/* =========================
-          MAIN
-      ========================= */}
+      {/* MAIN */}
       <section className="px-4 pb-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
 
           <div className="grid gap-8 lg:grid-cols-3">
 
-            {/* =========================
-                FORM
-            ========================= */}
+            {/* FORM */}
             <div className="rounded-3xl bg-white p-6 shadow-xl sm:p-9 lg:col-span-2">
 
               <div className="mb-8 border-b border-[#669BBC]/15 pb-6">
@@ -381,7 +391,7 @@ function EditProduct() {
                   />
 
                   <p className="mt-2 text-xs text-[#669BBC]">
-                    You can update the product image URL here.
+                    Leave empty to use the default product image.
                   </p>
                 </div>
 
@@ -410,9 +420,7 @@ function EditProduct() {
               </form>
             </div>
 
-            {/* =========================
-                SIDEBAR
-            ========================= */}
+            {/* SIDEBAR */}
             <aside className="space-y-6">
 
               {/* Preview */}
@@ -433,9 +441,9 @@ function EditProduct() {
                   {/* Image */}
                   <div className="flex h-48 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#FDF0D5] to-[#669BBC]/20">
 
-                    {formData.image ? (
+                    {previewImage ? (
                       <img
-                        src={formData.image}
+                        src={previewImage}
                         alt={
                           formData.name ||
                           "Product preview"

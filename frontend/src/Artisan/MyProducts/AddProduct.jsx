@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import productImages from "../../data/productImages";
 
 function AddProduct() {
   const navigate = useNavigate();
@@ -27,6 +28,12 @@ function AddProduct() {
       [name]: value,
     }));
   };
+
+  // الصورة الافتراضية حسب اسم المنتج
+  const previewImage =
+    formData.image.trim() ||
+    productImages[formData.name.trim()] ||
+    null;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -55,14 +62,25 @@ function AddProduct() {
         "http://localhost:5000/api/products",
         {
           artisan_id: artisanId,
+
           category_id: formData.category_id
             ? Number(formData.category_id)
             : null,
+
           name: formData.name.trim(),
+
           description: formData.description.trim(),
+
           price: Number(formData.price),
+
           stock_quantity: Number(formData.stock_quantity),
-          image: formData.image.trim(),
+
+          // إذا دخل صورة نستخدمها،
+          // وإذا تركها فارغة نستخدم الصورة الموجودة في productImages
+          image:
+            formData.image.trim() ||
+            productImages[formData.name.trim()] ||
+            "",
         }
       );
 
@@ -83,13 +101,16 @@ function AddProduct() {
 
   return (
     <main className="min-h-screen bg-[#FDF0D5]">
+
       {/* Header */}
       <section className="relative overflow-hidden px-4 py-12 sm:px-6 lg:px-8">
         <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#669BBC]/10" />
+
         <div className="absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-[#780000]/5" />
 
         <div className="relative mx-auto max-w-6xl">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+
             <div>
               <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#780000]">
                 Artisan Workspace
@@ -119,8 +140,10 @@ function AddProduct() {
       <section className="px-4 pb-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-8 lg:grid-cols-3">
+
             {/* Form Card */}
             <div className="rounded-3xl bg-white p-7 shadow-xl sm:p-9 lg:col-span-2">
+
               <div className="mb-8">
                 <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#780000]">
                   Product Details
@@ -136,6 +159,7 @@ function AddProduct() {
                 </p>
               </div>
 
+              {/* Error */}
               {error && (
                 <div className="mb-6 rounded-2xl border border-[#780000]/20 bg-[#780000]/5 p-4">
                   <div className="flex items-start gap-3">
@@ -154,7 +178,11 @@ function AddProduct() {
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form
+                onSubmit={handleSubmit}
+                className="space-y-6"
+              >
+
                 {/* Product Name */}
                 <div>
                   <label
@@ -191,13 +219,15 @@ function AddProduct() {
                     value={formData.description}
                     onChange={handleChange}
                     placeholder="Describe your handmade product..."
-                    rows="5"
+                    rows={5}
                     className="w-full resize-none rounded-xl border border-[#669BBC]/25 bg-[#FDF0D5]/30 px-4 py-3.5 text-[#003049] outline-none transition-all duration-300 placeholder:text-[#669BBC]/60 focus:border-[#780000] focus:bg-white focus:ring-2 focus:ring-[#780000]/10"
                   />
                 </div>
 
                 {/* Price + Stock */}
                 <div className="grid gap-6 sm:grid-cols-2">
+
+                  {/* Price */}
                   <div>
                     <label
                       htmlFor="price"
@@ -226,6 +256,7 @@ function AddProduct() {
                     </div>
                   </div>
 
+                  {/* Stock */}
                   <div>
                     <label
                       htmlFor="stock_quantity"
@@ -293,12 +324,13 @@ function AddProduct() {
                   />
 
                   <p className="mt-2 text-xs text-[#669BBC]">
-                    You can add a product image URL for now.
+                    Leave empty to use the default product image.
                   </p>
                 </div>
 
                 {/* Buttons */}
                 <div className="flex flex-col-reverse gap-3 border-t border-[#669BBC]/15 pt-6 sm:flex-row sm:justify-end">
+
                   <Link
                     to="/artisan/products"
                     className="rounded-xl border border-[#003049]/15 bg-white px-6 py-3 text-center font-semibold text-[#003049] transition-all duration-300 hover:-translate-y-1 hover:border-[#003049] hover:shadow-md"
@@ -323,7 +355,93 @@ function AddProduct() {
 
             {/* Side Information */}
             <aside className="space-y-6">
+
+              {/* Live Preview */}
+              <div className="overflow-hidden rounded-3xl bg-white shadow-xl">
+
+                <div className="border-b border-[#669BBC]/15 px-6 py-5">
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#780000]">
+                    Preview
+                  </p>
+
+                  <h3 className="mt-1 text-xl font-bold text-[#003049]">
+                    Product Preview
+                  </h3>
+                </div>
+
+                <div className="p-6">
+
+                  <div className="flex h-48 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#FDF0D5] to-[#669BBC]/20">
+
+                    {previewImage ? (
+                      <img
+                        src={previewImage}
+                        alt={formData.name || "Product preview"}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="text-center">
+                        <div className="text-6xl">
+                          🧶
+                        </div>
+
+                        <p className="mt-2 text-sm font-semibold text-[#669BBC]">
+                          Product Image
+                        </p>
+                      </div>
+                    )}
+
+                  </div>
+
+                  <div className="mt-5">
+
+                    <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#780000]">
+                      Handmade
+                    </p>
+
+                    <h4 className="mt-2 line-clamp-2 text-xl font-bold text-[#003049]">
+                      {formData.name || "Product Name"}
+                    </h4>
+
+                    <p className="mt-3 line-clamp-3 text-sm leading-6 text-[#669BBC]">
+                      {formData.description ||
+                        "Your product description will appear here."}
+                    </p>
+
+                    <div className="mt-5 flex items-center justify-between border-t border-[#669BBC]/15 pt-4">
+
+                      <div>
+                        <p className="text-xs text-[#669BBC]">
+                          Price
+                        </p>
+
+                        <p className="mt-1 font-bold text-[#780000]">
+                          {formData.price
+                            ? `${Number(
+                                formData.price
+                              ).toLocaleString()} IQD`
+                            : "0 IQD"}
+                        </p>
+                      </div>
+
+                      <div className="text-right">
+                        <p className="text-xs text-[#669BBC]">
+                          Stock
+                        </p>
+
+                        <p className="mt-1 font-semibold text-[#003049]">
+                          {formData.stock_quantity || 0}
+                        </p>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Tips */}
               <div className="rounded-3xl bg-[#003049] p-7 text-[#FDF0D5] shadow-xl">
+
                 <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#780000] text-3xl">
                   🧺
                 </div>
@@ -333,29 +451,41 @@ function AddProduct() {
                 </h2>
 
                 <div className="mt-5 space-y-4 text-sm leading-6 text-[#FDF0D5]/75">
+
                   <div className="flex gap-3">
                     <span className="text-[#669BBC]">✓</span>
-                    <p>Use a clear and descriptive product name.</p>
+                    <p>
+                      Use a clear and descriptive product name.
+                    </p>
                   </div>
 
                   <div className="flex gap-3">
                     <span className="text-[#669BBC]">✓</span>
-                    <p>Describe the materials and craftsmanship.</p>
+                    <p>
+                      Describe the materials and craftsmanship.
+                    </p>
                   </div>
 
                   <div className="flex gap-3">
                     <span className="text-[#669BBC]">✓</span>
-                    <p>Set an accurate price and stock quantity.</p>
+                    <p>
+                      Set an accurate price and stock quantity.
+                    </p>
                   </div>
 
                   <div className="flex gap-3">
                     <span className="text-[#669BBC]">✓</span>
-                    <p>Use a high-quality product image.</p>
+                    <p>
+                      Use a high-quality product image.
+                    </p>
                   </div>
+
                 </div>
               </div>
 
+              {/* Navigation */}
               <div className="rounded-3xl bg-white p-7 shadow-md">
+
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#780000]">
                   Need Help?
                 </p>
@@ -376,7 +506,9 @@ function AddProduct() {
                   Go to My Products
                   <span>→</span>
                 </Link>
+
               </div>
+
             </aside>
           </div>
         </div>
