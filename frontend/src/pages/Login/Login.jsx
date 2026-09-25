@@ -1,62 +1,102 @@
 import { Link } from "react-router-dom";
-
+import "../../styles/auth.css";
 function Login() {
   return (
-    <main className="flex min-h-[70vh] items-center justify-center px-6 py-10">
-      <div className="w-full max-w-md rounded-lg bg-white p-8 shadow">
-        <h1 className="text-3xl font-bold">Login</h1>
+    <main className="login-page min-h-screen bg-[#FDF0D5] px-5 py-12 md:px-8">
+      <div className="login-container">
 
-        <p className="mt-2 text-gray-600">
-          Sign in to your account.
-        </p>
+        {/* Logo */}
+       <Link to="/" className="auth-logo">
+  <div className="auth-logo-icon">
+    𒀭
+  </div>
 
-        <form className="mt-6 space-y-4">
-          <div>
-            <label
-              htmlFor="email"
-              className="mb-1 block text-sm font-medium"
-            >
-              Email
-            </label>
+  <div className="auth-logo-text">
+    <h1>AlHirfa</h1>
+    <span>IRAQI CRAFTS</span>
+  </div>
+</Link>
 
-            <input
-              id="email"
-              type="email"
-              placeholder="Enter your email"
-              className="w-full rounded-md border px-4 py-2 outline-none"
-            />
+        {/* Login Card */}
+        <div className="login-card relative overflow-hidden rounded-[2rem] bg-white">
+
+          <div className="login-decoration login-decoration-left">
+            <span>𒀭</span>
+            <span>𒂗</span>
+            <span>𒆠</span>
           </div>
 
-          <div>
-            <label
-              htmlFor="password"
-              className="mb-1 block text-sm font-medium"
-            >
-              Password
-            </label>
-
-            <input
-              id="password"
-              type="password"
-              placeholder="Enter your password"
-              className="w-full rounded-md border px-4 py-2 outline-none"
-            />
+          <div className="login-decoration login-decoration-right">
+            <span>𒀀</span>
+            <span>𒂗</span>
+            <span>𒀭</span>
           </div>
 
-          <button
-            type="submit"
-            className="w-full rounded-md bg-black px-4 py-2 text-white"
-          >
-            Login
-          </button>
-        </form>
+          <div className="login-content relative z-10">
 
-        <p className="mt-6 text-center text-sm text-gray-600">
-          Don't have an account?{" "}
-          <Link to="/register" className="font-medium text-black">
-            Register
-          </Link>
-        </p>
+            <div className="login-symbol">
+              <span className="login-line" />
+              <span>𒀭</span>
+              <span className="login-line" />
+            </div>
+
+            <p className="login-label">
+              WELCOME BACK
+            </p>
+
+            <h1 className="login-title">
+              Login
+            </h1>
+
+            <p className="login-description">
+              Sign in to your account and continue exploring
+              handmade products from Iraqi artisans.
+            </p>
+
+            <form className="login-form">
+
+              <div className="login-field">
+                <label htmlFor="email">
+                  Email
+                </label>
+
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email"
+                />
+              </div>
+
+              <div className="login-field">
+                <label htmlFor="password">
+                  Password
+                </label>
+
+                <input
+                  id="password"
+                  type="password"
+                  placeholder="Enter your password"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="login-button"
+              >
+                Login
+              </button>
+
+            </form>
+
+            <p className="login-register">
+              Don't have an account?{" "}
+              <Link to="/signup">
+                Sign Up
+              </Link>
+            </p>
+
+          </div>
+        </div>
       </div>
     </main>
   );

@@ -2,10 +2,9 @@ import { Link } from "react-router-dom";
 
 function Navbar() {
   return (
-    <nav className=" border-b border-[#003049]/10 bg-[#780000]/95 ">
-      <div className=" flex items-center justify-between px-4 mx-auto max-w-7xl">
+    <nav className="border-b border-[#003049]/10 bg-[#780000]/95">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
 
-        
         {/* Logo */}
         <Link
           to="/"
@@ -28,48 +27,54 @@ function Navbar() {
 
         {/* Navigation */}
         <div className="flex items-center gap-7">
-          <Link
-            to="/"
-            className="relative text-base font-medium text-[#FDF0D5] transition-colors duration-300 hover:text-[#003049]"
-          >
-            Home
-          </Link>
 
-          <Link
-            to="/products"
-            className="relative text-base font-medium text-[#FDF0D5] transition-colors duration-300 hover:text-[#003049]"
- 
-          >
-            Products
-          </Link>
+          {/* Main Links */}
+          <div className="flex items-center gap-7">
+            <Link
+              to="/"
+              className="text-base font-medium text-[#FDF0D5] transition-colors duration-300 hover:text-[#E6B566]"
+            >
+              Home
+            </Link>
 
-          <Link
-            to="/artisans"
-            className="relative text-base font-medium text-[#FDF0D5] transition-colors duration-300 hover:text-[#003049]"
-          >
-            Artisans
-          </Link>
+            <Link
+              to="/products"
+              className="text-base font-medium text-[#FDF0D5] transition-colors duration-300 hover:text-[#E6B566]"
+            >
+              Products
+            </Link>
 
-          <Link
-            to="/cart"
-            className="relative text-base font-medium text-[#FDF0D5] transition-colors duration-300 hover:text-[#003049]"
-          >
-            Cart
-          </Link>
+            <Link
+              to="/artisans"
+              className="text-base font-medium text-[#FDF0D5] transition-colors duration-300 hover:text-[#E6B566]"
+            >
+              Artisans
+            </Link>
+          </div>
 
-          <Link
-            to="/login"
-            className="relative text-base font-medium text-[#FDF0D5] transition-colors duration-300 hover:text-[#003049]"
-          >
-            Login
-          </Link>
+          {/* Right Actions */}
+          <div className="flex items-center gap-3 border-l border-[#FDF0D5]/20 pl-6">
 
-          <Link
-            to="/register"
-            className="relative text-base font-medium text-[#FDF0D5] transition-colors duration-300 hover:text-[#003049]"
-          >
-            Register
-          </Link>
+            {/* Cart */}
+            <Link
+              to="/cart"
+              aria-label="Cart"
+              className="flex h-10 w-10 items-center justify-center rounded-full text-xl text-[#FDF0D5] transition-all duration-300 hover:bg-[#003049] hover:text-[#E6B566]"
+            >
+              🛒
+            </Link>
+
+            {/* Profile / Login */}
+            <Link
+              to="/login"
+              aria-label="Login"
+              className="flex h-10 w-10 items-center justify-center rounded-full text-xl text-[#FDF0D5] transition-all duration-300 translate-x-150 hover:bg-[#003049] hover:text-[#E6B566]"
+            >
+              👤
+            </Link>
+
+          </div>
+
         </div>
       </div>
     </nav>
