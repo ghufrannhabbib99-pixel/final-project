@@ -1,28 +1,116 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import api from "../../services/api";
 import productImages from "../../data/productImages";
 
 function MyProducts() {
   const navigate = useNavigate();
 
   const [products, setProducts] = useState([]);
+  const [artisan, setArtisan] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
-  const artisanId = 2;
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:5000/api/products/artisan/${artisanId}`
+        setLoading(true);
+        setError("");
+
+        // =========================
+        // 1. Get current user
+        // =========================
+        const storedUser = localStorage.getItem("user");
+
+        if (!storedUser) {
+          setError("Please login first.");
+          return;
+        }
+
+        const parsedUser = JSON.parse(storedUser);
+
+        // Support both:
+        // { id: 11, ... }
+        // and
+        // { user: { id: 11, ... } }
+        const currentUser = parsedUser?.user || parsedUser;
+
+        const userId = currentUser?.id;
+
+        console.log("Current stored user:", parsedUser);
+        console.log("Current user ID:", userId);
+        console.log("Current user role:", currentUser?.role);
+
+        if (!userId) {
+          setError(
+            "Your login information is incomplete. Please logout and login again."
+          );
+          return;
+        }
+
+        // =========================
+        // 2. Get all artisans
+        // =========================
+        const artisanResponse = await api.artisans.getAll();
+
+        console.log("Artisans API response:", artisanResponse);
+
+        let artisans = [];
+
+        if (Array.isArray(artisanResponse)) {
+          artisans = artisanResponse;
+        } else if (Array.isArray(artisanResponse?.data)) {
+          artisans = artisanResponse.data;
+        } else if (Array.isArray(artisanResponse?.data?.data)) {
+          artisans = artisanResponse.data.data;
+        }
+
+        console.log("All artisans:", artisans);
+
+        // =========================
+        // 3. Find current artisan
+        // =========================
+        const currentArtisan = artisans.find(
+          (item) => Number(item.user_id) === Number(userId)
         );
 
-        setProducts(response.data.data || response.data || []);
+        console.log("Current artisan:", currentArtisan);
+
+        if (!currentArtisan) {
+          setError(
+            `Artisan profile not found for user ID ${userId}. Please make sure this account has an artisan profile.`
+          );
+          return;
+        }
+
+        setArtisan(currentArtisan);
+
+        // =========================
+        // 4. Get artisan products
+        // =========================
+        const productResponse = await api.products.getByArtisan(
+          currentArtisan.id
+        );
+
+        console.log("Products API response:", productResponse);
+
+        let artisanProducts = [];
+
+        if (Array.isArray(productResponse)) {
+          artisanProducts = productResponse;
+        } else if (Array.isArray(productResponse?.data)) {
+          artisanProducts = productResponse.data;
+        } else if (Array.isArray(productResponse?.data?.data)) {
+          artisanProducts = productResponse.data.data;
+        }
+
+        setProducts(artisanProducts);
       } catch (error) {
-        console.error(error);
-        setError("Failed to load products");
+        console.error("MyProducts error:", error);
+
+        setError(
+          error?.message || "Failed to load products."
+        );
       } finally {
         setLoading(false);
       }
@@ -41,18 +129,19 @@ function MyProducts() {
     }
 
     try {
-      await axios.delete(
-        `http://localhost:5000/api/products/${productId}`
-      );
+      await api.products.remove(productId);
 
       setProducts((currentProducts) =>
         currentProducts.filter(
-          (product) => product.id !== productId
+          (product) => Number(product.id) !== Number(productId)
         )
       );
     } catch (error) {
       console.error(error);
-      alert("Failed to delete product");
+
+      alert(
+        error?.message || "Failed to delete product"
+      );
     }
   };
 
@@ -106,7 +195,6 @@ function MyProducts() {
 
   return (
     <main className="min-h-screen bg-[#FDF0D5]">
-      {/* Header */}
       <section className="relative overflow-hidden px-4 py-12 sm:px-6 lg:px-8">
         <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#669BBC]/10" />
         <div className="absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-[#780000]/5" />
@@ -126,6 +214,12 @@ function MyProducts() {
                 Manage your handmade products, update their details, and
                 control your available stock.
               </p>
+
+              {artisan && (
+                <p className="mt-2 text-sm font-semibold text-[#780000]">
+                  Artisan: {artisan.artisan_name || artisan.craft_name}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-wrap gap-3">
@@ -148,7 +242,6 @@ function MyProducts() {
             </div>
           </div>
 
-          {/* Stats */}
           <div className="mt-10 grid gap-4 sm:grid-cols-3">
             <div className="rounded-2xl bg-white p-5 shadow-sm">
               <div className="flex items-center gap-4">
@@ -217,7 +310,6 @@ function MyProducts() {
         </div>
       </section>
 
-      {/* Products */}
       <section className="px-4 pb-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           {products.length === 0 ? (
@@ -247,7 +339,6 @@ function MyProducts() {
                 const stock = Number(product.stock_quantity) || 0;
                 const isOutOfStock = stock <= 0;
 
-                // نفس صور productImages المستخدمة بالصفحات العامة
                 const productImage =
                   product.image ||
                   productImages[product.name] ||
@@ -258,7 +349,6 @@ function MyProducts() {
                     key={product.id}
                     className="group overflow-hidden rounded-3xl bg-white shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
                   >
-                    {/* Image */}
                     <div className="relative h-60 overflow-hidden bg-gradient-to-br from-[#FDF0D5] to-[#669BBC]/20">
                       {productImage ? (
                         <img
@@ -278,7 +368,6 @@ function MyProducts() {
                         </div>
                       )}
 
-                      {/* Stock Badge */}
                       <div
                         className={`absolute right-4 top-4 rounded-full px-3 py-1.5 text-xs font-bold shadow-md ${
                           isOutOfStock
@@ -292,10 +381,9 @@ function MyProducts() {
                       </div>
                     </div>
 
-                    {/* Content */}
                     <div className="p-5">
                       <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#780000]">
-                        Handmade
+                        {product.category_name || "Handmade"}
                       </p>
 
                       <h2 className="mt-2 line-clamp-2 min-h-[56px] text-xl font-bold text-[#003049]">
@@ -307,7 +395,6 @@ function MyProducts() {
                           "No description available for this product."}
                       </p>
 
-                      {/* Price & Stock */}
                       <div className="mt-5 grid grid-cols-2 gap-3 border-t border-[#669BBC]/15 pt-4">
                         <div>
                           <p className="text-xs text-[#669BBC]">
@@ -330,7 +417,6 @@ function MyProducts() {
                         </div>
                       </div>
 
-                      {/* Actions */}
                       <div className="mt-5 grid grid-cols-2 gap-3">
                         <Link
                           to={`/artisan/products/edit/${product.id}`}
@@ -356,7 +442,6 @@ function MyProducts() {
         </div>
       </section>
 
-      {/* Bottom CTA */}
       {products.length > 0 && (
         <section className="px-4 pb-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl rounded-3xl bg-[#003049] p-7 shadow-xl sm:p-9">

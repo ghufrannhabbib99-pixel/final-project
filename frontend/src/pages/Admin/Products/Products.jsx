@@ -1,256 +1,298 @@
-import "./Products.css";
+import { useEffect, useState } from "react";
+import SearchBar from "../../../components/SearchBar/SearchBar";
+import ProductCard from "../../../components/ProductCard/ProductCard";
+import api from "../../../services/api";
 
 function Products() {
-  const products = [];
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [products, setProducts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const categories = [
+    { name: "All", symbol: "✦" },
+    { name: "Pottery", symbol: "𒀭" },
+    { name: "Weaving", symbol: "◇" },
+    { name: "Copper", symbol: "𒂗" },
+    { name: "Jewelry", symbol: "✧" },
+  ];
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await api.products.getAll();
+
+        console.log("PRODUCTS FROM BACKEND:", response);
+
+        setProducts(Array.isArray(response) ? response : []);
+      } catch (err) {
+        console.error("Failed to load products:", err);
+        setError(err.message || "Failed to load products");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProducts();
+  }, []);
+
+  const filteredProducts = products.filter((product) => {
+    const search = searchTerm.trim().toLowerCase();
+
+    const matchesSearch =
+      !search ||
+      product.name?.toLowerCase().includes(search) ||
+      product.description?.toLowerCase().includes(search);
+
+    return matchesSearch;
+  });
+
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+  };
 
   return (
-    <div className="admin-products min-h-screen bg-[#FDF0D5]">
+    <main className="products-page min-h-screen overflow-hidden bg-[#FDF0D5]">
 
-      {/* Main Content */}
-      <main className="products-main">
+      {/* ================= HERO ================= */}
+      <section className="px-5 md:px-8">
+        <div className="products-hero relative overflow-hidden rounded-[2rem] bg-[#003049] px-6 py-20 text-center md:px-12 md:py-24">
 
-        {/* Header */}
-        <header className="products-header">
-
-          <div>
-            <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-[#780000]">
-              Administration
-            </p>
-
-            <h1 className="text-3xl font-bold text-[#003049]">
-              Products Management
-            </h1>
-
-            <p className="mt-2 text-sm text-[#003049]/60">
-              Manage products listed by artisans on the marketplace.
-            </p>
+          {/* Top geometric decoration */}
+          <div className="absolute left-0 top-0 flex gap-3 p-6 opacity-20">
+            <div className="h-8 w-8 rotate-45 border border-[#E6B566]" />
+            <div className="h-8 w-8 rotate-45 border border-[#E6B566]" />
+            <div className="h-8 w-8 rotate-45 border border-[#E6B566]" />
           </div>
 
-          <div className="products-count rounded-2xl bg-white shadow-sm">
-            <p className="text-sm text-[#003049]/55">
-              Total Products
-            </p>
-
-            <p className="mt-1 text-2xl font-bold text-[#003049]">
-              {products.length}
-            </p>
+          {/* Bottom geometric decoration */}
+          <div className="absolute bottom-0 right-0 flex gap-3 p-6 opacity-20">
+            <div className="h-8 w-8 rotate-45 border border-[#E6B566]" />
+            <div className="h-8 w-8 rotate-45 border border-[#E6B566]" />
+            <div className="h-8 w-8 rotate-45 border border-[#E6B566]" />
           </div>
 
-        </header>
-
-        {/* Search and Filters */}
-        <section className="products-toolbar rounded-2xl bg-white shadow-sm">
-
-          <div className="products-search">
-
-            <label
-              htmlFor="product-search"
-              className="mb-2 block text-sm font-semibold text-[#003049]"
-            >
-              Search Products
-            </label>
-
-            <input
-              id="product-search"
-              type="text"
-              placeholder="Search by product name..."
-              className="w-full rounded-xl border border-[#003049]/15 bg-[#FDF0D5]/40 text-sm text-[#003049] outline-none transition placeholder:text-[#003049]/35 focus:border-[#E6B566] focus:ring-2 focus:ring-[#E6B566]/20"
-            />
-
+          {/* Left cuneiform decoration */}
+          <div className="absolute left-6 top-1/2 hidden -translate-y-1/2 flex-col gap-3 text-2xl text-[#E6B566]/30 md:flex">
+            <span>𒀭</span>
+            <span>𒂗</span>
+            <span>𒆠</span>
+            <span>𒀀</span>
           </div>
 
-          <div className="products-filter">
-
-            <label
-              htmlFor="product-category"
-              className="mb-2 block text-sm font-semibold text-[#003049]"
-            >
-              Category
-            </label>
-
-            <select
-              id="product-category"
-              className="w-full rounded-xl border border-[#003049]/15 bg-[#FDF0D5]/40 text-sm text-[#003049] outline-none transition focus:border-[#E6B566] focus:ring-2 focus:ring-[#E6B566]/20"
-            >
-              <option value="all">
-                كل الفئات
-              </option>
-
-              <option value="pottery">
-                فخار
-              </option>
-
-              <option value="weaving">
-                نسيج
-              </option>
-
-              <option value="copper">
-                نحاس
-              </option>
-
-              <option value="jewelry">
-                مجوهرات
-              </option>
-            </select>
-
+          {/* Right cuneiform decoration */}
+          <div className="absolute right-6 top-1/2 hidden -translate-y-1/2 flex-col gap-3 text-2xl text-[#E6B566]/30 md:flex">
+            <span>𒀭</span>
+            <span>𒂗</span>
+            <span>𒆠</span>
+            <span>𒀀</span>
           </div>
 
-          <div className="products-filter">
+          {/* Hero content */}
+          <div className="products-hero-content relative z-10">
 
-            <label
-              htmlFor="product-status"
-              className="mb-2 block text-sm font-semibold text-[#003049]"
-            >
-              Status
-            </label>
-
-            <select
-              id="product-status"
-              className="w-full rounded-xl border border-[#003049]/15 bg-[#FDF0D5]/40 text-sm text-[#003049] outline-none transition focus:border-[#E6B566] focus:ring-2 focus:ring-[#E6B566]/20"
-            >
-              <option value="all">
-                All Status
-              </option>
-
-              <option value="active">
-                Available
-              </option>
-
-              <option value="inactive">
-                Unavailable
-              </option>
-            </select>
-
-          </div>
-
-        </section>
-
-        {/* Products Table */}
-        <section className="products-table-wrapper overflow-hidden rounded-2xl bg-white shadow-sm">
-
-          <div className="products-table-header flex items-center justify-between">
-
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#780000]">
-                Products
-              </p>
-
-              <h2 className="mt-1 text-xl font-bold text-[#003049]">
-                All Products
-              </h2>
+            <div className="mb-6 flex justify-center">
+              <div className="flex items-center gap-3 text-[#E6B566]">
+                <span className="h-px w-12 bg-[#E6B566]/50" />
+                <span className="text-lg">𒀭</span>
+                <span className="h-px w-12 bg-[#E6B566]/50" />
+              </div>
             </div>
 
-            <p className="text-sm text-[#003049]/50">
-              {products.length} products
+            <p className="text-sm font-medium uppercase tracking-[0.3em] text-[#E6B566]">
+              Iraqi Handmade Collection
             </p>
 
+            <h1 className="mt-5 text-4xl font-bold leading-tight tracking-tight text-[#FDF0D5] md:text-6xl">
+              Crafted by Hand,
+              <span className="mt-2 block text-[#E6B566]">
+                Made with Heritage
+              </span>
+            </h1>
+
+            <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-[#FDF0D5]/70 md:text-lg">
+              Discover unique handmade pieces created by Iraqi artisans,
+              inspired by traditions passed from one generation to another.
+            </p>
+
+            {/* Heritage decoration */}
+            <div className="mt-8 flex items-center justify-center gap-4 text-[#E6B566]/60">
+              <span>𒀭</span>
+              <span>𒂗</span>
+              <span>✦</span>
+              <span>𒆠</span>
+              <span>𒀀</span>
+            </div>
+
           </div>
+        </div>
+      </section>
 
-          <div className="overflow-x-auto">
+      {/* ================= PRODUCTS SECTION ================= */}
+      <section className="px-5 py-20 md:px-8">
+        <div className="products-container">
 
-            <table className="w-full text-left">
+          <div className="products-content">
 
-              <thead>
-                <tr className="border-b border-[#003049]/10 bg-[#FDF0D5]/40">
+            {/* Section Heading */}
+            <div className="products-heading">
 
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Product
-                  </th>
+              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#780000]">
+                Our Collection
+              </p>
 
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Artisan
-                  </th>
+              <h2 className="mt-3 text-3xl font-bold text-[#003049] md:text-4xl">
+                Products
+              </h2>
 
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Category
-                  </th>
+              <p className="mt-3 text-[#003049]/60">
+                Explore handmade products crafted by talented Iraqi artisans.
+              </p>
 
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Price
-                  </th>
+            </div>
 
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Status
-                  </th>
+            {/* Search */}
+            <div className="products-search">
+              <SearchBar onSearch={handleSearch} />
+            </div>
 
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Actions
-                  </th>
+            {/* Categories */}
+            <div className="mt-2">
 
-                </tr>
-              </thead>
+              <p className="mb-5 text-xs font-semibold uppercase tracking-[0.2em] text-[#003049]/50">
+                Browse by Craft
+              </p>
 
-              <tbody>
+              <div className="products-categories">
 
-                {products.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan="6"
-                      className="products-empty-state text-center"
+                {categories.map((category) => (
+                  <button
+                    key={category.name}
+                    onClick={() => setSelectedCategory(category.name)}
+                    className={`group flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-medium transition duration-300 ${
+                      selectedCategory === category.name
+                        ? "border-[#780000] bg-[#780000] text-white shadow-md"
+                        : "border-[#003049]/15 bg-white text-[#003049] hover:border-[#E6B566] hover:bg-[#E6B566]/10"
+                    }`}
+                  >
+                    <span
+                      className={
+                        selectedCategory === category.name
+                          ? "text-[#E6B566]"
+                          : "text-[#780000]"
+                      }
                     >
-                      <div className="flex flex-col items-center justify-center">
+                      {category.symbol}
+                    </span>
 
-                        <div className="products-empty-icon flex items-center justify-center rounded-full bg-[#FDF0D5] text-2xl text-[#780000]">
-                          ▣
-                        </div>
+                    {category.name}
+                  </button>
+                ))}
 
-                        <p className="mt-4 text-sm font-medium text-[#003049]">
-                          No products available yet.
-                        </p>
+              </div>
+            </div>
 
-                        <p className="mt-1 text-sm text-[#003049]/50">
-                          Products will appear here once artisans add them.
-                        </p>
+            {/* Products Grid */}
+            <div className="products-grid mt-8">
 
-                      </div>
-                    </td>
-                  </tr>
-                ) : (
-                  products.map((product) => (
-                    <tr
+              {/* Loading */}
+              {loading && (
+                <div className="mx-auto max-w-2xl rounded-[2rem] border border-[#003049]/10 bg-white px-6 py-16 text-center shadow-sm">
+
+                  <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#FDF0D5]">
+                    <div className="animate-pulse text-2xl text-[#780000]">
+                      𒀭
+                    </div>
+                  </div>
+
+                  <h3 className="text-xl font-semibold text-[#003049]">
+                    Loading products...
+                  </h3>
+
+                  <p className="mt-2 text-sm text-[#003049]/55">
+                    Please wait while we load the handmade collection.
+                  </p>
+
+                </div>
+              )}
+
+              {/* Error */}
+              {!loading && error && (
+                <div className="mx-auto max-w-2xl rounded-[2rem] border border-red-200 bg-white px-6 py-16 text-center shadow-sm">
+
+                  <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-red-50">
+                    <span className="text-2xl text-red-600">
+                      !
+                    </span>
+                  </div>
+
+                  <h3 className="text-xl font-semibold text-red-700">
+                    Could not load products
+                  </h3>
+
+                  <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#003049]/55">
+                    {error}
+                  </p>
+
+                </div>
+              )}
+
+              {/* Products */}
+              {!loading && !error && filteredProducts.length > 0 && (
+                <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+
+                  {filteredProducts.map((product) => (
+                    <ProductCard
                       key={product.id}
-                      className="border-b border-[#003049]/10 transition hover:bg-[#FDF0D5]/30"
-                    >
+                      product={product}
+                    />
+                  ))}
 
-                      <td className="px-6 py-5">
-                        {product.name}
-                      </td>
+                </div>
+              )}
 
-                      <td className="px-6 py-5">
-                        {product.artisan}
-                      </td>
+              {/* No products */}
+              {!loading &&
+                !error &&
+                filteredProducts.length === 0 && (
+                  <div className="mx-auto max-w-2xl rounded-[2rem] border border-[#003049]/10 bg-white px-6 py-16 text-center shadow-sm">
 
-                      <td className="px-6 py-5">
-                        {product.category}
-                      </td>
+                    <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-[#E6B566]/50 bg-[#FDF0D5]">
+                      <div className="text-2xl text-[#780000]">
+                        𒀭
+                      </div>
+                    </div>
 
-                      <td className="px-6 py-5">
-                        {product.price}
-                      </td>
+                    <h3 className="text-xl font-semibold text-[#003049]">
+                      No products available
+                    </h3>
 
-                      <td className="px-6 py-5">
-                        {product.status}
-                      </td>
+                    <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#003049]/55">
+                      No products match your current search.
+                    </p>
 
-                      <td className="px-6 py-5">
-                        Actions
-                      </td>
+                    <div className="mt-7 flex justify-center gap-3 text-[#E6B566]">
+                      <span>◇</span>
+                      <span>✦</span>
+                      <span>◇</span>
+                    </div>
 
-                    </tr>
-                  ))
+                  </div>
                 )}
 
-              </tbody>
-
-            </table>
+            </div>
 
           </div>
 
-        </section>
+        </div>
+      </section>
 
-      </main>
-
-    </div>
+    </main>
   );
 }
 

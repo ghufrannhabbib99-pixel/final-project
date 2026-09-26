@@ -1,24 +1,20 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import productImages from "../../data/productImages";
+import api from "../../services/api";
 
 function Checkout() {
   const navigate = useNavigate();
 
   const [cartItems] = useState(() => {
     try {
-      const savedCart = JSON.parse(localStorage.getItem("cart"));
+      const savedCart = JSON.parse(
+        localStorage.getItem("cart") || "[]"
+      );
 
-      if (Array.isArray(savedCart)) {
-        return savedCart;
-      }
-
-      if (savedCart) {
-        return [savedCart];
-      }
-
-      return [];
+      return Array.isArray(savedCart)
+        ? savedCart
+        : [];
     } catch {
       return [];
     }
@@ -29,12 +25,15 @@ function Checkout() {
 
   const total = cartItems.reduce(
     (sum, item) =>
-      sum + Number(item.price) * Number(item.quantity),
+      sum +
+      Number(item.price || 0) *
+        Number(item.quantity || 0),
     0
   );
 
   const totalItems = cartItems.reduce(
-    (sum, item) => sum + Number(item.quantity),
+    (sum, item) =>
+      sum + Number(item.quantity || 0),
     0
   );
 
@@ -44,44 +43,88 @@ function Checkout() {
       return;
     }
 
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setError(
+        "Please login before placing your order."
+      );
+      return;
+    }
+
     try {
       setLoading(true);
       setError("");
 
-      const token = localStorage.getItem("token");
+      /*
+       * STEP 1
+       * Create the main order
+       */
+      const order = await api.orders.create({
+        total_amount: total,
+        status: "pending",
+      });
 
-      if (!token) {
-        setError("Please login before placing your order.");
-        setLoading(false);
-        return;
+      console.log("ORDER CREATED:", order);
+
+      if (!order?.id) {
+        throw new Error(
+          "Order was created but no order ID was returned."
+        );
       }
 
-      await axios.post(
-        "http://localhost:5000/api/orders",
-        {
-          total_amount: total,
-          status: "pending",
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      /*
+       * STEP 2
+       * Create an order item for every
+       * product in the cart
+       */
+      for (const item of cartItems) {
+        const orderItem =
+          await api.orderItems.create({
+            order_id: order.id,
+            product_id: item.id,
+            quantity: Number(item.quantity),
+            price: Number(item.price),
+          });
 
+        console.log(
+          "ORDER ITEM CREATED:",
+          orderItem
+        );
+      }
+
+      /*
+       * STEP 3
+       * Clear cart only after everything
+       * was successfully created
+       */
       localStorage.removeItem("cart");
 
       alert("Order placed successfully!");
 
+      /*
+       * STEP 4
+       * Go to user's orders
+       */
       navigate("/my-orders");
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(
+        "Failed to create order:",
+        err
+      );
 
-      if (error.response?.status === 401) {
-        setError("Your session has expired. Please login again.");
+      if (
+        err.message?.toLowerCase().includes("401") ||
+        err.message
+          ?.toLowerCase()
+          .includes("unauthorized")
+      ) {
+        setError(
+          "Your session has expired. Please login again."
+        );
       } else {
         setError(
-          error.response?.data?.message ||
+          err.message ||
             "Failed to place the order. Please try again."
         );
       }
@@ -93,6 +136,7 @@ function Checkout() {
   return (
     <main className="min-h-screen bg-[#FDF0D5] px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
+
         {/* Header */}
         <div className="mb-10 text-center">
           <p className="mb-2 text-sm font-bold tracking-[0.3em] text-[#780000]">
@@ -115,10 +159,13 @@ function Checkout() {
           </div>
         )}
 
+        {/* Empty Cart */}
         {cartItems.length === 0 ? (
-          /* Empty Cart */
           <div className="mx-auto max-w-xl rounded-3xl bg-white/70 p-10 text-center shadow-xl">
-            <div className="mb-5 text-6xl">🛒</div>
+
+            <div className="mb-5 text-6xl">
+              🛒
+            </div>
 
             <h2 className="text-2xl font-bold text-[#003049]">
               Your cart is empty
@@ -130,37 +177,53 @@ function Checkout() {
 
             <button
               type="button"
-              onClick={() => navigate("/artisans")}
+              onClick={() => navigate("/products")}
               className="mt-7 rounded-xl bg-[#780000] px-7 py-3 font-semibold text-[#FDF0D5] transition-all duration-300 hover:-translate-y-1 hover:bg-[#C1121F] hover:shadow-lg"
             >
               Continue Shopping
             </button>
+
           </div>
         ) : (
+
           <div className="grid gap-8 lg:grid-cols-[1fr_350px]">
-            {/* Order Items */}
+
+            {/* ================= ORDER ITEMS ================= */}
             <section className="space-y-5">
+
               <div className="rounded-3xl bg-white/70 p-6 shadow-md">
+
                 <h2 className="text-2xl font-bold text-[#003049]">
                   Order Details
                 </h2>
 
                 <p className="mt-1 text-[#669BBC]">
-                  {totalItems} item{totalItems !== 1 ? "s" : ""}
+                  {totalItems} item
+                  {totalItems !== 1 ? "s" : ""}
                 </p>
+
               </div>
 
               {cartItems.map((item) => {
+
                 const productImage =
-                  item.image || productImages[item.name] || null;
+                  item.image ||
+                  productImages[item.name] ||
+                  null;
+
+                const itemTotal =
+                  Number(item.price || 0) *
+                  Number(item.quantity || 0);
 
                 return (
                   <article
                     key={item.id}
                     className="flex flex-col gap-5 rounded-2xl bg-white/70 p-5 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl sm:flex-row sm:items-center"
                   >
-                    {/* Product Image */}
+
+                    {/* Image */}
                     <div className="h-28 w-full shrink-0 overflow-hidden rounded-xl bg-[#669BBC] sm:w-28">
+
                       {productImage ? (
                         <img
                           src={productImage}
@@ -174,60 +237,97 @@ function Checkout() {
                           </span>
                         </div>
                       )}
+
                     </div>
 
                     {/* Product Info */}
                     <div className="flex-1">
+
                       <h3 className="text-xl font-bold text-[#003049]">
                         {item.name}
                       </h3>
+
+                      {item.craft_name && (
+                        <p className="mt-1 text-sm font-semibold text-[#780000]">
+                          {item.craft_name}
+                        </p>
+                      )}
 
                       <p className="mt-1 text-[#669BBC]">
                         Quantity: {item.quantity}
                       </p>
 
                       <p className="mt-2 font-semibold text-[#780000]">
-                        {Number(item.price).toLocaleString()} IQD each
+                        {Number(
+                          item.price
+                        ).toLocaleString()}{" "}
+                        IQD each
                       </p>
+
                     </div>
 
                     {/* Subtotal */}
                     <div className="text-right">
+
                       <p className="text-sm text-[#669BBC]">
                         Subtotal
                       </p>
 
                       <p className="mt-1 text-lg font-bold text-[#003049]">
-                        {(
-                          Number(item.price) * Number(item.quantity)
-                        ).toLocaleString()}{" "}
-                        IQD
+                        {itemTotal.toLocaleString()} IQD
                       </p>
+
                     </div>
+
                   </article>
                 );
               })}
+
             </section>
 
-            {/* Summary */}
+            {/* ================= SUMMARY ================= */}
             <aside className="h-fit rounded-3xl bg-[#003049] p-7 text-[#FDF0D5] shadow-xl lg:sticky lg:top-6">
+
               <h2 className="text-2xl font-bold">
                 Order Summary
               </h2>
 
               <div className="mt-6 flex justify-between text-[#669BBC]">
-                <span>Items</span>
-                <span>{totalItems}</span>
+
+                <span>
+                  Items
+                </span>
+
+                <span>
+                  {totalItems}
+                </span>
+
+              </div>
+
+              <div className="mt-4 flex justify-between text-[#669BBC]">
+
+                <span>
+                  Subtotal
+                </span>
+
+                <span>
+                  {total.toLocaleString()} IQD
+                </span>
+
               </div>
 
               <div className="my-5 h-px bg-[#FDF0D5]/20" />
 
               <div className="flex justify-between text-xl font-bold">
-                <span>Total</span>
+
+                <span>
+                  Total
+                </span>
 
                 <span>
                   {total.toLocaleString()} IQD
                 </span>
+
               </div>
 
               <button
@@ -236,7 +336,9 @@ function Checkout() {
                 disabled={loading}
                 className="mt-7 w-full rounded-xl bg-[#780000] px-5 py-3 font-bold text-[#FDF0D5] transition-all duration-300 hover:-translate-y-1 hover:bg-[#C1121F] hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
               >
-                {loading ? "Placing Order..." : "Place Order"}
+                {loading
+                  ? "Placing Order..."
+                  : "Place Order"}
               </button>
 
               <button
@@ -247,7 +349,9 @@ function Checkout() {
               >
                 Back to Cart
               </button>
+
             </aside>
+
           </div>
         )}
       </div>

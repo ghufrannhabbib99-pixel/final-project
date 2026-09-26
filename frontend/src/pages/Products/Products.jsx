@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import ProductCard from "../../components/ProductCard/ProductCard";
+import api from "../../services/api";
 
 function Products() {
   const [selectedCategory, setSelectedCategory] = useState("All");
-
-  const products = [];
+  const [products, setProducts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const categories = [
     { name: "All", symbol: "✦" },
@@ -15,15 +18,55 @@ function Products() {
     { name: "Jewelry", symbol: "✧" },
   ];
 
-  const filteredProducts =
-    selectedCategory === "All"
-      ? products
-      : products.filter(
-          (product) => product.category === selectedCategory
-        );
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await api.products.getAll();
+
+        console.log("PRODUCTS FROM BACKEND:", response);
+
+        setProducts(Array.isArray(response) ? response : []);
+      } catch (err) {
+        console.error("Failed to load products:", err);
+        setError(err.message || "Failed to load products");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProducts();
+  }, []);
+
+  const filteredProducts = products.filter((product) => {
+    const search = searchTerm.trim().toLowerCase();
+
+    const matchesSearch =
+      !search ||
+      product.name?.toLowerCase().includes(search) ||
+      product.description?.toLowerCase().includes(search);
+
+    if (selectedCategory === "All") {
+      return matchesSearch;
+    }
+
+    const categoryMap = {
+      Pottery: "فخار وخزف",
+      Weaving: "خياطة وتطريز",
+      Copper: "نحاس وأعمال معدنية",
+      Jewelry: "مجوهرات",
+    };
+
+    const matchesCategory =
+      product.category_name === categoryMap[selectedCategory];
+
+    return matchesSearch && matchesCategory;
+  });
 
   const handleSearch = (searchTerm) => {
-    console.log("Search:", searchTerm);
+    setSearchTerm(searchTerm);
   };
 
   return (
@@ -112,7 +155,6 @@ function Products() {
             {/* Section Heading */}
             <div className="products-heading">
 
-
               <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#780000]">
                 Our Collection
               </p>
@@ -169,46 +211,86 @@ function Products() {
             </div>
 
             {/* Products Grid */}
-            <div className="products-grid">
+            <div className="products-grid mt-8">
 
-              {filteredProducts.length > 0 ? (
+              {/* Loading */}
+              {loading && (
+                <div className="py-16 text-center">
+                  <div className="text-lg font-medium text-[#003049]">
+                    Loading products...
+                  </div>
+
+                  <p className="mt-2 text-sm text-[#003049]/50">
+                    Please wait while we load the handmade collection.
+                  </p>
+                </div>
+              )}
+
+              {/* Error */}
+              {!loading && error && (
+                <div className="mx-auto max-w-2xl rounded-[2rem] border border-red-200 bg-white px-6 py-16 text-center shadow-sm">
+
+                  <div className="text-3xl text-[#780000]">
+                    ⚠️
+                  </div>
+
+                  <h3 className="mt-4 text-xl font-semibold text-[#003049]">
+                    Could not load products
+                  </h3>
+
+                  <p className="mt-2 text-sm text-[#003049]/60">
+                    {error}
+                  </p>
+
+                </div>
+              )}
+
+              {/* Products */}
+              {!loading && !error && filteredProducts.length > 0 && (
 
                 <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+
                   {filteredProducts.map((product) => (
                     <ProductCard
                       key={product.id}
                       product={product}
                     />
                   ))}
-                </div>
-
-              ) : (
-
-                <div className="mx-auto max-w-2xl rounded-[2rem] border border-[#003049]/10 bg-white px-6 py-16 text-center shadow-sm">
-
-                  <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-[#E6B566]/50 bg-[#FDF0D5]">
-                    <div className="text-2xl text-[#780000]">
-                      𒀭
-                    </div>
-                  </div>
-
-                  <h3 className="text-xl font-semibold text-[#003049]">
-                    No products available
-                  </h3>
-
-                  <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#003049]/55">
-                    Handmade products will appear here once they are added.
-                  </p>
-
-                  <div className="mt-7 flex justify-center gap-3 text-[#E6B566]">
-                    <span>◇</span>
-                    <span>✦</span>
-                    <span>◇</span>
-                  </div>
 
                 </div>
 
               )}
+
+              {/* Empty */}
+              {!loading &&
+                !error &&
+                filteredProducts.length === 0 && (
+
+                  <div className="mx-auto max-w-2xl rounded-[2rem] border border-[#003049]/10 bg-white px-6 py-16 text-center shadow-sm">
+
+                    <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-[#E6B566]/50 bg-[#FDF0D5]">
+                      <div className="text-2xl text-[#780000]">
+                        𒀭
+                      </div>
+                    </div>
+
+                    <h3 className="text-xl font-semibold text-[#003049]">
+                      No products found
+                    </h3>
+
+                    <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#003049]/55">
+                      Try another search or choose a different category.
+                    </p>
+
+                    <div className="mt-7 flex justify-center gap-3 text-[#E6B566]">
+                      <span>◇</span>
+                      <span>✦</span>
+                      <span>◇</span>
+                    </div>
+
+                  </div>
+
+                )}
 
             </div>
 

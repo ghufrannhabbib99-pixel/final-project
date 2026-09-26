@@ -1,6 +1,29 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 function Navbar() {
+  const navigate = useNavigate();
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem("user");
+
+    if (!storedUser) return null;
+
+    try {
+      return JSON.parse(storedUser);
+    } catch {
+      localStorage.removeItem("user");
+      return null;
+    }
+  });
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    setUser(null);
+    navigate("/login");
+  };
+
   return (
     <nav className="border-b border-[#003049]/10 bg-[#780000]/95">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
@@ -43,6 +66,13 @@ function Navbar() {
             >
               Products
             </Link>
+         <Link
+  to="/favorites"
+  title="Favorites"
+  className="flex items-center justify-center text-xl transition hover:scale-110 hover:text-[#780000]"
+>
+  ♡
+</Link>
 
             <Link
               to="/artisans"
@@ -64,17 +94,35 @@ function Navbar() {
               🛒
             </Link>
 
-            {/* Profile / Login */}
-            <Link
-              to="/login"
-              aria-label="Login"
-              className="flex h-10 w-10 items-center justify-center rounded-full text-xl text-[#FDF0D5] transition-all duration-300 translate-x-150 hover:bg-[#003049] hover:text-[#E6B566]"
-            >
-              👤
-            </Link>
+            {user ? (
+              <>
+                {/* User */}
+                <div className="flex items-center gap-3">
+                  <span className="text-sm font-medium text-[#FDF0D5]">
+                    {user.name}
+                  </span>
+
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="rounded-full bg-[#003049] px-4 py-2 text-sm font-medium text-[#FDF0D5] transition-colors duration-300 hover:text-[#E6B566]"
+                  >
+                    Logout
+                  </button>
+                </div>
+              </>
+            ) : (
+              /* Login */
+              <Link
+                to="/login"
+                aria-label="Login"
+                className="flex h-10 w-10 items-center justify-center rounded-full text-xl text-[#FDF0D5] transition-all duration-300 hover:bg-[#003049] hover:text-[#E6B566]"
+              >
+                👤
+              </Link>
+            )}
 
           </div>
-
         </div>
       </div>
     </nav>

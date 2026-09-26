@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../services/api";
 import productImages from "../../data/productImages";
 
 function AddProduct() {
@@ -15,11 +15,77 @@ function AddProduct() {
     category_id: "",
   });
 
+  const [categories, setCategories] = useState([]);
+  const [artisan, setArtisan] = useState(null);
+
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  const artisanId = 2;
+  // =========================
+  // Load artisan + categories
+  // =========================
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        setError("");
 
+        const storedUser = JSON.parse(
+          localStorage.getItem("user") || "null"
+        );
+
+        if (!storedUser?.id) {
+          setError("Please login first.");
+          return;
+        }
+
+        const [artisansResponse, categoriesResponse] =
+          await Promise.all([
+            api.artisans.getAll(),
+            api.categories.getAll(),
+          ]);
+
+        const artisans = Array.isArray(artisansResponse)
+          ? artisansResponse
+          : artisansResponse?.data || [];
+
+        const loadedCategories = Array.isArray(categoriesResponse)
+          ? categoriesResponse
+          : categoriesResponse?.data || [];
+
+        const currentArtisan = artisans.find(
+          (item) =>
+            Number(item.user_id) === Number(storedUser.id) ||
+            Number(item.userId) === Number(storedUser.id)
+        );
+
+        if (!currentArtisan) {
+          setError(
+            "Your artisan profile could not be found. Please make sure your account is registered as an artisan."
+          );
+          return;
+        }
+
+        setArtisan(currentArtisan);
+        setCategories(loadedCategories);
+      } catch (err) {
+        console.error("Failed to load add product data:", err);
+
+        setError(
+          err.message || "Failed to load artisan information."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  // =========================
+  // Handle input
+  // =========================
   const handleChange = (event) => {
     const { name, value } = event.target;
 
@@ -29,79 +95,108 @@ function AddProduct() {
     }));
   };
 
-  // الصورة الافتراضية حسب اسم المنتج
+  // =========================
+  // Preview image
+  // =========================
   const previewImage =
     formData.image.trim() ||
     productImages[formData.name.trim()] ||
     null;
 
+  // =========================
+  // Submit
+  // =========================
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     setError("");
 
+    if (!artisan?.id) {
+      setError("Artisan profile was not found.");
+      return;
+    }
+
     if (!formData.name.trim()) {
-      setError("Product name is required");
+      setError("Product name is required.");
       return;
     }
 
     if (Number(formData.price) <= 0) {
-      setError("Price must be greater than 0");
+      setError("Price must be greater than 0.");
       return;
     }
 
-    if (Number(formData.stock_quantity) < 0) {
-      setError("Stock quantity cannot be negative");
+    if (
+      formData.stock_quantity === "" ||
+      Number(formData.stock_quantity) < 0
+    ) {
+      setError("Stock quantity cannot be negative.");
       return;
     }
 
     try {
       setSaving(true);
 
-      await axios.post(
-        "http://localhost:5000/api/products",
-        {
-          artisan_id: artisanId,
+      await api.products.create({
+        artisan_id: Number(artisan.id),
 
-          category_id: formData.category_id
-            ? Number(formData.category_id)
-            : null,
+        category_id: formData.category_id
+          ? Number(formData.category_id)
+          : null,
 
-          name: formData.name.trim(),
+        name: formData.name.trim(),
 
-          description: formData.description.trim(),
+        description: formData.description.trim(),
 
-          price: Number(formData.price),
+        price: Number(formData.price),
 
-          stock_quantity: Number(formData.stock_quantity),
+        stock_quantity: Number(formData.stock_quantity),
 
-          // إذا دخل صورة نستخدمها،
-          // وإذا تركها فارغة نستخدم الصورة الموجودة في productImages
-          image:
-            formData.image.trim() ||
-            productImages[formData.name.trim()] ||
-            "",
-        }
-      );
+        image:
+          formData.image.trim() ||
+          productImages[formData.name.trim()] ||
+          "",
+      });
 
-      alert("Product added successfully");
+      alert("Product added successfully!");
 
       navigate("/artisan/products");
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error("Failed to add product:", err);
 
       setError(
-        error.response?.data?.message ||
-          "Failed to add product"
+        err.message || "Failed to add product."
       );
     } finally {
       setSaving(false);
     }
   };
 
+  // =========================
+  // Loading
+  // =========================
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-[#FDF0D5] px-4 py-16 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-6xl">
+          <div className="rounded-3xl bg-white p-10 text-center shadow-xl">
+            <div className="text-5xl">🧺</div>
+
+            <h1 className="mt-5 text-2xl font-bold text-[#003049]">
+              Loading artisan information...
+            </h1>
+
+            <p className="mt-2 text-[#669BBC]">
+              Please wait a moment.
+            </p>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-[#FDF0D5]">
-
       {/* Header */}
       <section className="relative overflow-hidden px-4 py-12 sm:px-6 lg:px-8">
         <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#669BBC]/10" />
@@ -110,7 +205,6 @@ function AddProduct() {
 
         <div className="relative mx-auto max-w-6xl">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-
             <div>
               <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#780000]">
                 Artisan Workspace
@@ -123,6 +217,16 @@ function AddProduct() {
               <p className="mt-3 max-w-2xl text-lg leading-8 text-[#669BBC]">
                 Add a new handmade product to your marketplace collection.
               </p>
+
+              {artisan && (
+                <p className="mt-3 text-sm font-semibold text-[#003049]/60">
+                  Artisan:{" "}
+                  {artisan.artisan_name ||
+                    artisan.name ||
+                    artisan.craft_name ||
+                    `#${artisan.id}`}
+                </p>
+              )}
             </div>
 
             <Link
@@ -143,7 +247,6 @@ function AddProduct() {
 
             {/* Form Card */}
             <div className="rounded-3xl bg-white p-7 shadow-xl sm:p-9 lg:col-span-2">
-
               <div className="mb-8">
                 <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#780000]">
                   Product Details
@@ -182,7 +285,6 @@ function AddProduct() {
                 onSubmit={handleSubmit}
                 className="space-y-6"
               >
-
                 {/* Product Name */}
                 <div>
                   <label
@@ -285,19 +387,31 @@ function AddProduct() {
                     htmlFor="category_id"
                     className="mb-2 block text-sm font-bold text-[#003049]"
                   >
-                    Category ID
+                    Category
                   </label>
 
-                  <input
+                  <select
                     id="category_id"
-                    type="number"
                     name="category_id"
                     value={formData.category_id}
                     onChange={handleChange}
-                    placeholder="Enter category ID"
-                    min="1"
-                    className="w-full rounded-xl border border-[#669BBC]/25 bg-[#FDF0D5]/30 px-4 py-3.5 text-[#003049] outline-none transition-all duration-300 placeholder:text-[#669BBC]/60 focus:border-[#780000] focus:bg-white focus:ring-2 focus:ring-[#780000]/10"
-                  />
+                    className="w-full rounded-xl border border-[#669BBC]/25 bg-[#FDF0D5]/30 px-4 py-3.5 text-[#003049] outline-none transition-all duration-300 focus:border-[#780000] focus:bg-white focus:ring-2 focus:ring-[#780000]/10"
+                  >
+                    <option value="">
+                      Select a category
+                    </option>
+
+                    {categories.map((category) => (
+                      <option
+                        key={category.id}
+                        value={category.id}
+                      >
+                        {category.name ||
+                          category.category_name ||
+                          `Category ${category.id}`}
+                      </option>
+                    ))}
+                  </select>
 
                   <p className="mt-2 text-xs text-[#669BBC]">
                     Category is optional.
@@ -330,7 +444,6 @@ function AddProduct() {
 
                 {/* Buttons */}
                 <div className="flex flex-col-reverse gap-3 border-t border-[#669BBC]/15 pt-6 sm:flex-row sm:justify-end">
-
                   <Link
                     to="/artisan/products"
                     className="rounded-xl border border-[#003049]/15 bg-white px-6 py-3 text-center font-semibold text-[#003049] transition-all duration-300 hover:-translate-y-1 hover:border-[#003049] hover:shadow-md"
@@ -358,7 +471,6 @@ function AddProduct() {
 
               {/* Live Preview */}
               <div className="overflow-hidden rounded-3xl bg-white shadow-xl">
-
                 <div className="border-b border-[#669BBC]/15 px-6 py-5">
                   <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#780000]">
                     Preview
@@ -370,9 +482,7 @@ function AddProduct() {
                 </div>
 
                 <div className="p-6">
-
                   <div className="flex h-48 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#FDF0D5] to-[#669BBC]/20">
-
                     {previewImage ? (
                       <img
                         src={previewImage}
@@ -390,11 +500,9 @@ function AddProduct() {
                         </p>
                       </div>
                     )}
-
                   </div>
 
                   <div className="mt-5">
-
                     <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#780000]">
                       Handmade
                     </p>
@@ -409,7 +517,6 @@ function AddProduct() {
                     </p>
 
                     <div className="mt-5 flex items-center justify-between border-t border-[#669BBC]/15 pt-4">
-
                       <div>
                         <p className="text-xs text-[#669BBC]">
                           Price
@@ -433,7 +540,6 @@ function AddProduct() {
                           {formData.stock_quantity || 0}
                         </p>
                       </div>
-
                     </div>
                   </div>
                 </div>
@@ -441,7 +547,6 @@ function AddProduct() {
 
               {/* Tips */}
               <div className="rounded-3xl bg-[#003049] p-7 text-[#FDF0D5] shadow-xl">
-
                 <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#780000] text-3xl">
                   🧺
                 </div>
@@ -451,7 +556,6 @@ function AddProduct() {
                 </h2>
 
                 <div className="mt-5 space-y-4 text-sm leading-6 text-[#FDF0D5]/75">
-
                   <div className="flex gap-3">
                     <span className="text-[#669BBC]">✓</span>
                     <p>
@@ -479,13 +583,11 @@ function AddProduct() {
                       Use a high-quality product image.
                     </p>
                   </div>
-
                 </div>
               </div>
 
               {/* Navigation */}
               <div className="rounded-3xl bg-white p-7 shadow-md">
-
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#780000]">
                   Need Help?
                 </p>
@@ -506,9 +608,7 @@ function AddProduct() {
                   Go to My Products
                   <span>→</span>
                 </Link>
-
               </div>
-
             </aside>
           </div>
         </div>

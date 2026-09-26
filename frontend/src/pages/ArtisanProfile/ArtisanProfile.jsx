@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../../services/api";
 import productImages from "../../data/productImages";
 
 const artisanImages = {
@@ -33,38 +33,36 @@ function ArtisanProfile() {
         setLoading(true);
         setError("");
 
-        // جلب بيانات الحرفي
-        const artisanResponse = await axios.get(
-          `http://localhost:5000/api/artisans/${id}`
-        );
+        const [artisanResponse, productsResponse] = await Promise.all([
+          api.artisans.getById(id),
+          api.products.getByArtisan(id),
+        ]);
 
-        // جلب منتجات الحرفي
-        const productsResponse = await axios.get(
-          `http://localhost:5000/api/products/artisan/${id}`
-        );
+        const artisanData =
+          artisanResponse?.data || artisanResponse;
 
-        const artisanData = artisanResponse.data.data;
+        const productsData =
+          productsResponse?.data ||
+          productsResponse ||
+          [];
 
         setArtisan(artisanData);
 
-        const productsData =
-          productsResponse.data.data ||
-          productsResponse.data ||
-          [];
-
-        // منع تكرار المنتجات حسب id
         const uniqueProducts = productsData.filter(
           (product, index, self) =>
             index ===
             self.findIndex(
-              (item) => item.id === product.id
+              (item) => Number(item.id) === Number(product.id)
             )
         );
 
         setProducts(uniqueProducts);
       } catch (error) {
-        console.error(error);
-        setError("حدث خطأ أثناء تحميل بيانات الحرفي");
+        console.error("Artisan Profile Error:", error);
+        setError(
+          error?.message ||
+            "حدث خطأ أثناء تحميل بيانات الحرفي"
+        );
       } finally {
         setLoading(false);
       }
@@ -80,7 +78,7 @@ function ArtisanProfile() {
         JSON.parse(localStorage.getItem("cart")) || [];
 
       const existingProduct = cart.find(
-        (item) => item.id === product.id
+        (item) => Number(item.id) === Number(product.id)
       );
 
       if (existingProduct) {
@@ -139,9 +137,7 @@ function ArtisanProfile() {
         className="flex min-h-screen items-center justify-center bg-[#FDF0D5] px-6"
       >
         <div className="w-full max-w-xl rounded-3xl bg-white p-10 text-center shadow-xl">
-          <div className="mb-5 text-6xl">
-            😔
-          </div>
+          <div className="mb-5 text-6xl">😔</div>
 
           <h1 className="text-2xl font-bold text-[#003049]">
             {error || "الحرفي غير موجود"}
@@ -167,7 +163,6 @@ function ArtisanProfile() {
       <section className="px-6 py-10">
         <div className="mx-auto max-w-7xl">
           <div className="grid items-center gap-10 rounded-3xl bg-[#003049] p-8 shadow-2xl md:p-12 lg:grid-cols-2">
-
             {/* Artisan Image */}
             <div className="flex items-center justify-center">
               {profileImage ? (
@@ -175,7 +170,8 @@ function ArtisanProfile() {
                   src={profileImage}
                   alt={
                     artisan.artisan_name ||
-                    artisan.craft_name
+                    artisan.craft_name ||
+                    "Artisan"
                   }
                   className="h-80 w-80 rounded-3xl object-cover shadow-2xl"
                 />
@@ -197,7 +193,7 @@ function ArtisanProfile() {
               </h1>
 
               <p className="mt-4 text-2xl font-semibold text-[#FDF0D5]">
-                {artisan.craft_name}
+                {artisan.craft_name || "حرفة يدوية عراقية"}
               </p>
 
               {artisan.city && (
@@ -205,6 +201,14 @@ function ArtisanProfile() {
                   📍 {artisan.city}
                 </p>
               )}
+
+              {artisan.experience_years !== null &&
+                artisan.experience_years !== undefined && (
+                  <p className="mt-3 text-lg text-gray-200">
+                    🏆 سنوات الخبرة:{" "}
+                    {artisan.experience_years}
+                  </p>
+                )}
 
               {artisan.bio && (
                 <p className="mt-6 text-lg leading-9 text-gray-200">
@@ -239,7 +243,7 @@ function ArtisanProfile() {
               {artisan.bio ||
                 `يتميز ${
                   artisan.artisan_name || "هذا الحرفي"
-                } بخبرة في مجال ${
+                } بالعمل في مجال ${
                   artisan.craft_name ||
                   "الحرف اليدوية العراقية"
                 } ويقدم منتجات مصنوعة بعناية تحافظ على روح التراث العراقي.`}
@@ -261,34 +265,10 @@ function ArtisanProfile() {
 
           <div className="rounded-3xl bg-[#003049] p-8 text-white shadow-xl md:p-10">
             <p className="text-lg leading-10 text-gray-200">
-              {artisan.craft_name === "خزاف عراقي" &&
-                "بدأ شغفه بالفخار من حبّه للطين وتحويله إلى قطع تحمل روح التراث العراقي. يعمل على تشكيل كل قطعة يدوياً، من المزاني إلى الأواني والأطباق، مع المحافظة على الطابع الأصيل للفخار العراقي."}
-
-              {artisan.craft_name === "نجار عراقي" &&
-                "يمتلك شغفاً خاصاً بالخشب وفن النجارة اليدوية. يحوّل قطع الخشب إلى منتجات عملية وجميلة تجمع بين التصميم التقليدي والدقة في العمل، مستلهماً أفكاره من التراث العراقي."}
-
-              {artisan.craft_name === "خياط عراقي" &&
-                "تجمع أعماله بين مهارة الخياطة ودقة اختيار الأقمشة والتفاصيل. يهتم بإحياء التصاميم العراقية التقليدية وإضافة لمسات يدوية تجعل كل قطعة مختلفة وتحمل طابعاً خاصاً."}
-
-              {artisan.craft_name === "صانع سعف عراقي" &&
-                "استلهم حرفته من النخلة العراقية وما تقدمه من سعف قابل للتحويل إلى منتجات جميلة ومفيدة. يعمل يدوياً على صناعة السلال والحصر وقطع الزينة، محافظاً على حرفة ارتبطت بالحياة العراقية منذ أجيال."}
-
-              {artisan.craft_name === "مطرزة عراقية" &&
-                "تعكس أعمالها جمال التطريز العراقي من خلال الألوان والنقوش والتفاصيل الدقيقة. كل غرزة تضيف جزءاً من الحكاية، وتسعى من خلال عملها إلى إبقاء فن التطريز حاضراً في الحياة اليومية."}
-
-              {artisan.craft_name === "صانع نحاس عراقي" &&
-                "يعمل في واحدة من أقدم الحرف المرتبطة بالأسواق العراقية. يحوّل النحاس إلى قطع فنية من خلال الطرق والنقش اليدوي، محافظاً على تفاصيل الزخارف التقليدية التي تميز المنتجات النحاسية العراقية."}
-
-              {![
-                "خزاف عراقي",
-                "نجار عراقي",
-                "خياط عراقي",
-                "صانع سعف عراقي",
-                "مطرزة عراقية",
-                "صانع نحاس عراقي",
-              ].includes(artisan.craft_name) &&
+              {artisan.story ||
                 `الحرف اليدوية العراقية جزء من الذاكرة والتراث والثقافة. ومن خلال عمله في ${
-                  artisan.craft_name || "الحرف اليدوية"
+                  artisan.craft_name ||
+                  "الحرف اليدوية"
                 }، يساهم ${
                   artisan.artisan_name || "هذا الحرفي"
                 } في الحفاظ على هذه المهنة ونقلها إلى الأجيال القادمة.`}
@@ -313,11 +293,12 @@ function ArtisanProfile() {
               <div className="text-5xl">🎨</div>
 
               <h3 className="mt-5 text-xl font-bold text-[#003049]">
-                حرفة عراقية
+                الحرفة
               </h3>
 
               <p className="mt-3 leading-8 text-gray-600">
-                صناعة يدوية مستوحاة من التراث العراقي.
+                {artisan.craft_name ||
+                  "حرفة عراقية يدوية"}
               </p>
             </div>
 
@@ -325,11 +306,12 @@ function ArtisanProfile() {
               <div className="text-5xl">👐</div>
 
               <h3 className="mt-5 text-xl font-bold text-[#003049]">
-                صناعة يدوية
+                التخصص
               </h3>
 
               <p className="mt-3 leading-8 text-gray-600">
-                كل قطعة يتم تنفيذها بعناية واهتمام بالتفاصيل.
+                {artisan.specialties ||
+                  "صناعة يدوية مستوحاة من التراث العراقي."}
               </p>
             </div>
 
@@ -337,11 +319,13 @@ function ArtisanProfile() {
               <div className="text-5xl">🇮🇶</div>
 
               <h3 className="mt-5 text-xl font-bold text-[#003049]">
-                تراث عراقي
+                الخبرة
               </h3>
 
               <p className="mt-3 leading-8 text-gray-600">
-                الحفاظ على الهوية والتراث من خلال الحرفة.
+                {artisan.experience_years
+                  ? `${artisan.experience_years} سنة خبرة`
+                  : "خبرة في صناعة المنتجات اليدوية"}
               </p>
             </div>
           </div>
@@ -360,8 +344,12 @@ function ArtisanProfile() {
           </div>
 
           <div className="rounded-3xl bg-white p-8 shadow-xl md:p-10">
-            <div className="grid gap-8 md:grid-cols-3">
+            <p className="text-lg leading-10 text-gray-700">
+              {artisan.work_style ||
+                "أصنع المنتجات يدوياً وأهتم بالتفاصيل وجودة القطعة النهائية."}
+            </p>
 
+            <div className="mt-10 grid gap-8 md:grid-cols-3">
               <div className="text-center">
                 <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#FDF0D5] text-xl font-bold text-[#003049]">
                   01
@@ -403,7 +391,6 @@ function ArtisanProfile() {
                   تقديم قطعة فريدة تحمل روح الحرفة العراقية.
                 </p>
               </div>
-
             </div>
           </div>
         </div>
@@ -412,7 +399,6 @@ function ArtisanProfile() {
       {/* Products */}
       <section className="px-6 py-12">
         <div className="mx-auto max-w-7xl">
-
           <div className="mb-8">
             <h2 className="text-4xl font-bold text-[#003049]">
               منتجات الحرفي
@@ -423,7 +409,6 @@ function ArtisanProfile() {
 
           {products.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-
               {products.map((product) => {
                 const productImage =
                   product.image ||
@@ -431,10 +416,10 @@ function ArtisanProfile() {
                   null;
 
                 const stock = Number(
-                  product.stock ??
                   product.stock_quantity ??
-                  product.quantity ??
-                  0
+                    product.stock ??
+                    product.quantity ??
+                    0
                 );
 
                 return (
@@ -442,7 +427,6 @@ function ArtisanProfile() {
                     key={product.id}
                     className="overflow-hidden rounded-3xl bg-white shadow-xl transition duration-300 hover:-translate-y-2"
                   >
-
                     {/* Product Image */}
                     <div className="h-64 overflow-hidden bg-[#FDF0D5]">
                       {productImage ? (
@@ -460,7 +444,6 @@ function ArtisanProfile() {
 
                     {/* Product Info */}
                     <div className="p-6">
-
                       <h3 className="text-xl font-bold text-[#003049]">
                         {product.name}
                       </h3>
@@ -503,12 +486,10 @@ function ArtisanProfile() {
                           ? "إضافة إلى السلة 🛒"
                           : "نفذت الكمية"}
                       </button>
-
                     </div>
                   </div>
                 );
               })}
-
             </div>
           ) : (
             <div className="rounded-3xl bg-white p-12 text-center shadow-xl">
@@ -523,7 +504,6 @@ function ArtisanProfile() {
               </p>
             </div>
           )}
-
         </div>
       </section>
 
@@ -531,7 +511,6 @@ function ArtisanProfile() {
       <section className="px-6 py-16">
         <div className="mx-auto max-w-7xl">
           <div className="rounded-3xl bg-[#003049] p-10 text-center text-white shadow-2xl md:p-14">
-
             <h2 className="text-3xl font-bold md:text-4xl">
               ادعم الحرف العراقية
             </h2>
@@ -547,7 +526,6 @@ function ArtisanProfile() {
             >
               استكشف باقي الحرفيين
             </button>
-
           </div>
         </div>
       </section>

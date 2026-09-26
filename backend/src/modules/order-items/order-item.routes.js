@@ -14,27 +14,35 @@ const {
 
 const router = express.Router();
 
+// Get all order items
+// Admin only
 router.get(
   "/",
   authenticate,
-  authorize("admin"),
+  authorize("admin"), 
   orderItemController.getAllOrderItems
 );
 
+// Get one order item
+// Any authenticated user
 router.get(
   "/:id",
   authenticate,
   orderItemController.getOrderItemById
 );
 
+// Create order item
+// Any authenticated user
+// The controller checks that the order belongs to the user
 router.post(
   "/",
   authenticate,
-  authorize("admin"),
   validateCreateOrderItem,
   orderItemController.createOrderItem
 );
 
+// Update order item
+// Admin only
 router.patch(
   "/:id",
   authenticate,
@@ -43,6 +51,8 @@ router.patch(
   orderItemController.updateOrderItem
 );
 
+// Delete order item
+// Admin only
 router.delete(
   "/:id",
   authenticate,

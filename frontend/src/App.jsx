@@ -23,6 +23,7 @@ import AdminProducts from "./pages/Admin/Products/Products";
 import AdminCategories from "./pages/Admin/Categories/Categories";
 import AdminOrders from "./pages/Admin/Orders/Orders";
 import AdminReviews from "./pages/Admin/Reviews/Reviews";
+import Favorites from "./pages/Favorites/Favorites";
 
 import Dashboard from "./Artisan/Dashboard/Dashboard";
 import Profile from "./Artisan/Profile/Profile";
@@ -136,6 +137,7 @@ function App() {
             element={<AdminReviews />}
           />
         </Route>
+        <Route path="/favorites" element={<Favorites />} />
 
 
         {/* Artisan Pages */}

@@ -1,21 +1,65 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "../../styles/auth.css";
+import api from "../../services/api";
+
 function Login() {
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await api.auth.login({
+        email,
+        password,
+      });
+
+      const { user, token } = response.data;
+
+      // Save authentication data
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      // Redirect according to role
+      if (user.role === "admin") {
+        navigate("/admin");
+      } else if (user.role === "artisan") {
+        navigate("/artisan/dashboard");
+      } else {
+        navigate("/");
+      }
+    } catch (err) {
+      setError(err.message || "Invalid email or password");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <main className="login-page min-h-screen bg-[#FDF0D5] px-5 py-12 md:px-8">
       <div className="login-container">
 
         {/* Logo */}
-       <Link to="/" className="auth-logo">
-  <div className="auth-logo-icon">
-    𒀭
-  </div>
+        <Link to="/" className="auth-logo">
+          <div className="auth-logo-icon">
+            𒀭
+          </div>
 
-  <div className="auth-logo-text">
-    <h1>AlHirfa</h1>
-    <span>IRAQI CRAFTS</span>
-  </div>
-</Link>
+          <div className="auth-logo-text">
+            <h1>AlHirfa</h1>
+            <span>IRAQI CRAFTS</span>
+          </div>
+        </Link>
 
         {/* Login Card */}
         <div className="login-card relative overflow-hidden rounded-[2rem] bg-white">
@@ -53,7 +97,17 @@ function Login() {
               handmade products from Iraqi artisans.
             </p>
 
-            <form className="login-form">
+            {/* Error message */}
+            {error && (
+              <div className="mb-4 rounded-lg bg-red-100 px-4 py-3 text-sm text-red-700">
+                {error}
+              </div>
+            )}
+
+            <form
+              className="login-form"
+              onSubmit={handleSubmit}
+            >
 
               <div className="login-field">
                 <label htmlFor="email">
@@ -64,6 +118,9 @@ function Login() {
                   id="email"
                   type="email"
                   placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
                 />
               </div>
 
@@ -76,14 +133,18 @@ function Login() {
                   id="password"
                   type="password"
                   placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
               </div>
 
               <button
                 type="submit"
                 className="login-button"
+                disabled={loading}
               >
-                Login
+                {loading ? "Logging in..." : "Login"}
               </button>
 
             </form>
@@ -102,4 +163,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Login; 
