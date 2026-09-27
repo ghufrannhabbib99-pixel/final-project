@@ -44,9 +44,7 @@ const createOrder = async (orderData) => {
 };
 
 const updateOrder = async (id, orderData) => {
-  const allowedFields = [
-    "status",
-  ];
+  const allowedFields = ["status"];
 
   const fields = [];
   const values = [];
@@ -88,6 +86,7 @@ const deleteOrder = async (id) => {
 
   return result.rows[0];
 };
+
 const getOrdersByUserId = async (userId) => {
   const result = await db.query(
     `SELECT *
@@ -99,6 +98,7 @@ const getOrdersByUserId = async (userId) => {
 
   return result.rows;
 };
+
 const getOrderOwner = async (orderId) => {
   const result = await db.query(
     `SELECT
@@ -111,6 +111,64 @@ const getOrderOwner = async (orderId) => {
 
   return result.rows[0];
 };
+
+const getOrdersByArtisanId = async (artisanId) => {
+  const result = await db.query(
+    `SELECT
+      o.id,
+      o.user_id,
+      o.total_amount,
+      o.status,
+      o.created_at,
+      o.updated_at,
+
+      u.name AS customer_name,
+      u.email AS customer_email,
+
+      COALESCE(
+        JSON_AGG(
+          JSON_BUILD_OBJECT(
+            'id', oi.id,
+            'product_id', oi.product_id,
+            'product_name', p.name,
+            'quantity', oi.quantity,
+            'price', oi.price
+          )
+          ORDER BY oi.id
+        ) FILTER (WHERE oi.id IS NOT NULL),
+        '[]'
+      ) AS items
+
+     FROM orders o
+
+     JOIN users u
+       ON u.id = o.user_id
+
+     JOIN order_items oi
+       ON oi.order_id = o.id
+
+     JOIN products p
+       ON p.id = oi.product_id
+
+     WHERE p.artisan_id = $1
+
+     GROUP BY
+       o.id,
+       o.user_id,
+       o.total_amount,
+       o.status,
+       o.created_at,
+       o.updated_at,
+       u.name,
+       u.email
+
+     ORDER BY o.created_at DESC`,
+    [artisanId]
+  );
+
+  return result.rows;
+};
+
 module.exports = {
   getAllOrders,
   getOrderById,
@@ -119,4 +177,5 @@ module.exports = {
   deleteOrder,
   getOrdersByUserId,
   getOrderOwner,
+  getOrdersByArtisanId,
 };

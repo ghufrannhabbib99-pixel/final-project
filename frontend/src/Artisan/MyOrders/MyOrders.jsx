@@ -1,425 +1,520 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import api from "../../services/api";
+import "./MyOrders.css";
 
-const DEMO_MODE = true;
+const statusLabels = {
+  pending: "Pending",
+  processing: "Processing",
+  shipped: "Shipped",
+  completed: "Completed",
+  cancelled: "Cancelled",
+};
 
-const demoOrders = [
-  {
-    id: 1001,
-    status: "completed",
-    total: 85000,
-    createdAt: "2026-09-20T10:30:00",
-  },
-  {
-    id: 1002,
-    status: "shipped",
-    total: 45000,
-    createdAt: "2026-09-21T14:15:00",
-  },
-  {
-    id: 1003,
-    status: "confirmed",
-    total: 120000,
-    createdAt: "2026-09-22T09:45:00",
-  },
-  {
-    id: 1004,
-    status: "pending",
-    total: 30000,
-    createdAt: "2026-09-23T16:20:00",
-  },
-  {
-    id: 1005,
-    status: "cancelled",
-    total: 60000,
-    createdAt: "2026-09-24T11:10:00",
-  },
+const statusSteps = [
+  "pending",
+  "processing",
+  "shipped",
+  "completed",
 ];
 
-function MyOrders() {
-  const [orders, setOrders] = useState(() => (DEMO_MODE ? demoOrders : []));
-  const [loading, setLoading] = useState(!DEMO_MODE);
+const formatPrice = (price) => {
+  return `${Number(price || 0).toLocaleString("en-US")} IQD`;
+};
+
+const formatDate = (date) => {
+  if (!date) return "-";
+
+  return new Date(date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
+
+const getStatusClass = (status) => {
+  switch (status) {
+    case "completed":
+      return "status completed";
+
+    case "cancelled":
+      return "status cancelled";
+
+    case "shipped":
+      return "status shipped";
+
+    case "processing":
+      return "status processing";
+
+    default:
+      return "status pending";
+  }
+};
+
+const getStatusStep = (status) => {
+  const index = statusSteps.indexOf(status);
+
+  return index === -1 ? 0 : index;
+};
+
+export default function MyOrders() {
+  const [orders, setOrders] = useState([]);
+  const [artisan, setArtisan] = useState(null);
+
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const userId = 1;
-
   useEffect(() => {
-    if (DEMO_MODE) {
-      return;
-    }
-
-    const fetchOrders = async () => {
+    const loadOrders = async () => {
       try {
         setLoading(true);
         setError("");
 
-        const token = localStorage.getItem("token");
+        const storedUser = localStorage.getItem("user");
 
-        const response = await axios.get(
-          `http://localhost:5000/api/orders/user/${userId}`,
-          {
-            headers: token
-              ? {
-                  Authorization: `Bearer ${token}`,
-                }
-              : {},
-          }
-        );
+        if (!storedUser) {
+          throw new Error("Please login first.");
+        }
 
-        const ordersData =
-          response.data?.data ||
-          response.data?.orders ||
-          response.data ||
+        const parsedUser = JSON.parse(storedUser);
+        const user = parsedUser?.user || parsedUser;
+
+        if (!user?.id) {
+          throw new Error("Invalid user data.");
+        }
+
+        if (user.role !== "artisan") {
+          throw new Error("This page is for artisans only.");
+        }
+
+        const artisansResponse = await api.artisans.getAll();
+
+        const artisansData =
+          artisansResponse?.data ||
+          artisansResponse ||
           [];
 
-        setOrders(Array.isArray(ordersData) ? ordersData : []);
+        const currentArtisan = artisansData.find(
+          (item) =>
+            Number(item.user_id) === Number(user.id)
+        );
+
+        if (!currentArtisan) {
+          throw new Error(
+            "No artisan profile was found for this account."
+          );
+        }
+
+        setArtisan(currentArtisan);
+
+        const ordersResponse =
+          await api.orders.getByArtisan(
+            currentArtisan.id
+          );
+
+        const ordersData =
+          ordersResponse?.data ||
+          ordersResponse ||
+          [];
+
+        setOrders(
+          Array.isArray(ordersData)
+            ? ordersData
+            : []
+        );
       } catch (err) {
-        console.error("Failed to fetch orders:", err);
+        console.error(err);
 
         setError(
-          err.response?.data?.message ||
-            "Failed to load your orders. Please try again."
+          err.message ||
+            "Something went wrong while loading orders."
         );
       } finally {
         setLoading(false);
       }
     };
 
-    fetchOrders();
+    loadOrders();
   }, []);
 
-  const getStatusText = (status) => {
-    switch (status) {
-      case "completed":
-        return "Completed";
+  const stats = useMemo(() => {
+    const total = orders.length;
 
-      case "shipped":
-        return "Shipped";
+    const completed = orders.filter(
+      (order) => order.status === "completed"
+    ).length;
 
-      case "confirmed":
-        return "Confirmed";
+    const active = orders.filter(
+      (order) =>
+        !["completed", "cancelled"].includes(
+          order.status
+        )
+    ).length;
 
-      case "pending":
-        return "Pending";
+    const cancelled = orders.filter(
+      (order) => order.status === "cancelled"
+    ).length;
 
-      case "cancelled":
-        return "Cancelled";
-
-      default:
-        return status || "Unknown";
-    }
-  };
-
-  const getStatusStyle = (status) => {
-    switch (status) {
-      case "completed":
-        return "bg-green-100 text-green-700";
-
-      case "shipped":
-        return "bg-blue-100 text-blue-700";
-
-      case "confirmed":
-        return "bg-yellow-100 text-yellow-700";
-
-      case "pending":
-        return "bg-orange-100 text-orange-700";
-
-      case "cancelled":
-        return "bg-red-100 text-red-700";
-
-      default:
-        return "bg-gray-100 text-gray-700";
-    }
-  };
-
-  const getProgress = (status) => {
-    switch (status) {
-      case "pending":
-        return 25;
-
-      case "confirmed":
-        return 50;
-
-      case "shipped":
-        return 75;
-
-      case "completed":
-        return 100;
-
-      case "cancelled":
-        return 100;
-
-      default:
-        return 0;
-    }
-  };
-
-  const formatDate = (date) => {
-    if (!date) return "-";
-
-    return new Date(date).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
-  const totalOrders = orders.length;
-
-  const completedOrders = orders.filter(
-    (order) => order.status === "completed"
-  ).length;
-
-  const activeOrders = orders.filter(
-    (order) =>
-      order.status !== "completed" && order.status !== "cancelled"
-  ).length;
+    return {
+      total,
+      completed,
+      active,
+      cancelled,
+    };
+  }, [orders]);
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FDF0D5]">
-        <div className="mx-auto max-w-7xl px-4 py-12">
-          <div className="mb-10">
-            <div className="h-10 w-56 animate-pulse rounded-xl bg-white/70" />
-            <div className="mt-3 h-5 w-80 animate-pulse rounded-lg bg-white/60" />
-          </div>
+      <div className="artisan-orders-page">
+        <div className="artisan-orders-loading">
+          <div className="loading-spinner" />
+          <p>Loading orders...</p>
+        </div>
+      </div>
+    );
+  }
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {[1, 2, 3].map((item) => (
-              <div
-                key={item}
-                className="h-32 animate-pulse rounded-3xl bg-white shadow-lg"
-              />
-            ))}
-          </div>
+  if (error) {
+    return (
+      <div className="artisan-orders-page">
+        <div className="artisan-orders-error">
+          <h2>Unable to Load Orders</h2>
 
-          <div className="mt-8 space-y-5">
-            {[1, 2, 3].map((item) => (
-              <div
-                key={item}
-                className="h-48 animate-pulse rounded-3xl bg-white shadow-lg"
-              />
-            ))}
-          </div>
+          <p>{error}</p>
+
+          <Link to="/artisan/dashboard">
+            Back to Dashboard
+          </Link>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#FDF0D5]">
-      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+    <div
+      className="artisan-orders-page"
+      dir="ltr"
+    >
+      <div className="orders-container">
+
         {/* Header */}
-        <div className="mb-10">
+
+        <div className="orders-header">
+
+          <div className="orders-heading">
+
+            <span className="orders-eyebrow">
+              ARTISAN WORKSPACE
+            </span>
+
+            <h1>My Orders</h1>
+
+            <p>
+              Track and manage orders containing
+              your products.
+            </p>
+
+            {artisan?.craft_name && (
+              <span className="artisan-name">
+                {artisan.craft_name}
+              </span>
+            )}
+
+          </div>
+
           <Link
-            to="/artisans"
-            className="mb-5 inline-flex items-center gap-2 text-sm font-semibold text-[#003049] transition hover:text-[#C1121F]"
+            to="/artisan/dashboard"
+            className="back-dashboard"
           >
-            ← Continue Shopping
+            Back to Dashboard
           </Link>
 
-          <h1 className="text-4xl font-black text-[#003049] sm:text-5xl">
-            My Orders
-          </h1>
-
-          <p className="mt-3 text-gray-600">
-            Track and manage all your orders in one place.
-          </p>
         </div>
 
-        {/* Error */}
-        {error && (
-          <div className="mb-8 rounded-2xl border border-red-200 bg-red-50 p-4 text-red-700">
-            {error}
-          </div>
-        )}
+        {/* Stats */}
 
-        {/* Summary Cards */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {/* Total Orders */}
-          <div className="rounded-3xl bg-white p-6 shadow-xl transition duration-300 hover:-translate-y-1">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-semibold text-gray-500">
-                  Total Orders
-                </p>
+        <div className="orders-stats">
 
-                <p className="mt-2 text-4xl font-black text-[#003049]">
-                  {totalOrders}
-                </p>
-              </div>
+          <div className="stat-card">
+            <span className="stat-label">
+              Total Orders
+            </span>
 
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#FDF0D5] text-2xl">
-                📦
-              </div>
-            </div>
+            <strong>
+              {stats.total}
+            </strong>
           </div>
 
-          {/* Completed */}
-          <div className="rounded-3xl bg-white p-6 shadow-xl transition duration-300 hover:-translate-y-1">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-semibold text-gray-500">
-                  Completed
-                </p>
+          <div className="stat-card">
+            <span className="stat-label">
+              Active Orders
+            </span>
 
-                <p className="mt-2 text-4xl font-black text-green-600">
-                  {completedOrders}
-                </p>
-              </div>
-
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-green-100 text-2xl">
-                ✓
-              </div>
-            </div>
+            <strong>
+              {stats.active}
+            </strong>
           </div>
 
-          {/* Active */}
-          <div className="rounded-3xl bg-white p-6 shadow-xl transition duration-300 hover:-translate-y-1">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-semibold text-gray-500">
-                  Active Orders
-                </p>
+          <div className="stat-card">
+            <span className="stat-label">
+              Completed
+            </span>
 
-                <p className="mt-2 text-4xl font-black text-[#C1121F]">
-                  {activeOrders}
-                </p>
-              </div>
-
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-red-100 text-2xl">
-                🚚
-              </div>
-            </div>
+            <strong>
+              {stats.completed}
+            </strong>
           </div>
+
+          <div className="stat-card">
+            <span className="stat-label">
+              Cancelled
+            </span>
+
+            <strong>
+              {stats.cancelled}
+            </strong>
+          </div>
+
         </div>
 
         {/* Orders */}
-        <div className="mt-10">
-          <div className="mb-5 flex items-center justify-between">
-            <h2 className="text-2xl font-black text-[#003049]">
-              Your Orders
-            </h2>
 
-            <span className="rounded-full bg-white px-4 py-2 text-sm font-bold text-[#003049] shadow">
-              {orders.length} Orders
+        <div className="orders-section-header">
+
+          <div>
+            <span>
+              YOUR ORDERS
             </span>
+
+            <h2>
+              Recent Orders
+            </h2>
           </div>
 
-          {orders.length === 0 ? (
-            /* Empty Orders */
-            <div className="rounded-3xl bg-white p-10 text-center shadow-xl sm:p-12">
-              {/* Lottie Empty Box */}
-              <div className="mx-auto h-40 w-40">
-                <DotLottieReact
-                  src="/animations/empty-box.lottie"
-                  loop
-                  autoplay
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                  }}
-                />
-              </div>
+          <div className="orders-count">
+            {orders.length} Orders
+          </div>
 
-              <h2 className="mt-4 text-2xl font-black text-[#003049]">
-                No orders yet
-              </h2>
+        </div>
 
-              <p className="mt-2 text-gray-600">
-                Start shopping from our talented artisans.
-              </p>
+        {orders.length === 0 ? (
 
-              <Link
-                to="/artisans"
-                className="mt-6 inline-flex rounded-xl bg-[#003049] px-6 py-3 font-bold text-white transition duration-300 hover:-translate-y-0.5 hover:bg-[#00263a]"
-              >
-                Explore Artisans
-              </Link>
+          <div className="orders-empty">
+
+            <div className="empty-icon">
+              📦
             </div>
-          ) : (
-            <div className="space-y-5">
-              {orders.map((order) => {
-                const progress = getProgress(order.status);
 
-                return (
-                  <article
-                    key={order.id}
-                    className="rounded-3xl bg-white p-6 shadow-xl transition duration-300 hover:-translate-y-1"
-                  >
-                    {/* Top */}
-                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                      <div>
-                        <p className="text-sm font-semibold text-gray-500">
-                          Order #{order.id}
-                        </p>
+            <h2>
+              No Orders Yet
+            </h2>
 
-                        <h3 className="mt-1 text-xl font-black text-[#003049]">
-                          {Number(order.total || 0).toLocaleString()} IQD
-                        </h3>
+            <p>
+              When someone purchases one of
+              your products, the order will
+              appear here.
+            </p>
 
-                        <p className="mt-1 text-sm text-gray-500">
-                          {formatDate(
-                            order.createdAt ||
-                              order.created_at ||
-                              order.date
-                          )}
-                        </p>
-                      </div>
+            <Link to="/artisan/products">
+              View My Products
+            </Link>
 
-                      <span
-                        className={`w-fit rounded-full px-4 py-2 text-sm font-bold ${getStatusStyle(
-                          order.status
-                        )}`}
-                      >
-                        {getStatusText(order.status)}
+          </div>
+
+        ) : (
+
+          <div className="orders-list">
+
+            {orders.map((order) => {
+
+              const currentStep =
+                getStatusStep(order.status);
+
+              return (
+
+                <article
+                  className="order-card"
+                  key={order.id}
+                >
+
+                  {/* Order Header */}
+
+                  <div className="order-top">
+
+                    <div>
+
+                      <span className="order-number">
+                        Order #{order.id}
                       </span>
+
+                      <span className="order-date">
+                        {formatDate(
+                          order.created_at
+                        )}
+                      </span>
+
                     </div>
 
-                    {/* Progress */}
-                    {order.status !== "cancelled" && (
-                      <div className="mt-7">
-                        <div className="mb-2 flex items-center justify-between text-xs font-semibold text-gray-500">
-                          <span>Order Progress</span>
+                    <span
+                      className={getStatusClass(
+                        order.status
+                      )}
+                    >
+                      {statusLabels[
+                        order.status
+                      ] || order.status}
+                    </span>
 
-                          <span>{progress}%</span>
+                  </div>
+
+                  {/* Customer */}
+
+                  <div className="customer-box">
+
+                    <div className="customer-info">
+
+                      <span>
+                        CUSTOMER
+                      </span>
+
+                      <strong>
+                        {order.customer_name ||
+                          "Unknown Customer"}
+                      </strong>
+
+                    </div>
+
+                    {order.customer_email && (
+
+                      <div className="customer-info">
+
+                        <span>
+                          EMAIL
+                        </span>
+
+                        <strong>
+                          {order.customer_email}
+                        </strong>
+
+                      </div>
+
+                    )}
+
+                  </div>
+
+                  {/* Products */}
+
+                  <div className="order-items">
+
+                    <h3>
+                      Order Items
+                    </h3>
+
+                    {Array.isArray(order.items) &&
+                      order.items.map((item) => (
+
+                        <div
+                          className="order-item"
+                          key={item.id}
+                        >
+
+                          <div className="item-info">
+
+                            <strong>
+                              {item.product_name}
+                            </strong>
+
+                            <span>
+                              Quantity:{" "}
+                              {item.quantity}
+                            </span>
+
+                          </div>
+
+                          <strong className="item-price">
+                            {formatPrice(
+                              Number(item.price) *
+                                Number(item.quantity)
+                            )}
+                          </strong>
+
                         </div>
 
-                        <div className="h-3 overflow-hidden rounded-full bg-gray-100">
+                      ))}
+
+                  </div>
+
+                  {/* Progress */}
+
+                  {order.status !==
+                    "cancelled" && (
+
+                    <div className="order-progress">
+
+                      {statusSteps.map(
+                        (step, index) => (
+
                           <div
-                            className="h-full rounded-full bg-[#003049] transition-all duration-700"
-                            style={{
-                              width: `${progress}%`,
-                            }}
-                          />
-                        </div>
+                            key={step}
+                            className={
+                              index <=
+                              currentStep
+                                ? "progress-step active"
+                                : "progress-step"
+                            }
+                          >
 
-                        <div className="mt-2 flex justify-between text-xs text-gray-400">
-                          <span>Pending</span>
-                          <span>Confirmed</span>
-                          <span>Shipped</span>
-                          <span>Completed</span>
-                        </div>
-                      </div>
-                    )}
+                            <div className="step-dot">
+                              {index + 1}
+                            </div>
 
-                    {/* Cancelled */}
-                    {order.status === "cancelled" && (
-                      <div className="mt-6 rounded-2xl bg-red-50 p-4 text-sm font-semibold text-red-700">
-                        This order has been cancelled.
-                      </div>
-                    )}
-                  </article>
-                );
-              })}
-            </div>
-          )}
-        </div>
+                            <span>
+                              {statusLabels[step]}
+                            </span>
+
+                          </div>
+
+                        )
+                      )}
+
+                    </div>
+
+                  )}
+
+                  {/* Bottom */}
+
+                  <div className="order-bottom">
+
+                    <div>
+
+                      <span>
+                        TOTAL AMOUNT
+                      </span>
+
+                      <strong>
+                        {formatPrice(
+                          order.total_amount
+                        )}
+                      </strong>
+
+                    </div>
+
+                    <span className="order-id">
+                      Order ID: #{order.id}
+                    </span>
+
+                  </div>
+
+                </article>
+
+              );
+            })}
+
+          </div>
+
+        )}
+
       </div>
     </div>
   );
 }
-
-export default MyOrders;

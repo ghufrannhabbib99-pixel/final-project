@@ -160,6 +160,9 @@ const api = {
   // ORDERS
   // =========================
   orders: {
+    getByArtisan: (artisanId) =>
+  request(`/orders/artisan/${artisanId}`),
+    
     getAll: () =>
       request("/orders"),
 

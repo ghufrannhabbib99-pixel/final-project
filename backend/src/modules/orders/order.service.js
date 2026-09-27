@@ -23,9 +23,15 @@ const deleteOrder = async (id) => {
 const getOrdersByUserId = async (userId) => {
   return await orderRepository.getOrdersByUserId(userId);
 };
+
 const getOrderOwner = async (orderId) => {
   return await orderRepository.getOrderOwner(orderId);
 };
+
+const getOrdersByArtisanId = async (artisanId) => {
+  return await orderRepository.getOrdersByArtisanId(artisanId);
+};
+
 module.exports = {
   getAllOrders,
   getOrderById,
@@ -34,4 +40,5 @@ module.exports = {
   deleteOrder,
   getOrdersByUserId,
   getOrderOwner,
+  getOrdersByArtisanId,
 };

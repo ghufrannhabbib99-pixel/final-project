@@ -22,6 +22,14 @@ router.get(
   orderController.getAllOrders
 );
 
+// Artisan: Get orders containing this artisan's products
+router.get(
+  "/artisan/:artisanId",
+  authenticate,
+  authorize("artisan", "admin"),
+  orderController.getOrdersByArtisanId
+);
+
 // Authenticated user: Get orders by user ID
 router.get(
   "/user/:userId",

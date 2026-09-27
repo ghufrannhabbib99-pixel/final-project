@@ -1,4 +1,5 @@
 const orderService = require("./order.service");
+const artisanService = require("../artisans/artisan.service");
 
 const getAllOrders = async (req, res) => {
   try {
@@ -28,7 +29,7 @@ const getOrderById = async (req, res) => {
 
     if (
       req.user.role !== "admin" &&
-      order.user_id !== req.user.userId
+      Number(order.user_id) !== Number(req.user.userId)
     ) {
       return res.status(403).json({
         message: "Access denied",
@@ -136,6 +137,38 @@ const getOrdersByUserId = async (req, res) => {
   }
 };
 
+const getOrdersByArtisanId = async (req, res) => {
+  try {
+    const { artisanId } = req.params;
+
+    const artisan = await artisanService.getArtisanById(artisanId);
+
+    if (!artisan) {
+      return res.status(404).json({
+        message: "Artisan not found",
+      });
+    }
+
+    if (
+      req.user.role !== "admin" &&
+      Number(artisan.user_id) !== Number(req.user.userId)
+    ) {
+      return res.status(403).json({
+        message: "Access denied",
+      });
+    }
+
+    const orders = await orderService.getOrdersByArtisanId(artisanId);
+
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Failed to fetch artisan orders",
+    });
+  }
+};
 module.exports = {
   getAllOrders,
   getOrderById,
@@ -143,4 +176,5 @@ module.exports = {
   updateOrder,
   deleteOrder,
   getOrdersByUserId,
+  getOrdersByArtisanId,
 };
