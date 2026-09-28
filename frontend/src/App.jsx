@@ -14,6 +14,8 @@ import Products from "./pages/Products/Products";
 import ProductDetails from "./pages/ProductDetails/ProductDetails";
 import Login from "./pages/Login/Login";
 import SignUp from "./pages/SignUp/SignUp";
+import Favorites from "./pages/Favorites/Favorites";
+import UserProfile from "./pages/UserProfile/UserProfile";
 
 import AdminLayout from "./pages/Admin/AdminLayout";
 import AdminDashboard from "./pages/Admin/Dashboard/Dashboard";
@@ -33,16 +35,15 @@ import ArtisanMyOrders from "./Artisan/MyOrders/MyOrders";
 
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 function App() {
   return (
     <BrowserRouter>
-
       <Navbar />
 
       <Routes>
-
-        {/* Customer Pages */}
+        {/* ================= CUSTOMER PAGES ================= */}
 
         <Route
           path="/"
@@ -83,19 +84,30 @@ function App() {
           path="/cart"
           element={<Cart />}
         />
+       <Route
+  path="/profile"
+  element={<UserProfile />}
+/>
+        {/* ================= PROTECTED CUSTOMER PAGES ================= */}
 
-        <Route
-          path="/checkout"
-          element={<Checkout />}
-        />
+        <Route element={<ProtectedRoute />}>
+          <Route
+            path="/favorites"
+            element={<Favorites />}
+          />
 
-        <Route
-          path="/my-orders"
-          element={<MyOrders />}
-        />
+          <Route
+            path="/checkout"
+            element={<Checkout />}
+          />
 
+          <Route
+            path="/my-orders"
+            element={<MyOrders />}
+          />
+        </Route>
 
-        {/* Admin Pages */}
+        {/* ================= ADMIN PAGES ================= */}
 
         <Route
           path="/admin"
@@ -126,9 +138,9 @@ function App() {
             element={<AdminCategories />}
           />
 
-         <Route
-           path="orders"
-           element={<AdminOrders />}
+          <Route
+            path="orders"
+            element={<AdminOrders />}
           />
 
           <Route
@@ -137,8 +149,7 @@ function App() {
           />
         </Route>
 
-
-        {/* Artisan Pages */}
+        {/* ================= ARTISAN PAGES ================= */}
 
         <Route
           path="/artisan/dashboard"
@@ -169,11 +180,9 @@ function App() {
           path="/artisan/orders"
           element={<ArtisanMyOrders />}
         />
-
       </Routes>
 
       <Footer />
-
     </BrowserRouter>
   );
 }
