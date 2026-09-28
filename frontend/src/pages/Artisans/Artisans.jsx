@@ -1,8 +1,10 @@
+
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import ArtisanCard from "../../components/ArtisanCard/ArtisanCard";
 import VariableProximity from "../../components/VariableProximity/VariableProximity";
 import SplitText from "../../components/SplitText/SplitText";
+import "./Artisans.css";
 
 const artisanImages = {
   "خزاف عراقي": "/images/artisans/potter.jpg",
@@ -19,7 +21,6 @@ function Artisans() {
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
 
-  // Reference for VariableProximity title
   const titleContainerRef = useRef(null);
 
   useEffect(() => {
@@ -31,15 +32,13 @@ function Artisans() {
 
         console.log(response.data);
 
-        const artisansWithImages = response.data.data.map(
-          (artisan) => ({
-            ...artisan,
-            profile_image:
-              artisan.profile_image ||
-              artisanImages[artisan.craft_name] ||
-              null,
-          })
-        );
+        const artisansWithImages = response.data.data.map((artisan) => ({
+          ...artisan,
+          profile_image:
+            artisan.profile_image ||
+            artisanImages[artisan.craft_name] ||
+            null,
+        }));
 
         setArtisans(artisansWithImages);
       } catch (error) {
@@ -57,24 +56,21 @@ function Artisans() {
     const searchValue = search.toLowerCase().trim();
 
     return (
-      artisan.craft_name
-        ?.toLowerCase()
-        .includes(searchValue) ||
-      artisan.city
-        ?.toLowerCase()
-        .includes(searchValue) ||
-      artisan.bio
-        ?.toLowerCase()
-        .includes(searchValue)
+      artisan.craft_name?.toLowerCase().includes(searchValue) ||
+      artisan.city?.toLowerCase().includes(searchValue) ||
+      artisan.bio?.toLowerCase().includes(searchValue)
     );
   });
 
-  // Loading
+  /* =========================
+     Loading
+  ========================= */
+
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#FDF0D5] px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-10 animate-pulse">
+      <main className="artisans-page bg-[#FDF0D5] px-5 py-16 sm:px-8 lg:px-10">
+        <div className="artisans-loading">
+          <div className="artisans-loading-header animate-pulse">
             <div className="h-4 w-32 rounded bg-[#669BBC]/30" />
 
             <div className="mt-4 h-12 w-80 rounded bg-[#003049]/20" />
@@ -82,7 +78,7 @@ function Artisans() {
             <div className="mt-3 h-5 w-96 max-w-full rounded bg-[#669BBC]/20" />
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="artisans-loading-grid">
             {[1, 2, 3, 4].map((item) => (
               <div
                 key={item}
@@ -95,7 +91,10 @@ function Artisans() {
     );
   }
 
-  // Error
+  /* =========================
+     Error
+  ========================= */
+
   if (error) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#FDF0D5] px-4">
@@ -106,108 +105,101 @@ function Artisans() {
             Something went wrong
           </h1>
 
-          <p className="mt-3 text-[#669BBC]">
-            {error}
-          </p>
+          <p className="mt-3 text-[#669BBC]">{error}</p>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#FDF0D5]">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-[#FDF0D5] px-4 py-16 sm:px-6 lg:px-8">
-        {/* Decorative circles */}
+    <main className="artisans-page bg-[#FDF0D5]">
+      {/* =========================
+          Hero
+      ========================= */}
+
+      <section className="artisans-hero relative overflow-hidden bg-[#FDF0D5]">
         <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#669BBC]/10" />
 
         <div className="absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-[#780000]/5" />
 
-        <div className="relative mx-auto max-w-7xl">
-          <div className="max-w-3xl">
-            {/* Small title */}
-            <p className="mb-3 text-sm font-bold tracking-[0.3em] text-[#780000]">
-              OUR ARTISANS
-            </p>
+        <div className="artisans-hero-content relative">
+          <p className="mb-3 text-sm font-bold tracking-[0.3em] text-[#780000]">
+            OUR ARTISANS
+          </p>
 
-            {/* Variable Proximity Title */}
-            <div
-              ref={titleContainerRef}
-              className="relative"
-            >
-              <VariableProximity
-                label="Meet the talented artisans"
-                className="text-4xl font-bold leading-tight text-[#003049] sm:text-5xl lg:text-6xl"
-                fromFontVariationSettings="'wght' 600, 'opsz' 48"
-                toFontVariationSettings="'wght' 1000, 'opsz' 72"
-                containerRef={titleContainerRef}
-                radius={180}
-                falloff="linear"
-              />
-            </div>
+          <div
+            ref={titleContainerRef}
+            className="relative"
+          >
+            <VariableProximity
+              label="Meet the talented artisans"
+              className="text-4xl font-bold leading-tight text-[#003049] sm:text-5xl lg:text-6xl"
+              fromFontVariationSettings="'wght' 600, 'opsz' 48"
+              toFontVariationSettings="'wght' 1000, 'opsz' 72"
+              containerRef={titleContainerRef}
+              radius={180}
+              falloff="linear"
+            />
+          </div>
 
-            {/* Description */}
-           <div className="mt-5 max-w-2xl">
-  <SplitText
-    text="Discover unique handmade products created by skilled local artisans and inspired by Iraqi culture and heritage."
-    tag="p"
-    className="text-lg leading-8 text-[#669BBC] sm:text-xl"
-    delay={25}
-    duration={0.8}
-    ease="power3.out"
-    splitType="words"
-    from={{
-      opacity: 0,
-      y: 30,
-    }}
-    to={{
-      opacity: 1,
-      y: 0,
-    }}
-    threshold={0.1}
-    rootMargin="-80px"
-    textAlign="left"
-  />
-</div>
+          <div className="artisans-hero-description">
+            <SplitText
+              text="Discover unique handmade products created by skilled local artisans and inspired by Iraqi culture and heritage."
+              tag="p"
+              className="text-lg leading-8 text-[#669BBC] sm:text-xl"
+              delay={25}
+              duration={0.8}
+              ease="power3.out"
+              splitType="words"
+              from={{ opacity: 0, y: 30 }}
+              to={{ opacity: 1, y: 0 }}
+              threshold={0.1}
+              rootMargin="-80px"
+              textAlign="center"
+            />
           </div>
         </div>
       </section>
 
-      {/* Artisans Section */}
-      <section className="px-4 pb-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          {/* Header + Search */}
-          <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h2 className="text-2xl font-bold text-[#003049]">
+      {/* =========================
+          Artisans
+      ========================= */}
+
+      <section className="artisans-section">
+        <div className="artisans-container">
+          <div className="artisans-header">
+            <div className="artisans-heading">
+              <h2 className="text-2xl font-bold text-[#003049] sm:text-3xl">
                 All Artisans
               </h2>
 
-              <p className="mt-1 text-sm text-[#669BBC]">
+              <p className="mt-2 text-sm text-[#669BBC]">
                 {filteredArtisans.length} artisan
                 {filteredArtisans.length !== 1 ? "s" : ""} found
               </p>
             </div>
 
             {/* Search */}
-            <div className="relative w-full sm:max-w-sm">
-              <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#669BBC]">
-                🔍
-              </span>
+
+            <div className="artisans-search">
+              <span className="artisans-search-icon">🔍</span>
 
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search artisans..."
-                className="w-full rounded-xl border border-[#669BBC]/30 bg-white/80 py-3 pl-11 pr-4 text-[#003049] outline-none transition-all duration-300 placeholder:text-[#669BBC]/70 focus:border-[#780000] focus:ring-2 focus:ring-[#780000]/10"
+                className="rounded-2xl border border-[#669BBC]/30 bg-white/90 text-[#003049] shadow-sm outline-none transition-all duration-300 placeholder:text-[#669BBC]/70 focus:border-[#780000] focus:ring-2 focus:ring-[#780000]/10"
               />
             </div>
           </div>
 
-          {/* Artisans Grid */}
+          {/* =========================
+              Cards
+          ========================= */}
+
           {filteredArtisans.length > 0 ? (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="artisans-grid">
               {filteredArtisans.map((artisan) => (
                 <ArtisanCard
                   key={artisan.id}
@@ -216,10 +208,8 @@ function Artisans() {
               ))}
             </div>
           ) : (
-            <div className="rounded-3xl bg-white/70 px-6 py-16 text-center shadow-md">
-              <div className="mb-5 text-6xl">
-                🔎
-              </div>
+            <div className="artisans-empty rounded-3xl bg-white/70 shadow-md">
+              <div className="mb-5 text-6xl">🔎</div>
 
               <h2 className="text-2xl font-bold text-[#003049]">
                 No artisans found

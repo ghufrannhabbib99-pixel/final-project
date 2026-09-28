@@ -1,0 +1,74 @@
+
+.artisan-card {
+  width: 100%;
+}
+
+.artisan-image {
+  height: 270px;
+}
+
+.artisan-content {
+  min-height: 270px;
+  padding: 24px;
+}
+
+.artisan-title {
+  min-height: 58px;
+}
+
+.artisan-bio {
+  min-height: 48px;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+}
+
+.artisan-favorite {
+  width: 42px;
+  height: 42px;
+}
+
+.artisan-button {
+  width: 100%;
+  height: 48px;
+}
+
+
+/* Search */
+
+.artisan-search {
+  width: 100%;
+  max-width: 520px;
+}
+
+
+/* Responsive */
+
+@media (max-width: 1024px) {
+  .artisan-image {
+    height: 250px;
+  }
+
+  .artisan-content {
+    min-height: 260px;
+  }
+}
+
+@media (max-width: 640px) {
+  .artisan-image {
+    height: 240px;
+  }
+
+  .artisan-content {
+    min-height: 260px;
+    padding: 20px;
+  }
+
+  .artisan-search {
+    max-width: 100%;
+  }
+}
+
