@@ -132,6 +132,80 @@ const deleteArtisan = async (id) => {
 
   return result.rows[0];
 };
+const searchArtisansForAI = async ({
+  search,
+  city,
+  craft,
+  limit = 10,
+}) => {
+  const conditions = [];
+  const values = [];
+
+  if (search) {
+    values.push(`%${search}%`);
+
+    conditions.push(`
+      (
+        u.name ILIKE $${values.length}
+        OR a.craft_name ILIKE $${values.length}
+        OR a.bio ILIKE $${values.length}
+        OR a.story ILIKE $${values.length}
+        OR a.specialties ILIKE $${values.length}
+        OR a.work_style ILIKE $${values.length}
+      )
+    `);
+  }
+
+  if (city) {
+    values.push(`%${city}%`);
+
+    conditions.push(
+      `a.city ILIKE $${values.length}`
+    );
+  }
+
+  if (craft) {
+    values.push(`%${craft}%`);
+
+    conditions.push(`
+      (
+        a.craft_name ILIKE $${values.length}
+        OR a.specialties ILIKE $${values.length}
+        OR a.bio ILIKE $${values.length}
+      )
+    `);
+  }
+
+  values.push(limit);
+
+  const whereClause =
+    conditions.length > 0
+      ? `WHERE ${conditions.join(" AND ")}`
+      : "";
+
+  const result = await db.query(
+    `SELECT
+      a.id,
+      a.user_id,
+      u.name AS artisan_name,
+      a.craft_name,
+      a.city,
+      a.experience_years,
+      a.bio,
+      a.story,
+      a.specialties,
+      a.work_style
+     FROM artisans a
+     JOIN users u
+       ON u.id = a.user_id
+     ${whereClause}
+     ORDER BY a.created_at DESC
+     LIMIT $${values.length}`,
+    values
+  );
+
+  return result.rows;
+};
 
 module.exports = {
   getAllArtisans,
@@ -139,4 +213,5 @@ module.exports = {
   createArtisan,
   updateArtisan,
   deleteArtisan,
+  searchArtisansForAI,
 };

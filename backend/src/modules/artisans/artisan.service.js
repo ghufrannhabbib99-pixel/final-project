@@ -45,6 +45,11 @@ const deleteArtisan = async (id) => {
 
   return await artisanRepository.deleteArtisan(id);
 };
+const searchArtisansForAI = async (filters = {}) => {
+  return await artisanRepository.searchArtisansForAI(
+    filters
+  );
+};
 
 module.exports = {
   getAllArtisans,
@@ -52,4 +57,5 @@ module.exports = {
   createArtisan,
   updateArtisan,
   deleteArtisan,
+  searchArtisansForAI,
 };

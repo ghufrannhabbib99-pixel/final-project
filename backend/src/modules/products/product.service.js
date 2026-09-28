@@ -11,21 +11,16 @@ const getProductById = async (id) => {
 };
 
 const createProduct = async (productData) => {
-  const {
-    artisan_id,
-    category_id,
-  } = productData;
+  const { artisan_id, category_id } = productData;
 
-  const artisan =
-    await artisanRepository.getArtisanById(artisan_id);
+  const artisan = await artisanRepository.getArtisanById(artisan_id);
 
   if (!artisan) {
     throw new Error("Artisan not found");
   }
 
   if (category_id !== undefined && category_id !== null) {
-    const category =
-      await categoryRepository.getCategoryById(category_id);
+    const category = await categoryRepository.getCategoryById(category_id);
 
     if (!category) {
       throw new Error("Category not found");
@@ -36,8 +31,7 @@ const createProduct = async (productData) => {
 };
 
 const updateProduct = async (id, productData) => {
-  const existingProduct =
-    await productRepository.getProductById(id);
+  const existingProduct = await productRepository.getProductById(id);
 
   if (!existingProduct) {
     return null;
@@ -47,20 +41,16 @@ const updateProduct = async (id, productData) => {
     productData.category_id !== undefined &&
     productData.category_id !== null
   ) {
-    const category =
-      await categoryRepository.getCategoryById(
-        productData.category_id
-      );
+    const category = await categoryRepository.getCategoryById(
+      productData.category_id
+    );
 
     if (!category) {
       throw new Error("Category not found");
     }
   }
 
-  return await productRepository.updateProduct(
-    id,
-    productData
-  );
+  return await productRepository.updateProduct(id, productData);
 };
 
 const deleteProduct = async (id) => {
@@ -68,16 +58,23 @@ const deleteProduct = async (id) => {
 };
 
 const getProductsByArtisanId = async (artisanId) => {
-  const artisan =
-    await artisanRepository.getArtisanById(artisanId);
+  const artisan = await artisanRepository.getArtisanById(artisanId);
 
   if (!artisan) {
     throw new Error("Artisan not found");
   }
 
-  return await productRepository.getProductsByArtisanId(
-    artisanId
-  );
+  return await productRepository.getProductsByArtisanId(artisanId);
+};
+
+/*
+========================================
+AI PRODUCT SEARCH
+========================================
+*/
+
+const searchProductsForAI = async (filters = {}) => {
+  return await productRepository.searchProductsForAI(filters);
 };
 
 module.exports = {
@@ -87,4 +84,5 @@ module.exports = {
   updateProduct,
   deleteProduct,
   getProductsByArtisanId,
+  searchProductsForAI,
 };

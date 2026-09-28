@@ -31,7 +31,7 @@ import MyProducts from "./Artisan/MyProducts/MyProducts";
 import AddProduct from "./Artisan/MyProducts/AddProduct";
 import EditProduct from "./Artisan/MyProducts/EditProduct";
 import ArtisanMyOrders from "./Artisan/MyOrders/MyOrders";
-
+import AI from "./pages/AI/AI";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 
@@ -59,6 +59,10 @@ function App() {
           path="/products/:id"
           element={<ProductDetails />}
         />
+        <Route
+  path="/ai"
+  element={<AI />}
+/>
 
         <Route
           path="/login"

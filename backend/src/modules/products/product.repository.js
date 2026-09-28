@@ -179,6 +179,96 @@ const getProductsByArtisanId = async (artisanId) => {
   return result.rows;
 };
 
+/*
+========================================
+AI PRODUCT SEARCH
+========================================
+*/
+
+const searchProductsForAI = async ({
+  search,
+  maxPrice,
+  category,
+  artisanId,
+  limit = 10,
+}) => {
+  const conditions = [];
+  const values = [];
+
+  if (search) {
+    values.push(`%${search}%`);
+
+    conditions.push(`
+      (
+        p.name ILIKE $${values.length}
+        OR p.description ILIKE $${values.length}
+        OR c.name ILIKE $${values.length}
+        OR a.craft_name ILIKE $${values.length}
+      )
+    `);
+  }
+
+  if (maxPrice !== undefined && maxPrice !== null) {
+    values.push(maxPrice);
+
+    conditions.push(
+      `p.price <= $${values.length}`
+    );
+  }
+
+  if (category) {
+    values.push(`%${category}%`);
+
+    conditions.push(
+      `c.name ILIKE $${values.length}`
+    );
+  }
+
+  if (artisanId !== undefined && artisanId !== null) {
+    values.push(artisanId);
+
+    conditions.push(
+      `p.artisan_id = $${values.length}`
+    );
+  }
+
+  // فقط المنتجات المتوفرة بالمخزون
+  conditions.push(
+    `COALESCE(p.stock_quantity, 0) > 0`
+  );
+
+  values.push(limit);
+
+  const whereClause =
+    conditions.length > 0
+      ? `WHERE ${conditions.join(" AND ")}`
+      : "";
+
+  const result = await db.query(
+    `SELECT
+      p.id,
+      p.name,
+      p.description,
+      p.price,
+      p.stock_quantity,
+      p.image,
+      a.id AS artisan_id,
+      a.craft_name,
+      c.name AS category_name
+     FROM products p
+     LEFT JOIN artisans a
+       ON p.artisan_id = a.id
+     LEFT JOIN categories c
+       ON p.category_id = c.id
+     ${whereClause}
+     ORDER BY p.created_at DESC
+     LIMIT $${values.length}`,
+    values
+  );
+
+  return result.rows;
+};
+
 module.exports = {
   getAllProducts,
   getProductById,
@@ -186,4 +276,5 @@ module.exports = {
   updateProduct,
   deleteProduct,
   getProductsByArtisanId,
+  searchProductsForAI,
 };

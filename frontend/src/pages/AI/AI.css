@@ -1,0 +1,250 @@
+.ai-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top right, rgba(166, 137, 91, 0.12), transparent 30%),
+    #f7f2e8;
+  color: #33291f;
+  direction: rtl;
+}
+
+.ai-hero {
+  position: relative;
+  overflow: hidden;
+  min-height: 430px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(71, 83, 58, 0.97),
+      rgba(91, 72, 48, 0.96)
+    );
+}
+
+.ai-pattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.12;
+  background-image:
+    linear-gradient(45deg, transparent 48%, #e8d7b7 49%, transparent 51%),
+    linear-gradient(-45deg, transparent 48%, #e8d7b7 49%, transparent 51%);
+  background-size: 70px 70px;
+}
+
+.ai-content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  text-align: center;
+  color: #fffaf0;
+}
+
+.ai-badge {
+  display: inline-block;
+  margin-bottom: 24px;
+  padding: 9px 18px;
+  border: 1px solid rgba(255, 250, 240, 0.3);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 14px;
+}
+
+.ai-content h1 {
+  margin: 0;
+  font-size: clamp(38px, 6vw, 68px);
+  line-height: 1.15;
+  font-weight: 700;
+}
+
+.ai-content h1 span {
+  color: #e5c58e;
+}
+
+.ai-content p {
+  max-width: 650px;
+  margin: 25px auto 0;
+  color: rgba(255, 250, 240, 0.82);
+  font-size: 18px;
+  line-height: 1.9;
+}
+
+.ai-chat-section {
+  padding: 60px 20px 90px;
+}
+
+.ai-chat-card {
+  width: min(950px, 100%);
+  min-height: 550px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #fffdf8;
+  border: 1px solid rgba(96, 77, 52, 0.12);
+  border-radius: 28px;
+  box-shadow: 0 20px 60px rgba(62, 48, 31, 0.1);
+}
+
+.ai-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 25px;
+  text-align: center;
+}
+
+.ai-icon {
+  width: 70px;
+  height: 70px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 20px;
+  border-radius: 50%;
+  background: #eee3ce;
+  color: #725b3c;
+  font-size: 32px;
+}
+
+.ai-empty h2 {
+  margin: 0 0 10px;
+  font-size: 30px;
+}
+
+.ai-empty p {
+  margin: 0 0 28px;
+  color: #796f63;
+}
+
+.ai-suggestions {
+  width: min(700px, 100%);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.ai-suggestions button {
+  padding: 15px 18px;
+  border: 1px solid #ded2be;
+  border-radius: 14px;
+  background: #faf5eb;
+  color: #514332;
+  cursor: pointer;
+  transition: 0.2s ease;
+  font-family: inherit;
+  font-size: 15px;
+}
+
+.ai-suggestions button:hover {
+  transform: translateY(-2px);
+  border-color: #a98a5c;
+  background: #f1e7d5;
+}
+
+.ai-messages {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+}
+
+.ai-message {
+  max-width: 75%;
+  margin-bottom: 20px;
+}
+
+.ai-message-user {
+  margin-right: auto;
+}
+
+.ai-message-assistant {
+  margin-left: auto;
+}
+
+.ai-message-label {
+  margin-bottom: 7px;
+  color: #88755d;
+  font-size: 13px;
+}
+
+.ai-message-content {
+  padding: 15px 18px;
+  border-radius: 18px;
+  line-height: 1.8;
+}
+
+.ai-message-user .ai-message-content {
+  background: #e9dfcf;
+}
+
+.ai-message-assistant .ai-message-content {
+  background: #59634a;
+  color: white;
+}
+
+.ai-input-area {
+  display: flex;
+  gap: 12px;
+  padding: 18px;
+  border-top: 1px solid #eee5d7;
+  background: #fffdf9;
+}
+
+.ai-input-area input {
+  flex: 1;
+  min-width: 0;
+  padding: 16px 18px;
+  border: 1px solid #ded3c3;
+  border-radius: 16px;
+  outline: none;
+  background: #faf8f2;
+  color: #33291f;
+  font-family: inherit;
+  font-size: 15px;
+}
+
+.ai-input-area input:focus {
+  border-color: #9d8158;
+}
+
+.ai-input-area button {
+  width: 52px;
+  height: 52px;
+  border: 0;
+  border-radius: 15px;
+  background: #59634a;
+  color: white;
+  cursor: pointer;
+  font-size: 24px;
+  transition: 0.2s ease;
+}
+
+.ai-input-area button:hover {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 650px) {
+  .ai-hero {
+    min-height: 380px;
+    padding: 60px 20px;
+  }
+
+  .ai-content p {
+    font-size: 15px;
+  }
+
+  .ai-suggestions {
+    grid-template-columns: 1fr;
+  }
+
+  .ai-chat-card {
+    min-height: 500px;
+    border-radius: 20px;
+  }
+
+  .ai-message {
+    max-width: 90%;
+  }
+}

@@ -3,7 +3,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const db = require("./src/config/db");
-
+const aiRoutes = require("./src/modules/ai/ai.routes");
 const artisanRoutes = require("./src/modules/artisans/artisan.routes");
 const productRoutes = require("./src/modules/products/product.routes");
 const categoryRoutes = require("./src/modules/categories/category.routes");
@@ -36,7 +36,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/favorites", favoriteRoutes);
 app.use("/api/admin", adminRoutes);
-
+app.use("/api/ai", aiRoutes);
 app.get("/api/test-db", async (req, res) => {
   try {
     const result = await db.query("SELECT NOW()");

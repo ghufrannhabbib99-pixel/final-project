@@ -287,6 +287,17 @@ const api = {
     getDashboard: () =>
       request("/admin/dashboard"),
   },
+
+  // =========================
+  // AI
+  // =========================
+  ai: {
+    chat: (data) =>
+      request("/ai/chat", {
+        method: "POST",
+        body: JSON.stringify(data),
+      }),
+  },
 };
 
 export default api;
