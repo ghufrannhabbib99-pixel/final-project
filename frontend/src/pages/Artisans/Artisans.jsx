@@ -1,4 +1,3 @@
-
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import ArtisanCard from "../../components/ArtisanCard/ArtisanCard";
@@ -30,8 +29,6 @@ function Artisans() {
           "http://localhost:5000/api/artisans"
         );
 
-        console.log(response.data);
-
         const artisansWithImages = response.data.data.map((artisan) => ({
           ...artisan,
           profile_image:
@@ -62,27 +59,23 @@ function Artisans() {
     );
   });
 
-  /* =========================
-     Loading
-  ========================= */
-
   if (loading) {
     return (
       <main className="artisans-page bg-[#FDF0D5] px-5 py-16 sm:px-8 lg:px-10">
         <div className="artisans-loading">
-          <div className="artisans-loading-header animate-pulse">
-            <div className="h-4 w-32 rounded bg-[#669BBC]/30" />
+          <div className="artisans-loading-header">
+            <div className="h-3 w-28 animate-pulse rounded-full bg-[#780000]/20" />
 
-            <div className="mt-4 h-12 w-80 rounded bg-[#003049]/20" />
+            <div className="mt-5 h-12 w-full max-w-xl animate-pulse rounded-2xl bg-[#003049]/10" />
 
-            <div className="mt-3 h-5 w-96 max-w-full rounded bg-[#669BBC]/20" />
+            <div className="mt-4 h-5 w-full max-w-2xl animate-pulse rounded-full bg-[#669BBC]/15" />
           </div>
 
           <div className="artisans-loading-grid">
             {[1, 2, 3, 4].map((item) => (
               <div
                 key={item}
-                className="h-96 animate-pulse rounded-2xl bg-white/60 shadow-md"
+                className="h-[500px] animate-pulse rounded-[28px] bg-white/60 shadow-sm"
               />
             ))}
           </div>
@@ -91,21 +84,23 @@ function Artisans() {
     );
   }
 
-  /* =========================
-     Error
-  ========================= */
-
   if (error) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#FDF0D5] px-4">
-        <div className="w-full max-w-md rounded-3xl bg-white p-8 text-center shadow-xl">
-          <div className="mb-4 text-5xl">⚠️</div>
+        <div className="w-full max-w-md rounded-[28px] border border-[#780000]/10 bg-white p-8 text-center shadow-xl">
+          <div className="mb-5 flex justify-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#780000]/10 text-3xl">
+              ⚠️
+            </div>
+          </div>
 
           <h1 className="text-2xl font-bold text-[#003049]">
             Something went wrong
           </h1>
 
-          <p className="mt-3 text-[#669BBC]">{error}</p>
+          <p className="mt-3 text-sm leading-6 text-[#669BBC]">
+            {error}
+          </p>
         </div>
       </main>
     );
@@ -113,19 +108,29 @@ function Artisans() {
 
   return (
     <main className="artisans-page bg-[#FDF0D5]">
-      {/* =========================
-          Hero
-      ========================= */}
 
-      <section className="artisans-hero relative overflow-hidden bg-[#FDF0D5]">
-        <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#669BBC]/10" />
+      {/* ================= HERO ================= */}
+      <section className="artisans-hero relative overflow-hidden">
 
-        <div className="absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-[#780000]/5" />
+        {/* Decorative background */}
+        <div className="pointer-events-none absolute -right-32 -top-32 h-80 w-80 rounded-full bg-[#780000]/5 blur-3xl" />
+
+        <div className="pointer-events-none absolute -bottom-40 -left-32 h-96 w-96 rounded-full bg-[#003049]/5 blur-3xl" />
+
+        <div className="pointer-events-none absolute right-[12%] top-[20%] select-none text-5xl text-[#780000]/10">
+          𒀭 𒂗
+        </div>
+
+        <div className="pointer-events-none absolute bottom-[15%] left-[10%] select-none text-4xl text-[#003049]/10">
+          𒆠
+        </div>
 
         <div className="artisans-hero-content relative">
-          <p className="mb-3 text-sm font-bold tracking-[0.3em] text-[#780000]">
+
+          <div className="artisans-eyebrow">
+            <span className="artisans-eyebrow-dot" />
             OUR ARTISANS
-          </p>
+          </div>
 
           <div
             ref={titleContainerRef}
@@ -133,7 +138,7 @@ function Artisans() {
           >
             <VariableProximity
               label="Meet the talented artisans"
-              className="text-4xl font-bold leading-tight text-[#003049] sm:text-5xl lg:text-6xl"
+              className="artisans-main-title"
               fromFontVariationSettings="'wght' 600, 'opsz' 48"
               toFontVariationSettings="'wght' 1000, 'opsz' 72"
               containerRef={titleContainerRef}
@@ -146,7 +151,7 @@ function Artisans() {
             <SplitText
               text="Discover unique handmade products created by skilled local artisans and inspired by Iraqi culture and heritage."
               tag="p"
-              className="text-lg leading-8 text-[#669BBC] sm:text-xl"
+              className="text-lg leading-8 text-[#003049]/60 sm:text-xl"
               delay={25}
               duration={0.8}
               ease="power3.out"
@@ -158,46 +163,66 @@ function Artisans() {
               textAlign="center"
             />
           </div>
+
+          {/* Decorative line */}
+          <div className="mx-auto mt-8 flex items-center justify-center gap-3">
+            <span className="h-px w-12 bg-[#780000]/30" />
+            <span className="text-sm text-[#780000]">✦</span>
+            <span className="h-px w-12 bg-[#780000]/30" />
+          </div>
         </div>
       </section>
 
-      {/* =========================
-          Artisans
-      ========================= */}
-
+      {/* ================= ARTISANS ================= */}
       <section className="artisans-section">
         <div className="artisans-container">
+
+          {/* Header */}
           <div className="artisans-header">
+
             <div className="artisans-heading">
-              <h2 className="text-2xl font-bold text-[#003049] sm:text-3xl">
+              <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#780000]">
+                Discover
+              </span>
+
+              <h2 className="mt-2 text-3xl font-bold tracking-tight text-[#003049] sm:text-4xl">
                 All Artisans
               </h2>
 
-              <p className="mt-2 text-sm text-[#669BBC]">
+              <p className="mt-2 text-sm text-[#003049]/55">
                 {filteredArtisans.length} artisan
                 {filteredArtisans.length !== 1 ? "s" : ""} found
               </p>
             </div>
 
             {/* Search */}
-
             <div className="artisans-search">
-              <span className="artisans-search-icon">🔍</span>
+
+              <span className="artisans-search-icon">
+                🔍
+              </span>
 
               <input
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search artisans..."
-                className="rounded-2xl border border-[#669BBC]/30 bg-white/90 text-[#003049] shadow-sm outline-none transition-all duration-300 placeholder:text-[#669BBC]/70 focus:border-[#780000] focus:ring-2 focus:ring-[#780000]/10"
+                placeholder="Search by craft, city, or story..."
               />
+
+              {search && (
+                <button
+                  type="button"
+                  onClick={() => setSearch("")}
+                  className="artisans-search-clear"
+                  aria-label="Clear search"
+                >
+                  ×
+                </button>
+              )}
             </div>
           </div>
 
-          {/* =========================
-              Cards
-          ========================= */}
-
+          {/* Cards */}
           {filteredArtisans.length > 0 ? (
             <div className="artisans-grid">
               {filteredArtisans.map((artisan) => (
@@ -208,14 +233,17 @@ function Artisans() {
               ))}
             </div>
           ) : (
-            <div className="artisans-empty rounded-3xl bg-white/70 shadow-md">
-              <div className="mb-5 text-6xl">🔎</div>
+            <div className="artisans-empty">
+
+              <div className="artisans-empty-icon">
+                🔎
+              </div>
 
               <h2 className="text-2xl font-bold text-[#003049]">
                 No artisans found
               </h2>
 
-              <p className="mt-3 text-[#669BBC]">
+              <p className="mt-3 max-w-md text-sm leading-6 text-[#003049]/55">
                 Try searching with a different name, location, or specialty.
               </p>
 
@@ -223,7 +251,7 @@ function Artisans() {
                 <button
                   type="button"
                   onClick={() => setSearch("")}
-                  className="mt-6 rounded-xl bg-[#780000] px-6 py-3 font-semibold text-[#FDF0D5] transition-all duration-300 hover:-translate-y-1 hover:bg-[#C1121F] hover:shadow-lg"
+                  className="mt-6 rounded-full bg-[#780000] px-6 py-3 font-semibold text-[#FDF0D5] transition-all duration-300 hover:-translate-y-1 hover:bg-[#5f0000] hover:shadow-lg"
                 >
                   Clear Search
                 </button>

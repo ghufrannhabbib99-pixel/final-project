@@ -4,208 +4,190 @@ function Artisans() {
   const artisans = [];
 
   return (
-    <div className="admin-artisans min-h-screen bg-[#FDF0D5]">
+    <div className="admin-artisans">
+      {/* Decorative background */}
+      <div className="artisans-orb artisans-orb-one" />
+      <div className="artisans-orb artisans-orb-two" />
+      <div className="artisans-cuneiform artisans-cuneiform-one">𒀭</div>
+      <div className="artisans-cuneiform artisans-cuneiform-two">𒂗</div>
 
-      {/* Main Content */}
       <main className="artisans-main">
-
         {/* Header */}
         <header className="artisans-header">
-
-          <div>
-            <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-[#780000]">
+          <div className="artisans-header-content">
+            <div className="artisans-kicker">
+              <span className="artisans-kicker-line" />
               Administration
-            </p>
+            </div>
 
-            <h1 className="text-3xl font-bold text-[#003049]">
-              Artisans Management
-            </h1>
+            <h1>Artisans Management</h1>
 
-            <p className="mt-2 text-sm text-[#003049]/60">
+            <p>
               Manage artisans and review their marketplace activity.
             </p>
           </div>
 
-          <div className="artisans-count rounded-2xl bg-white shadow-sm">
-            <p className="text-sm text-[#003049]/55">
-              Total Artisans
-            </p>
+          <div className="artisans-count">
+            <div className="artisans-count-icon">♢</div>
 
-            <p className="mt-1 text-2xl font-bold text-[#003049]">
-              {artisans.length}
-            </p>
+            <div>
+              <span>Total Artisans</span>
+              <strong>{artisans.length}</strong>
+            </div>
           </div>
-
         </header>
 
         {/* Search and Filter */}
-        <section className="artisans-toolbar rounded-2xl bg-white shadow-sm">
+        <section className="artisans-toolbar">
+          <div className="toolbar-decoration" />
 
           <div className="artisans-search">
-
-            <label
-              htmlFor="artisan-search"
-              className="mb-2 block text-sm font-semibold text-[#003049]"
-            >
+            <label htmlFor="artisan-search">
               Search Artisans
             </label>
 
-            <input
-              id="artisan-search"
-              type="text"
-              placeholder="Search by name or email..."
-              className="w-full rounded-xl border border-[#003049]/15 bg-[#FDF0D5]/40 text-sm text-[#003049] outline-none transition placeholder:text-[#003049]/35 focus:border-[#E6B566] focus:ring-2 focus:ring-[#E6B566]/20"
-            />
+            <div className="artisans-input-wrap">
+              <span className="artisans-input-icon">⌕</span>
 
+              <input
+                id="artisan-search"
+                type="text"
+                placeholder="Search by name or email..."
+              />
+            </div>
           </div>
 
           <div className="artisans-filter">
-
-            <label
-              htmlFor="artisan-status"
-              className="mb-2 block text-sm font-semibold text-[#003049]"
-            >
+            <label htmlFor="artisan-status">
               Status
             </label>
 
-            <select
-              id="artisan-status"
-              className="w-full rounded-xl border border-[#003049]/15 bg-[#FDF0D5]/40 text-sm text-[#003049] outline-none transition focus:border-[#E6B566] focus:ring-2 focus:ring-[#E6B566]/20"
-            >
-              <option value="all">
-                All Status
-              </option>
+            <div className="artisans-select-wrap">
+              <select id="artisan-status">
+                <option value="all">All Status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
 
-              <option value="active">
-                Active
-              </option>
-
-              <option value="inactive">
-                Inactive
-              </option>
-            </select>
-
+              <span className="select-arrow">⌄</span>
+            </div>
           </div>
-
         </section>
 
         {/* Artisans Table */}
-        <section className="artisans-table-wrapper overflow-hidden rounded-2xl bg-white shadow-sm">
-
-          <div className="artisans-table-header flex items-center justify-between">
-
+        <section className="artisans-table-wrapper">
+          <div className="artisans-table-header">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#780000]">
+              <div className="section-kicker">
+                <span />
                 Artisans
-              </p>
+              </div>
 
-              <h2 className="mt-1 text-xl font-bold text-[#003049]">
-                All Artisans
-              </h2>
+              <h2>All Artisans</h2>
             </div>
 
-            <p className="text-sm text-[#003049]/50">
-              {artisans.length} artisans
-            </p>
-
+            <div className="artisans-result-count">
+              <span>{artisans.length}</span>
+              artisans
+            </div>
           </div>
 
-          <div className="overflow-x-auto">
-
-            <table className="w-full text-left">
-
+          <div className="artisans-table-scroll">
+            <table>
               <thead>
-                <tr className="border-b border-[#003049]/10 bg-[#FDF0D5]/40">
-
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Artisan
-                  </th>
-
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Email
-                  </th>
-
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Craft
-                  </th>
-
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Status
-                  </th>
-
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Actions
-                  </th>
-
+                <tr>
+                  <th>Artisan</th>
+                  <th>Email</th>
+                  <th>Craft</th>
+                  <th>Status</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
 
               <tbody>
-
                 {artisans.length === 0 ? (
                   <tr>
                     <td
                       colSpan="5"
-                      className="artisans-empty-state text-center"
+                      className="artisans-empty-state"
                     >
-                      <div className="flex flex-col items-center justify-center">
-
-                        <div className="artisans-empty-icon flex items-center justify-center rounded-full bg-[#FDF0D5] text-2xl text-[#780000]">
-                          ♢
+                      <div className="artisans-empty-content">
+                        <div className="artisans-empty-icon">
+                          <span>♢</span>
                         </div>
 
-                        <p className="mt-4 text-sm font-medium text-[#003049]">
-                          No artisans available yet.
+                        <div className="artisans-empty-ring" />
+
+                        <h3>No artisans available yet.</h3>
+
+                        <p>
+                          Artisans will appear here once they are
+                          registered.
                         </p>
 
-                        <p className="mt-1 text-sm text-[#003049]/50">
-                          Artisans will appear here once they are registered.
-                        </p>
-
+                        <div className="artisans-empty-line">
+                          <span />
+                          <span />
+                          <span />
+                        </div>
                       </div>
                     </td>
                   </tr>
                 ) : (
                   artisans.map((artisan) => (
-                    <tr
-                      key={artisan.id}
-                      className="border-b border-[#003049]/10 transition hover:bg-[#FDF0D5]/30"
-                    >
+                    <tr key={artisan.id}>
+                      <td>
+                        <div className="artisan-table-person">
+                          <div className="artisan-avatar">
+                            {artisan.name?.charAt(0)}
+                          </div>
 
-                      <td className="px-6 py-5">
-                        {artisan.name}
+                          <span>{artisan.name}</span>
+                        </div>
                       </td>
 
-                      <td className="px-6 py-5">
-                        {artisan.email}
+                      <td>{artisan.email}</td>
+
+                      <td>
+                        <span className="artisan-craft">
+                          {artisan.craft}
+                        </span>
                       </td>
 
-                      <td className="px-6 py-5">
-                        {artisan.craft}
+                      <td>
+                        <span className="artisan-status">
+                          {artisan.status}
+                        </span>
                       </td>
 
-                      <td className="px-6 py-5">
-                        {artisan.status}
+                      <td>
+                        <button
+                          type="button"
+                          className="artisan-action"
+                        >
+                          Actions
+                        </button>
                       </td>
-
-                      <td className="px-6 py-5">
-                        Actions
-                      </td>
-
                     </tr>
                   ))
                 )}
-
               </tbody>
-
             </table>
-
           </div>
-
         </section>
 
-      </main>
+        {/* Footer note */}
+        <div className="artisans-footer-note">
+          <span className="footer-note-symbol">✦</span>
 
+          <p>
+            Every artisan adds another piece to the story of
+            Iraqi craftsmanship.
+          </p>
+
+          <span className="footer-note-symbol">✦</span>
+        </div>
+      </main>
     </div>
   );
 }

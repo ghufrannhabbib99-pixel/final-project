@@ -1,0 +1,710 @@
+.artisan-dashboard {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      circle at 8% 10%,
+      rgba(230, 181, 102, 0.16),
+      transparent 26%
+    ),
+    radial-gradient(
+      circle at 92% 72%,
+      rgba(102, 155, 188, 0.12),
+      transparent 28%
+    ),
+    #fdf0d5;
+  color: #003049;
+}
+
+/* =========================
+   Decorative Background
+========================= */
+
+.artisan-dashboard-orb {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(2px);
+  opacity: 0.45;
+  animation: artisanOrbFloat 10s ease-in-out infinite;
+}
+
+.artisan-dashboard-orb-one {
+  top: 180px;
+  left: -180px;
+  background: rgba(230, 181, 102, 0.18);
+}
+
+.artisan-dashboard-orb-two {
+  right: -180px;
+  bottom: 160px;
+  width: 360px;
+  height: 360px;
+  background: rgba(102, 155, 188, 0.1);
+  animation-delay: -4s;
+}
+
+.artisan-dashboard-symbol {
+  position: absolute;
+  z-index: 0;
+  color: #780000;
+  opacity: 0.035;
+  font-size: 170px;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+.symbol-one {
+  top: 60px;
+  right: 7%;
+  transform: rotate(8deg);
+}
+
+.symbol-two {
+  bottom: 3%;
+  left: 4%;
+  font-size: 130px;
+  transform: rotate(-12deg);
+}
+
+/* =========================
+   Hero
+========================= */
+
+.artisan-dashboard-hero {
+  position: relative;
+  z-index: 1;
+  padding: 68px 24px 55px;
+  border-bottom: 1px solid rgba(0, 48, 73, 0.06);
+}
+
+.artisan-dashboard-hero-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.artisan-dashboard-kicker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #780000;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  animation: artisanFadeUp 0.65s ease both;
+}
+
+.artisan-dashboard-kicker span {
+  width: 30px;
+  height: 2px;
+  border-radius: 99px;
+  background: #e6b566;
+}
+
+.artisan-dashboard-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-top: 14px;
+  animation: artisanFadeUp 0.75s 0.08s ease both;
+}
+
+.artisan-dashboard-heading h1 {
+  margin: 0;
+  color: #003049;
+  font-size: clamp(2.5rem, 5vw, 4.3rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.055em;
+}
+
+.artisan-dashboard-heading p {
+  max-width: 650px;
+  margin: 18px 0 0;
+  color: rgba(0, 48, 73, 0.58);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.artisan-marketplace-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  padding: 13px 19px;
+  border: 1px solid rgba(0, 48, 73, 0.12);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.82);
+  color: #003049;
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 10px 28px rgba(0, 48, 73, 0.06);
+  backdrop-filter: blur(10px);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.artisan-marketplace-btn:hover {
+  border-color: rgba(230, 181, 102, 0.8);
+  box-shadow: 0 16px 35px rgba(0, 48, 73, 0.1);
+  transform: translateY(-3px);
+}
+
+.artisan-marketplace-btn span {
+  color: #780000;
+  font-size: 1.1rem;
+}
+
+/* =========================
+   Content
+========================= */
+
+.artisan-dashboard-content {
+  position: relative;
+  z-index: 1;
+  padding: 42px 24px 70px;
+}
+
+.artisan-dashboard-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* =========================
+   Main Cards
+========================= */
+
+.artisan-dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.artisan-dashboard-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 390px;
+  border: 1px solid rgba(0, 48, 73, 0.07);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 18px 45px rgba(0, 48, 73, 0.065);
+  text-decoration: none;
+  transition:
+    transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow 0.4s ease,
+    border-color 0.4s ease;
+  animation: artisanCardEnter 0.7s ease both;
+}
+
+.artisan-dashboard-card:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.artisan-dashboard-card:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.artisan-dashboard-card:hover {
+  border-color: rgba(230, 181, 102, 0.45);
+  box-shadow: 0 28px 65px rgba(0, 48, 73, 0.12);
+  transform: translateY(-9px);
+}
+
+.artisan-card-image-wrap {
+  position: relative;
+  height: 185px;
+  overflow: hidden;
+  background: #fdf0d5;
+}
+
+.artisan-card-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.65s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.artisan-dashboard-card:hover .artisan-card-image-wrap img {
+  transform: scale(1.07);
+}
+
+.artisan-card-image-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to bottom,
+      transparent 45%,
+      rgba(0, 48, 73, 0.16)
+    );
+}
+
+.artisan-card-content {
+  position: relative;
+  padding: 25px 26px 27px;
+}
+
+.artisan-card-number {
+  position: absolute;
+  top: 22px;
+  right: 24px;
+  color: rgba(0, 48, 73, 0.18);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.artisan-card-content h2 {
+  margin: 0;
+  color: #003049;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.artisan-card-content p {
+  min-height: 57px;
+  margin: 10px 0 0;
+  color: rgba(0, 48, 73, 0.57);
+  font-size: 0.86rem;
+  line-height: 1.7;
+}
+
+.artisan-card-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 19px;
+  color: #780000;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.artisan-card-link span {
+  transition: transform 0.3s ease;
+}
+
+.artisan-dashboard-card:hover .artisan-card-link span {
+  transform: translateX(6px);
+}
+
+/* =========================
+   Quick Actions
+========================= */
+
+.artisan-quick-actions {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  margin-top: 26px;
+  padding: 35px 38px;
+  overflow: hidden;
+  border-radius: 28px;
+  background:
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(230, 181, 102, 0.14),
+      transparent 28%
+    ),
+    #003049;
+  box-shadow: 0 25px 60px rgba(0, 48, 73, 0.15);
+  animation: artisanFadeUp 0.75s 0.3s ease both;
+}
+
+.quick-actions-pattern {
+  position: absolute;
+  right: 5%;
+  bottom: -45px;
+  color: #fdf0d5;
+  opacity: 0.04;
+  font-size: 190px;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.quick-actions-content {
+  position: relative;
+  z-index: 1;
+}
+
+.quick-actions-content > span {
+  color: #669bbc;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.quick-actions-content h2 {
+  margin: 8px 0 0;
+  color: #fdf0d5;
+  font-size: clamp(1.55rem, 3vw, 2.1rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.quick-actions-content p {
+  max-width: 650px;
+  margin: 10px 0 0;
+  color: rgba(253, 240, 213, 0.65);
+  font-size: 0.88rem;
+  line-height: 1.7;
+}
+
+.add-product-btn {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  flex-shrink: 0;
+  padding: 14px 20px;
+  border-radius: 14px;
+  background: #780000;
+  color: #fdf0d5;
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 12px 28px rgba(120, 0, 0, 0.25);
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.add-product-btn:hover {
+  background: #c1121f;
+  box-shadow: 0 17px 34px rgba(120, 0, 0, 0.3);
+  transform: translateY(-3px);
+}
+
+.add-product-btn span {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+/* =========================
+   Explore
+========================= */
+
+.artisan-explore {
+  margin-top: 52px;
+  animation: artisanFadeUp 0.75s 0.38s ease both;
+}
+
+.artisan-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.artisan-section-heading span {
+  color: #780000;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.artisan-section-heading h2 {
+  margin: 5px 0 0;
+  color: #003049;
+  font-size: 1.7rem;
+  font-weight: 800;
+}
+
+.heading-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    rgba(0, 48, 73, 0.12),
+    transparent
+  );
+}
+
+.artisan-explore-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.artisan-explore-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px;
+  border: 1px solid rgba(0, 48, 73, 0.07);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.82);
+  color: inherit;
+  text-decoration: none;
+  box-shadow: 0 10px 30px rgba(0, 48, 73, 0.045);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.artisan-explore-card:hover {
+  border-color: rgba(230, 181, 102, 0.5);
+  box-shadow: 0 18px 40px rgba(0, 48, 73, 0.09);
+  transform: translateY(-4px);
+}
+
+.explore-card-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.explore-image {
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 15px;
+  background: #fdf0d5;
+}
+
+.explore-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.artisan-explore-card:hover .explore-image img {
+  transform: scale(1.08);
+}
+
+.explore-card-left h3 {
+  margin: 0;
+  color: #003049;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.explore-card-left p {
+  margin: 4px 0 0;
+  color: #669bbc;
+  font-size: 0.76rem;
+}
+
+.explore-arrow {
+  color: #780000;
+  font-size: 1.25rem;
+  transition: transform 0.3s ease;
+}
+
+.artisan-explore-card:hover .explore-arrow {
+  transform: translateX(5px);
+}
+
+/* =========================
+   Animations
+========================= */
+
+@keyframes artisanFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes artisanCardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes artisanOrbFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(18px, -20px, 0);
+  }
+}
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 1000px) {
+  .artisan-dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .artisan-dashboard-card {
+    min-height: auto;
+  }
+
+  .artisan-card-image-wrap {
+    height: 220px;
+  }
+}
+
+@media (max-width: 768px) {
+  .artisan-dashboard-hero {
+    padding: 50px 20px 42px;
+  }
+
+  .artisan-dashboard-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .artisan-dashboard-heading h1 {
+    font-size: 2.7rem;
+  }
+
+  .artisan-marketplace-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .artisan-dashboard-content {
+    padding: 32px 20px 55px;
+  }
+
+  .artisan-quick-actions {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 30px 26px;
+  }
+
+  .add-product-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .artisan-explore-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .artisan-dashboard-symbol {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .artisan-dashboard-hero {
+    padding: 40px 16px 34px;
+  }
+
+  .artisan-dashboard-heading h1 {
+    font-size: 2.15rem;
+  }
+
+  .artisan-dashboard-heading p {
+    margin-top: 14px;
+    font-size: 0.88rem;
+  }
+
+  .artisan-dashboard-content {
+    padding: 25px 16px 45px;
+  }
+
+  .artisan-dashboard-grid {
+    gap: 16px;
+  }
+
+  .artisan-dashboard-card {
+    border-radius: 23px;
+  }
+
+  .artisan-card-image-wrap {
+    height: 180px;
+  }
+
+  .artisan-card-content {
+    padding: 22px;
+  }
+
+  .artisan-card-content h2 {
+    font-size: 1.3rem;
+  }
+
+  .artisan-card-content p {
+    min-height: auto;
+  }
+
+  .artisan-quick-actions {
+    margin-top: 20px;
+    border-radius: 23px;
+    padding: 25px 21px;
+  }
+
+  .quick-actions-content h2 {
+    font-size: 1.45rem;
+  }
+
+  .artisan-section-heading h2 {
+    font-size: 1.45rem;
+  }
+
+  .heading-line {
+    display: none;
+  }
+
+  .artisan-explore {
+    margin-top: 38px;
+  }
+
+  .artisan-explore-card {
+    padding: 15px;
+  }
+}
+
+/* =========================
+   Reduced Motion
+========================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .artisan-dashboard-orb,
+  .artisan-dashboard-card,
+  .artisan-dashboard-hero,
+  .artisan-dashboard-content,
+  .artisan-quick-actions,
+  .artisan-explore {
+    animation: none !important;
+  }
+
+  .artisan-dashboard-card,
+  .artisan-marketplace-btn,
+  .add-product-btn,
+  .artisan-explore-card,
+  .artisan-card-image-wrap img,
+  .artisan-card-link span,
+  .explore-image img,
+  .explore-arrow {
+    transition: none !important;
+  }
+}

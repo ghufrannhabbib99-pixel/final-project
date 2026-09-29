@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import api from "../../services/api";
 import productImages from "../../data/productImages";
+import "./EditProduct.css";
 
 function EditProduct() {
   const { id } = useParams();
@@ -29,27 +30,37 @@ function EditProduct() {
         setLoading(true);
         setError("");
 
-        const [productResponse, categoriesResponse] =
-          await Promise.all([
-            api.products.getById(id),
-            api.categories.getAll(),
-          ]);
+        const [
+          productResponse,
+          categoriesResponse,
+        ] = await Promise.all([
+          api.products.getById(id),
+          api.categories.getAll(),
+        ]);
 
         const product =
-          productResponse.data || productResponse;
+          productResponse?.data || productResponse;
 
         const categoryList =
-          categoriesResponse.data || categoriesResponse || [];
+          categoriesResponse?.data ||
+          categoriesResponse ||
+          [];
 
-        setCategories(categoryList);
+        setCategories(
+          Array.isArray(categoryList)
+            ? categoryList
+            : []
+        );
 
         setFormData({
-          name: product.name || "",
-          description: product.description || "",
-          price: product.price || "",
-          stock_quantity: product.stock_quantity ?? "",
-          image: product.image || "",
-          category_id: product.category_id ?? "",
+          name: product?.name || "",
+          description: product?.description || "",
+          price: product?.price || "",
+          stock_quantity:
+            product?.stock_quantity ?? "",
+          image: product?.image || "",
+          category_id:
+            product?.category_id ?? "",
         });
       } catch (error) {
         console.error(error);
@@ -111,7 +122,9 @@ function EditProduct() {
         name: formData.name.trim(),
         description: formData.description.trim(),
         price: Number(formData.price),
-        stock_quantity: Number(formData.stock_quantity),
+        stock_quantity: Number(
+          formData.stock_quantity
+        ),
         image: formData.image.trim(),
         category_id: formData.category_id
           ? Number(formData.category_id)
@@ -165,15 +178,16 @@ function EditProduct() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#FDF0D5] px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-4xl">
-          <div className="animate-pulse">
-            <div className="h-5 w-40 rounded bg-[#780000]/20" />
-
-            <div className="mt-4 h-12 w-80 rounded bg-[#003049]/15" />
-
-            <div className="mt-8 h-[700px] rounded-3xl bg-white/70" />
+      <main className="artisan-edit-loading">
+        <div className="artisan-edit-loading-card">
+          <div className="artisan-edit-loading-icon">
+            ✦
           </div>
+
+          <div className="artisan-edit-loading-line large" />
+          <div className="artisan-edit-loading-line small" />
+
+          <div className="artisan-edit-loading-box" />
         </div>
       </main>
     );
@@ -181,23 +195,21 @@ function EditProduct() {
 
   if (error && !formData.name) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#FDF0D5] px-4">
-        <div className="w-full max-w-md rounded-3xl bg-white p-8 text-center shadow-xl">
-          <div className="mb-4 text-5xl">⚠️</div>
+      <main className="artisan-edit-error-page">
+        <div className="artisan-edit-error-card">
+          <div className="artisan-edit-error-icon">
+            ⚠️
+          </div>
 
-          <h1 className="text-2xl font-bold text-[#003049]">
-            Something went wrong
-          </h1>
+          <h1>Something went wrong</h1>
 
-          <p className="mt-3 text-[#669BBC]">
-            {error}
-          </p>
+          <p>{error}</p>
 
           <Link
             to="/artisan/products"
-            className="mt-6 inline-block rounded-xl bg-[#780000] px-6 py-3 font-semibold text-[#FDF0D5] transition-all duration-300 hover:bg-[#C1121F]"
+            className="artisan-edit-primary"
           >
-            Back to My Products
+            ← Back to My Products
           </Link>
         </div>
       </main>
@@ -209,283 +221,285 @@ function EditProduct() {
     productImages[formData.name] ||
     null;
 
+  const selectedCategory =
+    categories.find(
+      (category) =>
+        Number(category.id) ===
+        Number(formData.category_id)
+    )?.name || "Handmade";
+
   return (
-    <main className="min-h-screen bg-[#FDF0D5] px-4 py-12 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-5xl">
+    <main className="artisan-edit-page">
+      <div className="artisan-edit-decoration artisan-edit-decoration-one">
+        𒀭
+      </div>
 
-        {/* Header */}
-        <div className="mb-8">
-          <Link
-            to="/artisan/products"
-            className="inline-flex items-center gap-2 font-semibold text-[#780000] transition-colors hover:text-[#C1121F]"
-          >
-            ← Back to My Products
-          </Link>
+      <div className="artisan-edit-decoration artisan-edit-decoration-two">
+        ✧
+      </div>
 
-          <p className="mt-8 text-sm font-bold uppercase tracking-[0.3em] text-[#780000]">
-            Artisan Workspace
-          </p>
+      <section className="artisan-edit-header">
+        <div className="artisan-edit-header-inner">
+          <div>
+            <Link
+              to="/artisan/products"
+              className="artisan-edit-back"
+            >
+              ← Back to My Products
+            </Link>
 
-          <h1 className="mt-3 text-4xl font-bold text-[#003049] sm:text-5xl">
-            Edit Product
-          </h1>
+            <p className="artisan-edit-kicker">
+              Artisan Workspace
+            </p>
 
-          <p className="mt-3 max-w-2xl text-lg leading-8 text-[#669BBC]">
-            Update your product information, price, stock, category,
-            or image.
-          </p>
+            <h1 className="artisan-edit-title">
+              Edit Product
+            </h1>
+
+            <p className="artisan-edit-description">
+              Update your product information, price,
+              stock, category, or image.
+            </p>
+          </div>
         </div>
+      </section>
 
-        {/* Success */}
+      <section className="artisan-edit-content">
         {success && (
-          <div className="mb-6 rounded-2xl border border-green-200 bg-green-50 px-5 py-4 font-semibold text-green-700">
-            ✓ {success}
+          <div className="artisan-edit-success">
+            <span>✓</span>
+            {success}
           </div>
         )}
 
-        {/* Error */}
         {error && (
-          <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 font-semibold text-red-700">
-            ⚠️ {error}
+          <div className="artisan-edit-error">
+            <span>⚠️</span>
+            {error}
           </div>
         )}
 
-        <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
-
+        <div className="artisan-edit-layout">
           {/* Form */}
           <form
             onSubmit={handleSubmit}
-            className="rounded-3xl bg-white p-6 shadow-xl sm:p-8"
+            className="artisan-edit-form-card"
           >
-            {/* Product Name */}
-            <div>
-              <label className="block text-sm font-bold text-[#003049]">
-                Product Name
-              </label>
+            <div className="artisan-edit-form-heading">
+              <p>Product Information</p>
 
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="Enter product name"
-                className="mt-2 w-full rounded-xl border border-[#669BBC]/25 bg-[#FDF0D5]/30 px-4 py-3 text-[#003049] outline-none transition focus:border-[#780000] focus:ring-2 focus:ring-[#780000]/10"
-              />
+              <h2>Update your creation</h2>
+
+              <span>
+                Keep your product details accurate so customers
+                know exactly what they are buying.
+              </span>
             </div>
 
-            {/* Description */}
-            <div className="mt-6">
-              <label className="block text-sm font-bold text-[#003049]">
-                Description
-              </label>
-
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                rows={5}
-                placeholder="Describe your handmade product..."
-                className="mt-2 w-full resize-none rounded-xl border border-[#669BBC]/25 bg-[#FDF0D5]/30 px-4 py-3 text-[#003049] outline-none transition focus:border-[#780000] focus:ring-2 focus:ring-[#780000]/10"
-              />
-            </div>
-
-            {/* Price + Stock */}
-            <div className="mt-6 grid gap-5 sm:grid-cols-2">
-              <div>
-                <label className="block text-sm font-bold text-[#003049]">
-                  Price (IQD)
-                </label>
+            <div className="artisan-edit-form">
+              <div className="artisan-edit-field">
+                <label>Product Name</label>
 
                 <input
-                  type="number"
-                  name="price"
-                  min="0.01"
-                  step="0.01"
-                  value={formData.price}
+                  type="text"
+                  name="name"
+                  value={formData.name}
                   onChange={handleChange}
-                  placeholder="25000"
-                  className="mt-2 w-full rounded-xl border border-[#669BBC]/25 bg-[#FDF0D5]/30 px-4 py-3 text-[#003049] outline-none transition focus:border-[#780000] focus:ring-2 focus:ring-[#780000]/10"
+                  placeholder="Enter product name"
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-bold text-[#003049]">
-                  Stock Quantity
-                </label>
+              <div className="artisan-edit-field">
+                <label>Description</label>
 
-                <input
-                  type="number"
-                  name="stock_quantity"
-                  min="0"
-                  step="1"
-                  value={formData.stock_quantity}
+                <textarea
+                  name="description"
+                  value={formData.description}
                   onChange={handleChange}
-                  placeholder="10"
-                  className="mt-2 w-full rounded-xl border border-[#669BBC]/25 bg-[#FDF0D5]/30 px-4 py-3 text-[#003049] outline-none transition focus:border-[#780000] focus:ring-2 focus:ring-[#780000]/10"
+                  rows={5}
+                  placeholder="Describe your handmade product..."
                 />
               </div>
-            </div>
 
-            {/* Category */}
-            <div className="mt-6">
-              <label className="block text-sm font-bold text-[#003049]">
-                Category
-              </label>
+              <div className="artisan-edit-two-columns">
+                <div className="artisan-edit-field">
+                  <label>Price (IQD)</label>
 
-              <select
-                name="category_id"
-                value={formData.category_id}
-                onChange={handleChange}
-                className="mt-2 w-full rounded-xl border border-[#669BBC]/25 bg-[#FDF0D5]/30 px-4 py-3 text-[#003049] outline-none transition focus:border-[#780000] focus:ring-2 focus:ring-[#780000]/10"
-              >
-                <option value="">
-                  Select a category
-                </option>
+                  <input
+                    type="number"
+                    name="price"
+                    min="0.01"
+                    step="0.01"
+                    value={formData.price}
+                    onChange={handleChange}
+                    placeholder="25000"
+                  />
+                </div>
 
-                {categories.map((category) => (
-                  <option
-                    key={category.id}
-                    value={category.id}
-                  >
-                    {category.name}
+                <div className="artisan-edit-field">
+                  <label>Stock Quantity</label>
+
+                  <input
+                    type="number"
+                    name="stock_quantity"
+                    min="0"
+                    step="1"
+                    value={formData.stock_quantity}
+                    onChange={handleChange}
+                    placeholder="10"
+                  />
+                </div>
+              </div>
+
+              <div className="artisan-edit-field">
+                <label>Category</label>
+
+                <select
+                  name="category_id"
+                  value={formData.category_id}
+                  onChange={handleChange}
+                >
+                  <option value="">
+                    Select a category
                   </option>
-                ))}
-              </select>
-            </div>
 
-            {/* Image */}
-            <div className="mt-6">
-              <label className="block text-sm font-bold text-[#003049]">
-                Image URL
-              </label>
+                  {categories.map((category) => (
+                    <option
+                      key={category.id}
+                      value={category.id}
+                    >
+                      {category.name ||
+                        category.category_name ||
+                        `Category ${category.id}`}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-              <input
-                type="text"
-                name="image"
-                value={formData.image}
-                onChange={handleChange}
-                placeholder="/images/products/..."
-                className="mt-2 w-full rounded-xl border border-[#669BBC]/25 bg-[#FDF0D5]/30 px-4 py-3 text-[#003049] outline-none transition focus:border-[#780000] focus:ring-2 focus:ring-[#780000]/10"
-              />
+              <div className="artisan-edit-field">
+                <label>Image URL</label>
 
-              <p className="mt-2 text-xs text-[#669BBC]">
-                You can enter an image URL or leave it empty.
-              </p>
-            </div>
+                <input
+                  type="text"
+                  name="image"
+                  value={formData.image}
+                  onChange={handleChange}
+                  placeholder="/images/products/..."
+                />
 
-            {/* Buttons */}
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <button
-                type="submit"
-                disabled={saving || deleting}
-                className="flex-1 rounded-xl bg-[#780000] px-6 py-3.5 font-bold text-[#FDF0D5] transition-all duration-300 hover:-translate-y-1 hover:bg-[#C1121F] hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {saving ? "Saving..." : "Save Changes"}
-              </button>
+                <small>
+                  You can enter an image URL or leave it empty.
+                </small>
+              </div>
 
-              <Link
-                to="/artisan/products"
-                className="flex-1 rounded-xl border border-[#003049]/15 bg-white px-6 py-3.5 text-center font-bold text-[#003049] transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
-              >
-                Cancel
-              </Link>
-            </div>
+              <div className="artisan-edit-actions">
+                <button
+                  type="submit"
+                  disabled={saving || deleting}
+                  className="artisan-edit-primary"
+                >
+                  {saving
+                    ? "Saving..."
+                    : "Save Changes"}
+                </button>
 
-            {/* Delete */}
-            <div className="mt-10 border-t border-[#669BBC]/15 pt-8">
-              <h3 className="font-bold text-[#003049]">
-                Danger Zone
-              </h3>
+                <Link
+                  to="/artisan/products"
+                  className="artisan-edit-secondary"
+                >
+                  Cancel
+                </Link>
+              </div>
 
-              <p className="mt-2 text-sm leading-6 text-[#669BBC]">
-                Deleting this product will permanently remove it from
-                your products.
-              </p>
+              <div className="artisan-edit-danger">
+                <div>
+                  <p>Danger Zone</p>
 
-              <button
-                type="button"
-                onClick={handleDelete}
-                disabled={saving || deleting}
-                className="mt-4 rounded-xl border border-[#780000]/30 bg-white px-6 py-3 font-bold text-[#780000] transition-all duration-300 hover:bg-[#780000] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {deleting ? "Deleting..." : "Delete Product"}
-              </button>
+                  <h3>Delete this product</h3>
+
+                  <span>
+                    Deleting this product will permanently
+                    remove it from your products.
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  disabled={saving || deleting}
+                  className="artisan-edit-delete"
+                >
+                  {deleting
+                    ? "Deleting..."
+                    : "Delete Product"}
+                </button>
+              </div>
             </div>
           </form>
 
           {/* Preview */}
-          <aside className="h-fit rounded-3xl bg-white p-6 shadow-xl lg:sticky lg:top-6">
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-[#780000]">
-              Preview
-            </p>
+          <aside className="artisan-edit-preview-card">
+            <div className="artisan-edit-preview-heading">
+              <p>Live Preview</p>
+              <h2>Product Preview</h2>
+            </div>
 
-            <div className="mt-4 overflow-hidden rounded-2xl bg-[#FDF0D5]">
-              <div className="h-64">
-                {previewImage ? (
-                  <img
-                    src={previewImage}
-                    alt={formData.name || "Product preview"}
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center">
-                    <div className="text-center">
-                      <div className="text-6xl">🧶</div>
+            <div className="artisan-edit-preview-image">
+              {previewImage ? (
+                <img
+                  src={previewImage}
+                  alt={
+                    formData.name ||
+                    "Product preview"
+                  }
+                />
+              ) : (
+                <div>
+                  <span>🧶</span>
+                  <p>Product Preview</p>
+                </div>
+              )}
+            </div>
 
-                      <p className="mt-3 text-sm font-semibold text-[#669BBC]">
-                        Product Preview
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
+            <div className="artisan-edit-preview-body">
+              <p className="artisan-edit-preview-category">
+                {selectedCategory}
+              </p>
 
-              <div className="p-5">
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#780000]">
-                  {categories.find(
-                    (category) =>
-                      Number(category.id) ===
-                      Number(formData.category_id)
-                  )?.name || "Handmade"}
-                </p>
+              <h3>
+                {formData.name || "Product Name"}
+              </h3>
 
-                <h2 className="mt-2 text-2xl font-bold text-[#003049]">
-                  {formData.name || "Product Name"}
-                </h2>
+              <p className="artisan-edit-preview-description">
+                {formData.description ||
+                  "Product description will appear here."}
+              </p>
 
-                <p className="mt-3 line-clamp-3 text-sm leading-6 text-[#669BBC]">
-                  {formData.description ||
-                    "Product description will appear here."}
-                </p>
+              <div className="artisan-edit-preview-meta">
+                <div>
+                  <small>Price</small>
 
-                <div className="mt-5 flex items-center justify-between border-t border-[#669BBC]/15 pt-4">
-                  <div>
-                    <p className="text-xs text-[#669BBC]">
-                      Price
-                    </p>
+                  <strong>
+                    {formData.price
+                      ? `${Number(
+                          formData.price
+                        ).toLocaleString()} IQD`
+                      : "0 IQD"}
+                  </strong>
+                </div>
 
-                    <p className="mt-1 font-bold text-[#780000]">
-                      {formData.price
-                        ? `${Number(formData.price).toLocaleString()} IQD`
-                        : "0 IQD"}
-                    </p>
-                  </div>
+                <div>
+                  <small>Stock</small>
 
-                  <div className="text-right">
-                    <p className="text-xs text-[#669BBC]">
-                      Stock
-                    </p>
-
-                    <p className="mt-1 font-bold text-[#003049]">
-                      {formData.stock_quantity || 0}
-                    </p>
-                  </div>
+                  <strong>
+                    {formData.stock_quantity || 0}
+                  </strong>
                 </div>
               </div>
             </div>
           </aside>
         </div>
-      </div>
+      </section>
     </main>
   );
 }

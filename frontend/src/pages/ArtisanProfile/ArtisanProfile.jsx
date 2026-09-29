@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import api from "../../services/api";
 import productImages from "../../data/productImages";
+import "./ArtisanProfile.css";
 
 const artisanImages = {
   "خزاف عراقي": "/images/artisans/potter.jpg",
@@ -21,68 +22,62 @@ function ArtisanProfile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const profileImage =
-    artisan?.profile_image ||
-    artisan?.image ||
-    artisanImages[artisan?.craft_name] ||
-    null;
-
   useEffect(() => {
-    const fetchData = async () => {
+    const loadArtisan = async () => {
       try {
         setLoading(true);
         setError("");
 
-        const [artisanResponse, productsResponse] = await Promise.all([
-          api.artisans.getById(id),
-          api.products.getByArtisan(id),
-        ]);
+        const [artisanResponse, productsResponse] =
+          await Promise.all([
+            api.artisans.getById(id),
+            api.products.getByArtisan(id),
+          ]);
 
         const artisanData =
           artisanResponse?.data || artisanResponse;
 
         const productsData =
-          productsResponse?.data ||
-          productsResponse ||
-          [];
+          productsResponse?.data || productsResponse || [];
 
-        setArtisan(artisanData);
+        const normalizedProducts = Array.isArray(productsData)
+          ? productsData
+          : [];
 
-        const uniqueProducts = productsData.filter(
-          (product, index, self) =>
+        const uniqueProducts = normalizedProducts.filter(
+          (product, index, array) =>
             index ===
-            self.findIndex(
-              (item) => Number(item.id) === Number(product.id)
+            array.findIndex(
+              (item) =>
+                Number(item.id) === Number(product.id)
             )
         );
 
+        setArtisan(artisanData);
         setProducts(uniqueProducts);
-      } catch (error) {
-        console.error("Artisan Profile Error:", error);
-        setError(
-          error?.message ||
-            "حدث خطأ أثناء تحميل بيانات الحرفي"
-        );
+      } catch (err) {
+        console.error("Failed to load artisan:", err);
+        setError("تعذر تحميل معلومات الحرفي.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
+    loadArtisan();
   }, [id]);
 
-  // إضافة المنتج إلى السلة
   const addToCart = (product) => {
     try {
-      const cart =
-        JSON.parse(localStorage.getItem("cart")) || [];
+      const cart = JSON.parse(
+        localStorage.getItem("cart")
+      ) || [];
 
-      const existingProduct = cart.find(
+      const existingItem = cart.find(
         (item) => Number(item.id) === Number(product.id)
       );
 
-      if (existingProduct) {
-        existingProduct.quantity += 1;
+      if (existingItem) {
+        existingItem.quantity += 1;
       } else {
         cart.push({
           ...product,
@@ -96,436 +91,522 @@ function ArtisanProfile() {
       );
 
       alert("تمت إضافة المنتج إلى السلة 🛒");
-    } catch (error) {
-      console.error("Cart Error:", error);
-      alert("حدث خطأ أثناء إضافة المنتج إلى السلة");
+    } catch (err) {
+      console.error("Failed to add product to cart:", err);
+      alert("صار خطأ أثناء إضافة المنتج للسلة.");
     }
   };
 
-  // Loading
   if (loading) {
     return (
-      <main
-        dir="rtl"
-        className="min-h-screen bg-[#FDF0D5] px-6 py-10"
-      >
-        <div className="mx-auto max-w-7xl animate-pulse">
-          <div className="h-96 rounded-3xl bg-gray-200" />
+      <main className="artisan-profile-page artisan-profile-loading">
+        <div className="artisan-profile-orb artisan-profile-orb-one" />
+        <div className="artisan-profile-orb artisan-profile-orb-two" />
 
-          <div className="mt-8 h-10 w-64 rounded-lg bg-gray-200" />
+        <div className="artisan-profile-loading-container">
+          <div className="artisan-loading-hero">
+            <div className="artisan-skeleton artisan-skeleton-image" />
 
-          <div className="mt-4 h-6 w-full max-w-2xl rounded-lg bg-gray-200" />
+            <div className="artisan-loading-content">
+              <div className="artisan-skeleton artisan-skeleton-small" />
+              <div className="artisan-skeleton artisan-skeleton-title" />
+              <div className="artisan-skeleton artisan-skeleton-line" />
+              <div className="artisan-skeleton artisan-skeleton-line short" />
 
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {[1, 2, 3].map((item) => (
-              <div
-                key={item}
-                className="h-72 rounded-3xl bg-gray-200"
-              />
-            ))}
+              <div className="artisan-loading-stats">
+                <div className="artisan-skeleton artisan-skeleton-stat" />
+                <div className="artisan-skeleton artisan-skeleton-stat" />
+                <div className="artisan-skeleton artisan-skeleton-stat" />
+              </div>
+            </div>
+          </div>
+
+          <div className="artisan-skeleton-section">
+            <div className="artisan-skeleton artisan-skeleton-heading" />
+            <div className="artisan-skeleton artisan-skeleton-line" />
+            <div className="artisan-skeleton artisan-skeleton-line" />
+            <div className="artisan-skeleton artisan-skeleton-line short" />
           </div>
         </div>
       </main>
     );
   }
 
-  // Error
   if (error || !artisan) {
     return (
-      <main
-        dir="rtl"
-        className="flex min-h-screen items-center justify-center bg-[#FDF0D5] px-6"
-      >
-        <div className="w-full max-w-xl rounded-3xl bg-white p-10 text-center shadow-xl">
-          <div className="mb-5 text-6xl">😔</div>
+      <main className="artisan-profile-page artisan-profile-error-page">
+        <div className="artisan-profile-error-card">
+          <div className="artisan-error-icon">𒀭</div>
 
-          <h1 className="text-2xl font-bold text-[#003049]">
-            {error || "الحرفي غير موجود"}
-          </h1>
+          <span>ALHERFA</span>
+
+          <h1>تعذر تحميل الصفحة</h1>
+
+          <p>
+            {error ||
+              "ما قدرنا نلقى معلومات الحرفي المطلوبة."}
+          </p>
 
           <button
             onClick={() => navigate("/artisans")}
-            className="mt-6 rounded-2xl bg-[#780000] px-6 py-3 font-bold text-white transition hover:-translate-y-1 hover:bg-[#C1121F]"
+            className="artisan-error-button"
           >
-            العودة للحرفيين
+            <span>←</span>
+            العودة إلى الحرفيين
           </button>
         </div>
       </main>
     );
   }
 
+  const profileImage =
+    artisan?.profile_image ||
+    artisan?.image ||
+    artisanImages[artisan?.craft_name] ||
+    null;
+
+  const specialties =
+    artisan?.specialties ||
+    artisan?.skills ||
+    artisan?.bio ||
+    "صناعة يدوية عراقية أصيلة";
+
   return (
-    <main
-      dir="rtl"
-      className="min-h-screen bg-[#FDF0D5]"
-    >
-      {/* Hero */}
-      <section className="px-6 py-10">
-        <div className="mx-auto max-w-7xl">
-          <div className="grid items-center gap-10 rounded-3xl bg-[#003049] p-8 shadow-2xl md:p-12 lg:grid-cols-2">
-            {/* Artisan Image */}
-            <div className="flex items-center justify-center">
-              {profileImage ? (
-                <img
-                  src={profileImage}
-                  alt={
-                    artisan.artisan_name ||
-                    artisan.craft_name ||
-                    "Artisan"
-                  }
-                  className="h-80 w-80 rounded-3xl object-cover shadow-2xl"
-                />
-              ) : (
-                <div className="flex h-80 w-80 items-center justify-center rounded-3xl bg-[#669BBC] text-7xl shadow-2xl">
-                  🧑‍🎨
+    <main className="artisan-profile-page">
+      <div className="artisan-profile-orb artisan-profile-orb-one" />
+      <div className="artisan-profile-orb artisan-profile-orb-two" />
+
+      <div className="artisan-profile-cuneiform artisan-cuneiform-one">
+        𒀭
+      </div>
+
+      <div className="artisan-profile-cuneiform artisan-cuneiform-two">
+        𒂗
+      </div>
+
+      <section className="artisan-profile-hero">
+        <div className="artisan-profile-pattern artisan-pattern-one" />
+        <div className="artisan-profile-pattern artisan-pattern-two" />
+
+        <div className="artisan-profile-container">
+          <button
+            onClick={() => navigate("/artisans")}
+            className="artisan-back-button"
+          >
+            <span>←</span>
+            العودة إلى الحرفيين
+          </button>
+
+          <div className="artisan-hero-grid">
+            <div className="artisan-hero-image-column">
+              <div className="artisan-image-frame">
+                <div className="artisan-image-glow" />
+
+                <div className="artisan-image-inner">
+                  {profileImage ? (
+                    <img
+                      src={profileImage}
+                      alt={artisan.name}
+                      className="artisan-main-image"
+                    />
+                  ) : (
+                    <div className="artisan-image-placeholder">
+                      <span>𒀭</span>
+                      <p>AlHerfa</p>
+                    </div>
+                  )}
                 </div>
-              )}
+
+                <div className="artisan-image-corner corner-top" />
+                <div className="artisan-image-corner corner-bottom" />
+
+                <div className="artisan-image-badge">
+                  <span>✦</span>
+                  حرفي عراقي
+                </div>
+              </div>
             </div>
 
-            {/* Artisan Info */}
-            <div className="text-right text-white">
-              <p className="mb-3 text-lg font-semibold text-[#669BBC]">
-                حرفي عراقي
-              </p>
+            <div className="artisan-hero-content">
+              <div className="artisan-hero-kicker">
+                <span className="kicker-line" />
+                ALHERFA ARTISAN
+                <span className="kicker-line" />
+              </div>
 
-              <h1 className="text-4xl font-bold md:text-5xl">
-                {artisan.artisan_name || "حرفي عراقي"}
+              <div className="artisan-craft-pill">
+                <span>✧</span>
+                {artisan.craft_name || "حرف يدوية"}
+              </div>
+
+              <h1 className="artisan-profile-title">
+                {artisan.name}
               </h1>
 
-              <p className="mt-4 text-2xl font-semibold text-[#FDF0D5]">
-                {artisan.craft_name || "حرفة يدوية عراقية"}
-              </p>
-
-              {artisan.city && (
-                <p className="mt-4 text-lg text-gray-200">
-                  📍 {artisan.city}
-                </p>
-              )}
-
-              {artisan.experience_years !== null &&
-                artisan.experience_years !== undefined && (
-                  <p className="mt-3 text-lg text-gray-200">
-                    🏆 سنوات الخبرة:{" "}
-                    {artisan.experience_years}
-                  </p>
-                )}
-
-              {artisan.bio && (
-                <p className="mt-6 text-lg leading-9 text-gray-200">
-                  {artisan.bio}
-                </p>
-              )}
-
-              <button
-                onClick={() => navigate("/artisans")}
-                className="mt-8 rounded-2xl bg-[#780000] px-7 py-3 font-bold text-white transition hover:-translate-y-1 hover:bg-[#C1121F]"
-              >
-                العودة للحرفيين
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* About Artisan */}
-      <section className="px-6 py-12">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-8">
-            <h2 className="text-4xl font-bold text-[#003049]">
-              عن الحرفي
-            </h2>
-
-            <div className="mt-3 h-1 w-24 rounded-full bg-[#780000]" />
-          </div>
-
-          <div className="rounded-3xl bg-white p-8 shadow-xl md:p-10">
-            <p className="text-lg leading-10 text-gray-700">
-              {artisan.bio ||
-                `يتميز ${
-                  artisan.artisan_name || "هذا الحرفي"
-                } بالعمل في مجال ${
-                  artisan.craft_name ||
-                  "الحرف اليدوية العراقية"
-                } ويقدم منتجات مصنوعة بعناية تحافظ على روح التراث العراقي.`}
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Story */}
-      <section className="px-6 py-12">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-8">
-            <h2 className="text-4xl font-bold text-[#003049]">
-              قصة الحرفي
-            </h2>
-
-            <div className="mt-3 h-1 w-24 rounded-full bg-[#780000]" />
-          </div>
-
-          <div className="rounded-3xl bg-[#003049] p-8 text-white shadow-xl md:p-10">
-            <p className="text-lg leading-10 text-gray-200">
-              {artisan.story ||
-                `الحرف اليدوية العراقية جزء من الذاكرة والتراث والثقافة. ومن خلال عمله في ${
-                  artisan.craft_name ||
-                  "الحرف اليدوية"
-                }، يساهم ${
-                  artisan.artisan_name || "هذا الحرفي"
-                } في الحفاظ على هذه المهنة ونقلها إلى الأجيال القادمة.`}
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Specialties */}
-      <section className="px-6 py-12">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-8">
-            <h2 className="text-4xl font-bold text-[#003049]">
-              التخصصات
-            </h2>
-
-            <div className="mt-3 h-1 w-24 rounded-full bg-[#780000]" />
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-3">
-            <div className="rounded-3xl bg-white p-8 text-center shadow-lg transition hover:-translate-y-1">
-              <div className="text-5xl">🎨</div>
-
-              <h3 className="mt-5 text-xl font-bold text-[#003049]">
-                الحرفة
-              </h3>
-
-              <p className="mt-3 leading-8 text-gray-600">
-                {artisan.craft_name ||
-                  "حرفة عراقية يدوية"}
-              </p>
-            </div>
-
-            <div className="rounded-3xl bg-white p-8 text-center shadow-lg transition hover:-translate-y-1">
-              <div className="text-5xl">👐</div>
-
-              <h3 className="mt-5 text-xl font-bold text-[#003049]">
-                التخصص
-              </h3>
-
-              <p className="mt-3 leading-8 text-gray-600">
-                {artisan.specialties ||
-                  "صناعة يدوية مستوحاة من التراث العراقي."}
-              </p>
-            </div>
-
-            <div className="rounded-3xl bg-white p-8 text-center shadow-lg transition hover:-translate-y-1">
-              <div className="text-5xl">🇮🇶</div>
-
-              <h3 className="mt-5 text-xl font-bold text-[#003049]">
-                الخبرة
-              </h3>
-
-              <p className="mt-3 leading-8 text-gray-600">
-                {artisan.experience_years
-                  ? `${artisan.experience_years} سنة خبرة`
-                  : "خبرة في صناعة المنتجات اليدوية"}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Work Style */}
-      <section className="px-6 py-12">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-8">
-            <h2 className="text-4xl font-bold text-[#003049]">
-              أسلوب العمل
-            </h2>
-
-            <div className="mt-3 h-1 w-24 rounded-full bg-[#780000]" />
-          </div>
-
-          <div className="rounded-3xl bg-white p-8 shadow-xl md:p-10">
-            <p className="text-lg leading-10 text-gray-700">
-              {artisan.work_style ||
-                "أصنع المنتجات يدوياً وأهتم بالتفاصيل وجودة القطعة النهائية."}
-            </p>
-
-            <div className="mt-10 grid gap-8 md:grid-cols-3">
-              <div className="text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#FDF0D5] text-xl font-bold text-[#003049]">
-                  01
-                </div>
-
-                <h3 className="mt-4 text-xl font-bold text-[#003049]">
-                  اختيار المواد
-                </h3>
-
-                <p className="mt-3 leading-8 text-gray-600">
-                  اختيار المواد المناسبة بعناية قبل البدء بالعمل.
-                </p>
+              <div className="artisan-title-line">
+                <span />
+                <b>𒀭</b>
+                <span />
               </div>
 
-              <div className="text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#FDF0D5] text-xl font-bold text-[#003049]">
-                  02
+              <p className="artisan-profile-bio">
+                {artisan.bio ||
+                  "حرفي عراقي يقدّم أعمالاً يدوية تجمع بين التراث والأصالة والتفاصيل المعاصرة."}
+              </p>
+
+              <div className="artisan-hero-stats">
+                <div className="artisan-stat-card">
+                  <span className="artisan-stat-icon">⌖</span>
+
+                  <div>
+                    <small>الموقع</small>
+                    <strong>
+                      {artisan.city || "العراق"}
+                    </strong>
+                  </div>
                 </div>
 
-                <h3 className="mt-4 text-xl font-bold text-[#003049]">
-                  العمل اليدوي
-                </h3>
+                <div className="artisan-stat-card">
+                  <span className="artisan-stat-icon">✦</span>
 
-                <p className="mt-3 leading-8 text-gray-600">
-                  تنفيذ كل قطعة يدوياً مع الاهتمام بالتفاصيل.
-                </p>
+                  <div>
+                    <small>الخبرة</small>
+                    <strong>
+                      {artisan.experience_years ||
+                        artisan.experience ||
+                        "عدة سنوات"}
+                    </strong>
+                  </div>
+                </div>
+
+                <div className="artisan-stat-card">
+                  <span className="artisan-stat-icon">◇</span>
+
+                  <div>
+                    <small>المنتجات</small>
+                    <strong>{products.length}</strong>
+                  </div>
+                </div>
               </div>
 
-              <div className="text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#FDF0D5] text-xl font-bold text-[#003049]">
-                  03
-                </div>
+              <div className="artisan-hero-actions">
+                <button
+                  onClick={() => {
+                    document
+                      .getElementById("artisan-products")
+                      ?.scrollIntoView({
+                        behavior: "smooth",
+                      });
+                  }}
+                  className="artisan-primary-button"
+                >
+                  استكشف الأعمال
+                  <span>↓</span>
+                </button>
 
-                <h3 className="mt-4 text-xl font-bold text-[#003049]">
-                  القطعة النهائية
-                </h3>
-
-                <p className="mt-3 leading-8 text-gray-600">
-                  تقديم قطعة فريدة تحمل روح الحرفة العراقية.
-                </p>
+                <button
+                  onClick={() => navigate("/artisans")}
+                  className="artisan-secondary-button"
+                >
+                  كل الحرفيين
+                  <span>→</span>
+                </button>
               </div>
             </div>
           </div>
         </div>
+
+        <div className="artisan-scroll-indicator">
+          <span />
+          اسحب للأسفل
+        </div>
       </section>
 
-      {/* Products */}
-      <section className="px-6 py-12">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-8">
-            <h2 className="text-4xl font-bold text-[#003049]">
-              منتجات الحرفي
-            </h2>
+      <section className="artisan-about-section">
+        <div className="artisan-profile-container">
+          <div className="artisan-section-heading">
+            <div>
+              <span>THE STORY</span>
+              <h2>عن الحرفي</h2>
+            </div>
 
-            <div className="mt-3 h-1 w-24 rounded-full bg-[#780000]" />
+            <div className="artisan-section-symbol">
+              𒀭
+            </div>
           </div>
 
-          {products.length > 0 ? (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {products.map((product) => {
-                const productImage =
+          <div className="artisan-about-grid">
+            <article className="artisan-story-card artisan-story-main">
+              <div className="story-card-number">01</div>
+
+              <span className="story-card-kicker">
+                ABOUT THE ARTISAN
+              </span>
+
+              <h3>
+                حكاية تُروى من خلال
+                <span> الحرفة</span>
+              </h3>
+
+              <p>
+                {artisan.bio ||
+                  `${artisan.name} يعمل في مجال ${artisan.craft_name || "الحرف اليدوية"}، ويجمع بين المهارة اليدوية والاهتمام بالتفاصيل للحفاظ على روح الحرفة العراقية.`}
+              </p>
+
+              <div className="story-card-decoration">
+                <span />
+                <b>✦</b>
+                <span />
+              </div>
+            </article>
+
+            <article className="artisan-story-card artisan-story-side">
+              <div className="story-card-number">02</div>
+
+              <span className="story-card-kicker">
+                SPECIALTIES
+              </span>
+
+              <h3>مجالات التخصص</h3>
+
+              <p>{specialties}</p>
+
+              <div className="specialty-list">
+                <div>
+                  <span>✧</span>
+                  {artisan.craft_name || "حرفة يدوية"}
+                </div>
+
+                <div>
+                  <span>✧</span>
+                  صناعة يدوية
+                </div>
+
+                <div>
+                  <span>✧</span>
+                  تراث عراقي
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section className="artisan-process-section">
+        <div className="artisan-profile-container">
+          <div className="artisan-section-heading centered">
+            <div>
+              <span>CRAFT PROCESS</span>
+              <h2>أسلوب العمل</h2>
+            </div>
+          </div>
+
+          <div className="artisan-process-grid">
+            <article className="artisan-process-card">
+              <div className="process-number">01</div>
+              <div className="process-icon">◇</div>
+
+              <h3>اختيار المواد</h3>
+
+              <p>
+                اختيار المواد المناسبة بعناية للحفاظ على جودة
+                المنتج وروحه الأصلية.
+              </p>
+
+              <span className="process-arrow">→</span>
+            </article>
+
+            <article className="artisan-process-card featured">
+              <div className="process-number">02</div>
+              <div className="process-icon">✦</div>
+
+              <h3>صناعة يدوية</h3>
+
+              <p>
+                كل قطعة تُصنع باهتمام وتفاصيل دقيقة تعكس مهارة
+                الحرفي وخبرته.
+              </p>
+
+              <span className="process-arrow">→</span>
+            </article>
+
+            <article className="artisan-process-card">
+              <div className="process-number">03</div>
+              <div className="process-icon">𒀭</div>
+
+              <h3>اللمسة الأخيرة</h3>
+
+              <p>
+                مراجعة التفاصيل النهائية حتى تصل القطعة بشكل
+                يليق بالحرفة العراقية.
+              </p>
+
+              <span className="process-arrow">→</span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="artisan-products"
+        className="artisan-products-section"
+      >
+        <div className="artisan-profile-container">
+          <div className="artisan-section-heading">
+            <div>
+              <span>HANDCRAFTED COLLECTION</span>
+              <h2>أعمال الحرفي</h2>
+            </div>
+
+            <div className="artisan-products-count">
+              {products.length}
+              <span>منتج</span>
+            </div>
+          </div>
+
+          {products.length === 0 ? (
+            <div className="artisan-no-products">
+              <div>𒀭</div>
+              <h3>لا توجد منتجات حالياً</h3>
+              <p>
+                لم تتم إضافة منتجات لهذا الحرفي بعد.
+              </p>
+            </div>
+          ) : (
+            <div className="artisan-products-grid">
+              {products.map((product, index) => {
+                const image =
                   product.image ||
+                  productImages[product.id] ||
                   productImages[product.name] ||
                   null;
 
-                const stock = Number(
-                  product.stock_quantity ??
-                    product.stock ??
-                    product.quantity ??
-                    0
-                );
-
                 return (
-                  <div
+                  <article
                     key={product.id}
-                    className="overflow-hidden rounded-3xl bg-white shadow-xl transition duration-300 hover:-translate-y-2"
+                    className="artisan-product-card"
+                    style={{
+                      animationDelay: `${index * 0.08}s`,
+                    }}
                   >
-                    {/* Product Image */}
-                    <div className="h-64 overflow-hidden bg-[#FDF0D5]">
-                      {productImage ? (
+                    <div className="artisan-product-image">
+                      {image ? (
                         <img
-                          src={productImage}
+                          src={image}
                           alt={product.name}
-                          className="h-full w-full object-cover transition duration-500 hover:scale-105"
                         />
                       ) : (
-                        <div className="flex h-full w-full items-center justify-center text-7xl">
-                          🛍️
+                        <div className="artisan-product-placeholder">
+                          𒀭
                         </div>
                       )}
+
+                      <span className="artisan-product-number">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+
+                      {product.stock_quantity <= 0 && (
+                        <span className="artisan-out-of-stock">
+                          نفد المخزون
+                        </span>
+                      )}
+
+                      <div className="artisan-product-overlay">
+                        <button
+                          onClick={() =>
+                            navigate(
+                              `/products/${product.id}`
+                            )
+                          }
+                        >
+                          عرض التفاصيل
+                          <span>→</span>
+                        </button>
+                      </div>
                     </div>
 
-                    {/* Product Info */}
-                    <div className="p-6">
-                      <h3 className="text-xl font-bold text-[#003049]">
-                        {product.name}
-                      </h3>
+                    <div className="artisan-product-content">
+                      <span className="artisan-product-label">
+                        HANDCRAFTED
+                      </span>
+
+                      <h3>{product.name}</h3>
 
                       {product.description && (
-                        <p className="mt-3 line-clamp-3 leading-7 text-gray-600">
+                        <p>
                           {product.description}
                         </p>
                       )}
 
-                      {/* Price + Stock */}
-                      <div className="mt-5 flex items-center justify-between gap-3">
-                        <span className="text-xl font-bold text-[#780000]">
-                          {Number(
-                            product.price || 0
-                          ).toLocaleString()}{" "}
-                          د.ع
-                        </span>
+                      <div className="artisan-product-bottom">
+                        <div className="artisan-product-price">
+                          <small>السعر</small>
+                          <strong>
+                            {Number(
+                              product.price
+                            ).toLocaleString()}{" "}
+                            IQD
+                          </strong>
+                        </div>
 
-                        <span
-                          className={`rounded-full px-3 py-1 text-sm font-semibold ${
-                            stock > 0
-                              ? "bg-[#FDF0D5] text-[#003049]"
-                              : "bg-red-100 text-red-700"
-                          }`}
+                        <button
+                          onClick={() =>
+                            addToCart(product)
+                          }
+                          disabled={
+                            product.stock_quantity <= 0
+                          }
+                          className="artisan-add-cart"
                         >
-                          {stock > 0
-                            ? `متوفر: ${stock}`
-                            : "نفذت الكمية"}
-                        </span>
+                          <span>+</span>
+                          أضف للسلة
+                        </button>
                       </div>
 
-                      {/* Add To Cart */}
-                      <button
-                        onClick={() => addToCart(product)}
-                        disabled={stock <= 0}
-                        className="mt-5 w-full rounded-2xl bg-[#780000] px-5 py-3 font-bold text-white transition duration-300 hover:-translate-y-1 hover:bg-[#C1121F] disabled:cursor-not-allowed disabled:bg-gray-400 disabled:hover:translate-y-0"
-                      >
-                        {stock > 0
-                          ? "إضافة إلى السلة 🛒"
-                          : "نفذت الكمية"}
-                      </button>
+                      {product.stock_quantity > 0 && (
+                        <div className="artisan-stock-line">
+                          <span />
+                          {product.stock_quantity} متوفر
+                        </div>
+                      )}
                     </div>
-                  </div>
+                  </article>
                 );
               })}
-            </div>
-          ) : (
-            <div className="rounded-3xl bg-white p-12 text-center shadow-xl">
-              <div className="text-6xl">🛍️</div>
-
-              <h3 className="mt-5 text-2xl font-bold text-[#003049]">
-                لا توجد منتجات حالياً
-              </h3>
-
-              <p className="mt-3 text-gray-600">
-                سيتم إضافة منتجات هذا الحرفي قريباً.
-              </p>
             </div>
           )}
         </div>
       </section>
 
-      {/* Bottom CTA */}
-      <section className="px-6 py-16">
-        <div className="mx-auto max-w-7xl">
-          <div className="rounded-3xl bg-[#003049] p-10 text-center text-white shadow-2xl md:p-14">
-            <h2 className="text-3xl font-bold md:text-4xl">
-              ادعم الحرف العراقية
+      <section className="artisan-final-cta">
+        <div className="artisan-cta-pattern" />
+
+        <div className="artisan-profile-container">
+          <div className="artisan-cta-content">
+            <span>SUPPORT IRAQI CRAFTSMANSHIP</span>
+
+            <h2>
+              كل قطعة تحمل
+              <br />
+              <strong>حكاية عراقية</strong>
             </h2>
 
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-9 text-gray-200">
-              عندما تشتري من الحرفيين المحليين، أنت لا تشتري منتجاً
-              فقط، بل تساهم في الحفاظ على حرفة وتراث عراقي أصيل.
+            <p>
+              اكتشف المزيد من الحرفيين والأعمال اليدوية
+              الأصيلة على الحرفا.
             </p>
 
             <button
               onClick={() => navigate("/artisans")}
-              className="mt-8 rounded-2xl bg-[#780000] px-8 py-4 font-bold text-white transition hover:-translate-y-1 hover:bg-[#C1121F]"
+              className="artisan-cta-button"
             >
-              استكشف باقي الحرفيين
+              استكشف جميع الحرفيين
+              <span>→</span>
             </button>
+          </div>
+
+          <div className="artisan-cta-symbol">
+            𒀭
           </div>
         </div>
       </section>

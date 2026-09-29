@@ -1,24 +1,36 @@
+/* =========================================================
+   ALHERFA - ARTISANS PAGE
+   ========================================================= */
 
-/* =========================
-   Artisans Page
-========================= */
+.artisans-page {
+  width: 100%;
+  min-width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
 
-.artisans-page { width: 100%;
-     min-width: 100%;
-    min-height: 100vh; 
-    margin: 0; padding: 0; 
-    overflow-x: hidden; 
-    box-sizing: border-box; } 
-    .artisans-page *, 
-    .artisans-page *::before, 
-    .artisans-page *::after { box-sizing: border-box; }
+.artisans-page *,
+.artisans-page *::before,
+.artisans-page *::after {
+  box-sizing: border-box;
+}
 
-/* =========================
-   Hero Section
-========================= */
+/* =========================================================
+   HERO
+   ========================================================= */
 
 .artisans-hero {
-  padding: 64px 20px;
+  padding: 88px 20px 96px;
+  background:
+    radial-gradient(
+      circle at 50% 30%,
+      rgba(120, 0, 0, 0.035),
+      transparent 42%
+    ),
+    #fdf0d5;
 }
 
 .artisans-hero-content {
@@ -28,18 +40,52 @@
   text-align: center;
 }
 
-.artisans-hero-description {
-  width: 100%;
-  max-width: 680px;
-  margin: 24px auto 0;
+.artisans-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 22px;
+  padding: 8px 15px;
+  border: 1px solid rgba(120, 0, 0, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.45);
+  color: #780000;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  backdrop-filter: blur(8px);
+  animation: artisansFadeUp 0.7s ease-out both;
 }
 
-/* =========================
-   Artisans Section
-========================= */
+.artisans-eyebrow-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #780000;
+  animation: artisansPulse 2s ease-in-out infinite;
+}
+
+.artisans-main-title {
+  color: #003049;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.artisans-hero-description {
+  width: 100%;
+  max-width: 700px;
+  margin: 26px auto 0;
+}
+
+/* =========================================================
+   MAIN SECTION
+   ========================================================= */
 
 .artisans-section {
-  padding: 0 20px 96px;
+  position: relative;
+  padding: 0 20px 100px;
 }
 
 .artisans-container {
@@ -48,81 +94,144 @@
   margin: 0 auto;
 }
 
-/* =========================
-   Header
-========================= */
-
+/* =========================================================
+   HEADER
+   ========================================================= */
 
 .artisans-header {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
-  margin-bottom: 48px;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+  margin-bottom: 42px;
   width: 100%;
 }
 
 .artisans-heading {
-  width: 100%;
-  text-align: center;
+  flex: 1;
 }
 
-
-/* =========================
-   Search
-========================= */
-
+/* =========================================================
+   SEARCH
+   ========================================================= */
 
 .artisans-search {
   position: relative;
   width: 100%;
-  max-width: 520px;
-  margin: 0 auto;
- 
+  max-width: 440px;
+  flex-shrink: 0;
 }
 
 .artisans-search input {
   width: 100%;
-  height: 54px;
-
+  height: 56px;
+  padding: 0 48px 0 50px;
+  border: 1px solid rgba(0, 48, 73, 0.12);
+  border-radius: 18px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.82);
+  color: #003049;
+  font-size: 14px;
+  box-shadow: 0 8px 30px rgba(0, 48, 73, 0.06);
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+  backdrop-filter: blur(10px);
 }
 
+.artisans-search input::placeholder {
+  color: rgba(102, 155, 188, 0.75);
+}
 
-/* =========================
-   Grid
-========================= */
+.artisans-search input:focus {
+  border-color: rgba(120, 0, 0, 0.45);
+  box-shadow:
+    0 10px 35px rgba(0, 48, 73, 0.08),
+    0 0 0 4px rgba(120, 0, 0, 0.06);
+  transform: translateY(-1px);
+}
+
+.artisans-search-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  z-index: 2;
+  transform: translateY(-50%);
+  font-size: 17px;
+  pointer-events: none;
+}
+
+.artisans-search-clear {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(0, 48, 73, 0.06);
+  color: #003049;
+  font-size: 21px;
+  line-height: 1;
+  transform: translateY(-50%);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.artisans-search-clear:hover {
+  background: #780000;
+  color: #fdf0d5;
+}
+
+/* =========================================================
+   GRID
+   ========================================================= */
 
 .artisans-grid {
   display: grid;
-
   grid-template-columns: repeat(1, minmax(0, 1fr));
-
-  column-gap: 32px;
-  row-gap: 40px;
+  gap: 28px;
 }
 
-/* =========================
-   Empty State
-========================= */
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
 
 .artisans-empty {
   width: 100%;
   max-width: 700px;
-
-  margin: 0 auto;
-  padding: 64px 24px;
-
+  margin: 20px auto 0;
+  padding: 70px 24px;
+  border: 1px solid rgba(0, 48, 73, 0.08);
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.65);
   text-align: center;
+  box-shadow: 0 15px 50px rgba(0, 48, 73, 0.06);
 }
 
-/* =========================
-   Loading
-========================= */
+.artisans-empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 78px;
+  height: 78px;
+  margin: 0 auto 22px;
+  border-radius: 50%;
+  background: rgba(120, 0, 0, 0.07);
+  font-size: 34px;
+}
+
+/* =========================================================
+   LOADING
+   ========================================================= */
 
 .artisans-loading {
   width: 100%;
   max-width: 1280px;
-
   margin: 0 auto;
 }
 
@@ -132,23 +241,21 @@
 
 .artisans-loading-grid {
   display: grid;
-
   grid-template-columns: repeat(1, minmax(0, 1fr));
-
-  gap: 32px;
+  gap: 28px;
 }
 
-/* =========================
-   Tablet
-========================= */
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
 
 @media (min-width: 640px) {
   .artisans-hero {
-    padding: 80px 32px;
+    padding: 100px 32px 110px;
   }
 
   .artisans-section {
-    padding: 0 32px 96px;
+    padding: 0 32px 110px;
   }
 
   .artisans-grid,
@@ -157,60 +264,99 @@
   }
 }
 
-/* =========================
-   Laptop
-========================= */
-
 @media (min-width: 1024px) {
   .artisans-hero {
-    padding: 96px 40px;
+    padding: 105px 40px 115px;
   }
 
   .artisans-section {
-    padding: 0 40px 112px;
+    padding: 0 40px 120px;
   }
 
   .artisans-grid,
   .artisans-loading-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
-
-  .artisans-header {
-    gap: 28px;
-  }
 }
-
-/* =========================
-   Large Screens
-========================= */
 
 @media (min-width: 1280px) {
   .artisans-grid,
   .artisans-loading-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 30px;
   }
 
   .artisans-hero {
-    padding-top: 104px;
-    padding-bottom: 104px;
+    padding-top: 115px;
+    padding-bottom: 125px;
   }
 }
 
-/* =========================
-   Mobile
-========================= */
+@media (max-width: 767px) {
+  .artisans-header {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .artisans-search {
+    max-width: none;
+  }
+}
 
 @media (max-width: 639px) {
+  .artisans-hero {
+    padding: 72px 20px 80px;
+  }
+
+  .artisans-section {
+    padding: 0 20px 80px;
+  }
+
   .artisans-hero-description {
     margin-top: 20px;
   }
 
-  .artisans-header {
-    margin-bottom: 40px;
-  }
-
   .artisans-empty {
-    padding: 52px 20px;
+    padding: 55px 20px;
   }
 }
 
+/* =========================================================
+   ANIMATIONS
+   ========================================================= */
+
+@keyframes artisansFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes artisansPulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.45;
+    transform: scale(0.75);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .artisans-page *,
+  .artisans-page *::before,
+  .artisans-page *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../../services/api";
+import "./Favorites.css";
 
 const productImages = {
   19: "/images/products/copper/copper-tray.jpg",
@@ -57,9 +58,6 @@ function Favorites() {
             api.products.getAll(),
           ]);
 
-        console.log("FAVORITES:", favoritesResponse);
-        console.log("PRODUCTS:", productsResponse);
-
         const favoriteList = Array.isArray(favoritesResponse)
           ? favoritesResponse
           : [];
@@ -71,14 +69,10 @@ function Favorites() {
         setFavorites(favoriteList);
         setProducts(productList);
       } catch (err) {
-        console.error(
-          "Failed to load favorites:",
-          err
-        );
+        console.error("Failed to load favorites:", err);
 
         setError(
-          err.message ||
-            "Failed to load your favorites."
+          err.message || "Failed to load your favorites."
         );
       } finally {
         setLoading(false);
@@ -124,10 +118,7 @@ function Favorites() {
         })
       );
     } catch (err) {
-      console.error(
-        "Failed to remove favorite:",
-        err
-      );
+      console.error("Failed to remove favorite:", err);
 
       alert(
         err.message ||
@@ -140,30 +131,35 @@ function Favorites() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#FDF0D5] px-5 py-12 md:px-8">
-        <div className="mx-auto max-w-6xl">
+      <main className="favorites-page favorites-loading-page">
+        <div className="favorites-orb favorites-orb-one" />
+        <div className="favorites-orb favorites-orb-two" />
 
-          <div className="mx-auto h-10 w-64 animate-pulse rounded-lg bg-gray-200" />
+        <div className="favorites-container">
+          <div className="favorites-loading-header">
+            <div className="favorites-skeleton skeleton-small" />
+            <div className="favorites-skeleton skeleton-title" />
+            <div className="favorites-skeleton skeleton-text" />
+          </div>
 
-          <div className="mx-auto mt-3 h-5 w-80 animate-pulse rounded bg-gray-200" />
+          <div className="favorites-skeleton-count" />
 
-          <div className="mt-10 grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="favorites-grid">
             {[1, 2, 3, 4].map((item) => (
               <div
                 key={item}
-                className="overflow-hidden rounded-2xl bg-white shadow"
+                className="favorite-skeleton-card"
               >
-                <div className="aspect-square animate-pulse bg-gray-200" />
+                <div className="favorite-skeleton-image" />
 
-                <div className="space-y-3 p-5">
-                  <div className="h-3 w-20 animate-pulse rounded bg-gray-200" />
-                  <div className="h-5 w-40 animate-pulse rounded bg-gray-200" />
-                  <div className="h-8 w-full animate-pulse rounded bg-gray-200" />
+                <div className="favorite-skeleton-content">
+                  <div className="favorite-skeleton-line small" />
+                  <div className="favorite-skeleton-line medium" />
+                  <div className="favorite-skeleton-line price" />
                 </div>
               </div>
             ))}
           </div>
-
         </div>
       </main>
     );
@@ -171,204 +167,268 @@ function Favorites() {
 
   if (error) {
     return (
-      <main className="min-h-screen bg-[#FDF0D5] px-5 py-12 md:px-8">
-        <div className="mx-auto max-w-2xl rounded-3xl bg-white p-10 text-center shadow-xl">
+      <main className="favorites-page favorites-error-page">
+        <div className="favorites-orb favorites-orb-one" />
+        <div className="favorites-orb favorites-orb-two" />
 
-          <div className="text-6xl">
-            ♡
-          </div>
+        <div className="favorites-container">
+          <section className="favorites-message-card">
+            <div className="favorites-message-icon">♡</div>
 
-          <h1 className="mt-5 text-3xl font-black text-[#003049]">
-            Favorites
-          </h1>
+            <span className="favorites-kicker">
+              ALHERFA COLLECTION
+            </span>
 
-          <p className="mt-3 text-gray-600">
-            {error}
-          </p>
+            <h1>Favorites</h1>
 
-          <Link
-            to="/login"
-            className="mt-7 inline-flex rounded-xl bg-[#003049] px-7 py-3 font-bold text-white transition hover:-translate-y-1 hover:bg-[#780000]"
-          >
-            Login
-          </Link>
+            <p>{error}</p>
 
+            <Link
+              to="/login"
+              className="favorites-primary-button"
+            >
+              Login
+              <span>→</span>
+            </Link>
+          </section>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#FDF0D5] px-5 py-12 md:px-8">
+    <main className="favorites-page">
+      <div className="favorites-orb favorites-orb-one" />
+      <div className="favorites-orb favorites-orb-two" />
+      <div className="favorites-cuneiform">𒀭</div>
 
-      <div className="mx-auto max-w-6xl">
+      <section className="favorites-hero">
+        <div className="favorites-pattern favorites-pattern-one" />
+        <div className="favorites-pattern favorites-pattern-two" />
 
-        {/* Header */}
-        <section className="text-center">
+        <div className="favorites-hero-content">
+          <div className="favorites-kicker">
+            <span className="favorites-kicker-line" />
+            ALHERFA COLLECTION
+            <span className="favorites-kicker-line" />
+          </div>
 
-          <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#780000]">
-            Alherfa
-          </p>
-
-          <h1 className="mt-2 text-4xl font-black text-[#003049] md:text-5xl">
-            My Favorites
+          <h1>
+            My
+            <span> Favorites</span>
           </h1>
 
-          <p className="mx-auto mt-3 max-w-xl text-[#003049]/60">
-            Your favorite handmade products, all in one place.
-          </p>
-
-        </section>
-
-        {/* Count */}
-        <div className="mt-8 flex justify-center">
-          <div className="rounded-full bg-white px-6 py-3 font-bold text-[#003049] shadow-md">
-            ♥ {favoriteProducts.length}{" "}
-            {favoriteProducts.length === 1
-              ? "Favorite"
-              : "Favorites"}
+          <div className="favorites-title-decoration">
+            <span />
+            <b>♥</b>
+            <span />
           </div>
+
+          <p>
+            Keep the handcrafted pieces you love
+            close and discover them whenever you want.
+          </p>
         </div>
+      </section>
 
-        {/* Empty */}
-        {favoriteProducts.length === 0 ? (
-          <div className="mx-auto mt-10 max-w-2xl rounded-3xl bg-white p-12 text-center shadow-xl">
+      <section className="favorites-content-section">
+        <div className="favorites-container">
 
-            <div className="text-7xl text-[#780000]">
-              ♡
+          <div className="favorites-toolbar">
+            <div className="favorites-toolbar-left">
+              <span className="favorites-section-label">
+                YOUR COLLECTION
+              </span>
+
+              <h2>Saved Products</h2>
             </div>
 
-            <h2 className="mt-6 text-2xl font-black text-[#003049]">
-              No favorites yet
-            </h2>
+            <div className="favorites-count">
+              <span>♥</span>
 
-            <p className="mt-3 text-gray-500">
-              Start exploring our handmade products
-              and save the ones you love.
-            </p>
+              <strong>
+                {favoriteProducts.length}
+              </strong>
 
-            <Link
-              to="/products"
-              className="mt-7 inline-flex rounded-xl bg-[#003049] px-7 py-3 font-bold text-white transition hover:-translate-y-1 hover:bg-[#780000]"
-            >
-              Explore Products
-            </Link>
-
+              <small>
+                {favoriteProducts.length === 1
+                  ? "Favorite"
+                  : "Favorites"}
+              </small>
+            </div>
           </div>
-        ) : (
 
-          /* Products */
-          <div className="mt-10 grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {favoriteProducts.length === 0 ? (
+            <section className="favorites-empty-card">
+              <div className="favorites-empty-icon">
+                ♡
+              </div>
 
-            {favoriteProducts.map((product) => {
+              <span className="favorites-empty-kicker">
+                YOUR COLLECTION IS WAITING
+              </span>
 
-              const imageSrc =
-                productImages[product.id] ||
-                product.image?.trim() ||
-                null;
+              <h2>No favorites yet</h2>
 
-              const categoryName =
-                product.category_name ||
-                product.category ||
-                "Handmade";
+              <p>
+                Start exploring our handmade products
+                and save the pieces that speak to you.
+              </p>
 
-              const formattedPrice =
-                Number(
-                  product.price || 0
-                ).toLocaleString("en-US");
+              <Link
+                to="/products"
+                className="favorites-primary-button"
+              >
+                Explore Products
+                <span>→</span>
+              </Link>
 
-              const isRemoving =
-                Number(removingId) ===
-                Number(product.id);
+              <div className="favorites-empty-symbol">
+                𒀭
+              </div>
+            </section>
+          ) : (
+            <div className="favorites-grid">
+              {favoriteProducts.map((product, index) => {
+                const imageSrc =
+                  productImages[product.id] ||
+                  product.image?.trim() ||
+                  null;
 
-              return (
-                <article
-                  key={product.id}
-                  className="group overflow-hidden rounded-2xl bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
-                >
+                const categoryName =
+                  product.category_name ||
+                  product.category ||
+                  "Handmade";
 
-                  {/* Image */}
-                  <div className="relative">
+                const formattedPrice =
+                  Number(product.price || 0).toLocaleString(
+                    "en-US"
+                  );
 
-                    <Link
-                      to={`/products/${product.id}`}
-                    >
-                      <div className="aspect-square overflow-hidden bg-[#FDF0D5]">
+                const isRemoving =
+                  Number(removingId) ===
+                  Number(product.id);
 
-                        {imageSrc ? (
-                          <img
-                            src={imageSrc}
-                            alt={
-                              product.name ||
-                              "Handmade product"
-                            }
-                            className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                          />
-                        ) : (
-                          <div className="flex h-full w-full items-center justify-center text-5xl text-[#780000]">
-                            𒀭
-                          </div>
-                        )}
-
-                      </div>
-                    </Link>
-
-                    {/* Remove */}
-                    <button
-                      type="button"
-                      onClick={() =>
-                        removeFavorite(product.id)
-                      }
-                      disabled={isRemoving}
-                      aria-label="Remove from favorites"
-                      title="Remove from favorites"
-                      className="absolute right-3 top-3 flex h-11 w-11 items-center justify-center rounded-full bg-white/95 text-2xl text-[#780000] shadow-md backdrop-blur-sm transition hover:scale-110 hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
-                    >
-                      {isRemoving ? "…" : "♥"}
-                    </button>
-
-                  </div>
-
-                  {/* Info */}
-                  <div className="p-5">
-
-                    <p className="text-xs font-medium uppercase tracking-wider text-[#780000]">
-                      {categoryName}
-                    </p>
-
-                    <Link
-                      to={`/products/${product.id}`}
-                    >
-                      <h2 className="mt-2 text-lg font-semibold text-[#003049] transition hover:text-[#780000]">
-                        {product.name}
-                      </h2>
-                    </Link>
-
-                    <div className="mt-4 flex items-center justify-between gap-3">
-
-                      <p className="font-semibold text-[#003049]">
-                        {formattedPrice} IQD
-                      </p>
+                return (
+                  <article
+                    key={product.id}
+                    className={`favorite-card ${
+                      isRemoving
+                        ? "favorite-card-removing"
+                        : ""
+                    }`}
+                    style={{
+                      animationDelay: `${index * 0.08}s`,
+                    }}
+                  >
+                    <div className="favorite-image-wrapper">
 
                       <Link
                         to={`/products/${product.id}`}
-                        className="rounded-full bg-[#003049] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#780000]"
+                        className="favorite-image-link"
                       >
-                        View
+                        <div className="favorite-image">
+
+                          {imageSrc ? (
+                            <img
+                              src={imageSrc}
+                              alt={
+                                product.name ||
+                                "Handmade product"
+                              }
+                            />
+                          ) : (
+                            <div className="favorite-image-fallback">
+                              𒀭
+                            </div>
+                          )}
+
+                          <div className="favorite-image-overlay">
+                            <span>View Product</span>
+                          </div>
+                        </div>
                       </Link>
 
+                      <span className="favorite-number">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          removeFavorite(product.id)
+                        }
+                        disabled={isRemoving}
+                        aria-label="Remove from favorites"
+                        title="Remove from favorites"
+                        className="favorite-remove-button"
+                      >
+                        {isRemoving ? (
+                          <span className="favorite-spinner" />
+                        ) : (
+                          "♥"
+                        )}
+                      </button>
                     </div>
 
-                  </div>
+                    <div className="favorite-card-content">
 
-                </article>
-              );
-            })}
+                      <div className="favorite-category-row">
+                        <span>{categoryName}</span>
+                        <span>HANDMADE</span>
+                      </div>
 
+                      <Link
+                        to={`/products/${product.id}`}
+                        className="favorite-product-link"
+                      >
+                        <h3>{product.name}</h3>
+                      </Link>
+
+                      <div className="favorite-card-footer">
+                        <div className="favorite-price">
+                          <small>PRICE</small>
+                          <strong>
+                            {formattedPrice} IQD
+                          </strong>
+                        </div>
+
+                        <Link
+                          to={`/products/${product.id}`}
+                          className="favorite-view-button"
+                        >
+                          View
+                          <span>→</span>
+                        </Link>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
+
+          <div className="favorites-bottom-banner">
+            <div className="favorites-banner-symbol">
+              𒀭
+            </div>
+
+            <div>
+              <span>ALHERFA COLLECTION</span>
+              <p>
+                Every saved piece supports Iraqi
+                craftsmanship and local creativity.
+              </p>
+            </div>
+
+            <Link to="/products">
+              Continue Exploring
+              <span>→</span>
+            </Link>
           </div>
-        )}
 
-      </div>
+        </div>
+      </section>
     </main>
   );
 }

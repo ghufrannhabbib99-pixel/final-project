@@ -1,32 +1,36 @@
 import { Link } from "react-router-dom";
+import "./Dashboard.css";
 
 function Dashboard() {
   return (
-    <main className="min-h-screen bg-[#FDF0D5]">
+    <main className="artisan-dashboard">
+      {/* Decorative background */}
+      <div className="artisan-dashboard-orb artisan-dashboard-orb-one" />
+      <div className="artisan-dashboard-orb artisan-dashboard-orb-two" />
+
+      <div className="artisan-dashboard-symbol symbol-one">𒀭</div>
+      <div className="artisan-dashboard-symbol symbol-two">𒂗</div>
+
       {/* Header */}
-      <section className="relative overflow-hidden bg-[#FDF0D5] px-4 py-16 sm:px-6 lg:px-8">
-        <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#669BBC]/10" />
-        <div className="absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-[#780000]/5" />
-
-        <div className="relative mx-auto max-w-7xl">
-          <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#780000]">
+      <section className="artisan-dashboard-hero">
+        <div className="artisan-dashboard-hero-inner">
+          <div className="artisan-dashboard-kicker">
+            <span />
             Artisan Workspace
-          </p>
+          </div>
 
-          <div className="mt-3 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div className="artisan-dashboard-heading">
             <div>
-              <h1 className="text-4xl font-bold leading-tight text-[#003049] sm:text-5xl">
-                Artisan Dashboard
-              </h1>
+              <h1>Artisan Dashboard</h1>
 
-              <p className="mt-4 max-w-2xl text-lg leading-8 text-[#669BBC]">
+              <p>
                 Manage your profile, products, and orders from one place.
               </p>
             </div>
 
             <Link
               to="/artisans"
-              className="inline-flex w-fit items-center gap-2 rounded-xl border border-[#003049]/15 bg-white px-5 py-3 font-semibold text-[#003049] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
+              className="artisan-marketplace-btn"
             >
               <span>←</span>
               View Marketplace
@@ -36,167 +40,168 @@ function Dashboard() {
       </section>
 
       {/* Main Content */}
-      <section className="px-4 pb-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
+      <section className="artisan-dashboard-content">
+        <div className="artisan-dashboard-container">
 
           {/* Main Navigation Cards */}
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="artisan-dashboard-grid">
 
             {/* Profile */}
             <Link
               to="/artisan/profile"
-              className="group rounded-3xl bg-white p-7 shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+              className="artisan-dashboard-card"
             >
-              <div className="h-14 w-14 overflow-hidden rounded-2xl bg-[#FDF0D5] transition-transform duration-300 group-hover:scale-110">
+              <div className="artisan-card-image-wrap">
                 <img
                   src="/images/artisans/potter.jpg"
                   alt="Artisan Profile"
-                  className="h-full w-full object-cover"
                 />
+
+                <div className="artisan-card-image-overlay" />
               </div>
 
-              <h2 className="mt-6 text-2xl font-bold text-[#003049]">
-                My Profile
-              </h2>
+              <div className="artisan-card-content">
+                <span className="artisan-card-number">01</span>
 
-              <p className="mt-3 leading-7 text-[#669BBC]">
-                View and manage your artisan information, bio, location,
-                and experience.
-              </p>
+                <h2>My Profile</h2>
 
-              <div className="mt-6 font-semibold text-[#780000]">
-                Manage Profile
-                <span className="ml-2 inline-block transition-transform duration-300 group-hover:translate-x-2">
-                  →
-                </span>
+                <p>
+                  View and manage your artisan information, bio,
+                  location, and experience.
+                </p>
+
+                <div className="artisan-card-link">
+                  Manage Profile
+                  <span>→</span>
+                </div>
               </div>
             </Link>
 
             {/* Products */}
             <Link
               to="/artisan/products"
-              className="group rounded-3xl bg-white p-7 shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+              className="artisan-dashboard-card"
             >
-              <div className="h-14 w-14 overflow-hidden rounded-2xl bg-[#FDF0D5] transition-transform duration-300 group-hover:scale-110">
+              <div className="artisan-card-image-wrap">
                 <img
                   src="/images/products/ceramics/vase.jpg"
                   alt="Products"
-                  className="h-full w-full object-cover"
                 />
+
+                <div className="artisan-card-image-overlay" />
               </div>
 
-              <h2 className="mt-6 text-2xl font-bold text-[#003049]">
-                My Products
-              </h2>
+              <div className="artisan-card-content">
+                <span className="artisan-card-number">02</span>
 
-              <p className="mt-3 leading-7 text-[#669BBC]">
-                Add new handmade products and manage your existing
-                products.
-              </p>
+                <h2>My Products</h2>
 
-              <div className="mt-6 font-semibold text-[#780000]">
-                Manage Products
-                <span className="ml-2 inline-block transition-transform duration-300 group-hover:translate-x-2">
-                  →
-                </span>
+                <p>
+                  Add new handmade products and manage your existing
+                  products.
+                </p>
+
+                <div className="artisan-card-link">
+                  Manage Products
+                  <span>→</span>
+                </div>
               </div>
             </Link>
 
             {/* Orders */}
             <Link
               to="/artisan/orders"
-              className="group rounded-3xl bg-white p-7 shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+              className="artisan-dashboard-card"
             >
-              <div className="h-14 w-14 overflow-hidden rounded-2xl bg-[#FDF0D5] transition-transform duration-300 group-hover:scale-110">
+              <div className="artisan-card-image-wrap">
                 <img
                   src="/images/products/copper/copper-tray.jpg"
                   alt="Orders"
-                  className="h-full w-full object-cover"
                 />
+
+                <div className="artisan-card-image-overlay" />
               </div>
 
-              <h2 className="mt-6 text-2xl font-bold text-[#003049]">
-                My Orders
-              </h2>
+              <div className="artisan-card-content">
+                <span className="artisan-card-number">03</span>
 
-              <p className="mt-3 leading-7 text-[#669BBC]">
-                Follow your orders and keep track of the latest order
-                activity.
-              </p>
+                <h2>My Orders</h2>
 
-              <div className="mt-6 font-semibold text-[#780000]">
-                View Orders
-                <span className="ml-2 inline-block transition-transform duration-300 group-hover:translate-x-2">
-                  →
-                </span>
+                <p>
+                  Follow your orders and keep track of the latest
+                  order activity.
+                </p>
+
+                <div className="artisan-card-link">
+                  View Orders
+                  <span>→</span>
+                </div>
               </div>
             </Link>
           </div>
 
           {/* Quick Actions */}
-          <div className="mt-10 overflow-hidden rounded-3xl bg-[#003049] p-7 shadow-xl sm:p-9">
-            <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <section className="artisan-quick-actions">
+            <div className="quick-actions-pattern">𒀭</div>
 
-              <div>
-                <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#669BBC]">
-                  Quick Actions
-                </p>
+            <div className="quick-actions-content">
+              <span>Quick Actions</span>
 
-                <h2 className="mt-2 text-3xl font-bold text-[#FDF0D5]">
-                  Ready to add something new?
-                </h2>
+              <h2>
+                Ready to add something new?
+              </h2>
 
-                <p className="mt-3 max-w-2xl leading-7 text-[#FDF0D5]/70">
-                  Add a handmade product and make it available to customers
-                  in the marketplace.
-                </p>
-              </div>
-
-              <Link
-                to="/artisan/products/add"
-                className="inline-flex w-fit shrink-0 items-center gap-2 rounded-xl bg-[#780000] px-6 py-3 font-semibold text-[#FDF0D5] transition-all duration-300 hover:-translate-y-1 hover:bg-[#C1121F] hover:shadow-lg"
-              >
-                <span className="text-xl">+</span>
-                Add Product
-              </Link>
+              <p>
+                Add a handmade product and make it available to
+                customers in the marketplace.
+              </p>
             </div>
-          </div>
+
+            <Link
+              to="/artisan/products/add"
+              className="add-product-btn"
+            >
+              <span>+</span>
+              Add Product
+            </Link>
+          </section>
 
           {/* Helpful Links */}
-          <div className="mt-10">
-            <h2 className="text-2xl font-bold text-[#003049]">
-              Explore
-            </h2>
+          <section className="artisan-explore">
+            <div className="artisan-section-heading">
+              <div>
+                <span>Discover</span>
+                <h2>Explore</h2>
+              </div>
 
-            <div className="mt-5 grid gap-4 sm:grid-cols-2">
+              <div className="heading-line" />
+            </div>
+
+            <div className="artisan-explore-grid">
 
               {/* Browse Artisans */}
               <Link
                 to="/artisans"
-                className="group flex items-center justify-between rounded-2xl bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                className="artisan-explore-card"
               >
-                <div className="flex items-center gap-4">
-
-                  <div className="h-11 w-11 overflow-hidden rounded-xl bg-[#FDF0D5]">
+                <div className="explore-card-left">
+                  <div className="explore-image">
                     <img
                       src="/images/artisans/embroiderer.jpg"
                       alt="Browse Artisans"
-                      className="h-full w-full object-cover"
                     />
                   </div>
 
                   <div>
-                    <h3 className="font-bold text-[#003049]">
-                      Browse Artisans
-                    </h3>
+                    <h3>Browse Artisans</h3>
 
-                    <p className="text-sm text-[#669BBC]">
+                    <p>
                       Explore the marketplace
                     </p>
                   </div>
                 </div>
 
-                <span className="text-xl text-[#780000] transition-transform duration-300 group-hover:translate-x-1">
+                <span className="explore-arrow">
                   →
                 </span>
               </Link>
@@ -204,37 +209,32 @@ function Dashboard() {
               {/* Shopping Cart */}
               <Link
                 to="/cart"
-                className="group flex items-center justify-between rounded-2xl bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                className="artisan-explore-card"
               >
-                <div className="flex items-center gap-4">
-
-                  <div className="h-11 w-11 overflow-hidden rounded-xl bg-[#FDF0D5]">
+                <div className="explore-card-left">
+                  <div className="explore-image">
                     <img
                       src="/images/products/palm/palm-basket.jpg"
                       alt="Shopping Cart"
-                      className="h-full w-full object-cover"
                     />
                   </div>
 
                   <div>
-                    <h3 className="font-bold text-[#003049]">
-                      Shopping Cart
-                    </h3>
+                    <h3>Shopping Cart</h3>
 
-                    <p className="text-sm text-[#669BBC]">
+                    <p>
                       View your cart
                     </p>
                   </div>
                 </div>
 
-                <span className="text-xl text-[#780000] transition-transform duration-300 group-hover:translate-x-1">
+                <span className="explore-arrow">
                   →
                 </span>
               </Link>
 
             </div>
-          </div>
-
+          </section>
         </div>
       </section>
     </main>

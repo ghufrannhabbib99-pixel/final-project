@@ -5,231 +5,188 @@ function Orders() {
 
   return (
     <div className="admin-orders min-h-screen bg-[#FDF0D5]">
+      {/* Decorative elements */}
+      <div className="orders-orb orders-orb-one" />
+      <div className="orders-orb orders-orb-two" />
+      <div className="orders-cuneiform orders-cuneiform-one">𒀭</div>
+      <div className="orders-cuneiform orders-cuneiform-two">𒂗</div>
 
-      {/* Main Content */}
       <main className="orders-main">
-
         {/* Header */}
         <header className="orders-header">
-
-          <div>
-            <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-[#780000]">
+          <div className="orders-header-content">
+            <div className="orders-kicker">
+              <span className="orders-kicker-line" />
               Administration
-            </p>
+            </div>
 
-            <h1 className="text-3xl font-bold text-[#003049]">
-              Orders Management
+            <h1>
+              Orders <span>Management</span>
             </h1>
 
-            <p className="mt-2 text-sm text-[#003049]/60">
-              Manage customer orders and track their status.
+            <p>
+              Manage customer orders and track their status from one place.
             </p>
           </div>
 
-          <div className="orders-count rounded-2xl bg-white shadow-sm">
-            <p className="text-sm text-[#003049]/55">
-              Total Orders
-            </p>
+          <div className="orders-count">
+            <div className="orders-count-icon">◷</div>
 
-            <p className="mt-1 text-2xl font-bold text-[#003049]">
-              {orders.length}
-            </p>
+            <div>
+              <span>Total Orders</span>
+              <strong>{orders.length}</strong>
+            </div>
           </div>
-
         </header>
 
-        {/* Search and Filters */}
-        <section className="orders-toolbar rounded-2xl bg-white shadow-sm">
+        {/* Toolbar */}
+        <section className="orders-toolbar">
+          <div className="toolbar-heading">
+            <div className="toolbar-symbol">⌕</div>
 
-          <div className="orders-search">
-
-            <label
-              htmlFor="order-search"
-              className="mb-2 block text-sm font-semibold text-[#003049]"
-            >
-              Search Orders
-            </label>
-
-            <input
-              id="order-search"
-              type="text"
-              placeholder="Search by order ID or customer name..."
-              className="w-full rounded-xl border border-[#003049]/15 bg-[#FDF0D5]/40 text-sm text-[#003049] outline-none transition placeholder:text-[#003049]/35 focus:border-[#E6B566] focus:ring-2 focus:ring-[#E6B566]/20"
-            />
-
+            <div>
+              <span>Order Directory</span>
+              <h2>Search & Filter</h2>
+            </div>
           </div>
 
-          <div className="orders-filter">
+          <div className="orders-toolbar-fields">
+            <div className="orders-search">
+              <label htmlFor="order-search">Search Orders</label>
 
-            <label
-              htmlFor="order-status"
-              className="mb-2 block text-sm font-semibold text-[#003049]"
-            >
-              Status
-            </label>
+              <div className="orders-input-wrapper">
+                <span>⌕</span>
 
-            <select
-              id="order-status"
-              className="w-full rounded-xl border border-[#003049]/15 bg-[#FDF0D5]/40 text-sm text-[#003049] outline-none transition focus:border-[#E6B566] focus:ring-2 focus:ring-[#E6B566]/20"
-            >
-              <option value="all">
-                All Status
-              </option>
+                <input
+                  id="order-search"
+                  type="text"
+                  placeholder="Search by order ID or customer name..."
+                />
+              </div>
+            </div>
 
-              <option value="pending">
-                Pending
-              </option>
+            <div className="orders-filter">
+              <label htmlFor="order-status">Status</label>
 
-              <option value="processing">
-                Processing
-              </option>
-
-              <option value="completed">
-                Completed
-              </option>
-
-              <option value="cancelled">
-                Cancelled
-              </option>
-            </select>
-
+              <select id="order-status">
+                <option value="all">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="processing">Processing</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
           </div>
-
         </section>
 
         {/* Orders Table */}
-        <section className="orders-table-wrapper overflow-hidden rounded-2xl bg-white shadow-sm">
-
-          <div className="orders-table-header flex items-center justify-between">
-
+        <section className="orders-table-wrapper">
+          <div className="orders-table-header">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#780000]">
+              <div className="orders-section-kicker">
+                <span />
                 Orders
-              </p>
+              </div>
 
-              <h2 className="mt-1 text-xl font-bold text-[#003049]">
-                All Orders
-              </h2>
+              <h2>All Orders</h2>
             </div>
 
-            <p className="text-sm text-[#003049]/50">
-              {orders.length} orders
-            </p>
-
+            <div className="orders-result-count">
+              <strong>{orders.length}</strong>
+              <span>orders</span>
+            </div>
           </div>
 
-          <div className="overflow-x-auto">
-
-            <table className="w-full text-left">
-
+          <div className="orders-table-scroll">
+            <table>
               <thead>
-                <tr className="border-b border-[#003049]/10 bg-[#FDF0D5]/40">
-
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Order ID
-                  </th>
-
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Customer
-                  </th>
-
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Products
-                  </th>
-
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Total
-                  </th>
-
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Status
-                  </th>
-
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Actions
-                  </th>
-
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Products</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
 
               <tbody>
-
                 {orders.length === 0 ? (
                   <tr>
-
-                    <td
-                      colSpan="6"
-                      className="orders-empty-state text-center"
-                    >
-
-                      <div className="flex flex-col items-center justify-center">
-
-                        <div className="orders-empty-icon flex items-center justify-center rounded-full bg-[#FDF0D5] text-2xl text-[#780000]">
-                          ◷
+                    <td colSpan="6">
+                      <div className="orders-empty-state">
+                        <div className="orders-empty-icon">
+                          <div className="orders-empty-ring">
+                            ◷
+                          </div>
                         </div>
 
-                        <p className="mt-4 text-sm font-medium text-[#003049]">
-                          No orders available yet.
-                        </p>
+                        <div className="orders-empty-content">
+                          <h3>No orders available yet</h3>
 
-                        <p className="mt-1 text-sm text-[#003049]/50">
-                          Orders will appear here once customers place them.
-                        </p>
+                          <p>
+                            Orders will appear here once customers place
+                            their first orders.
+                          </p>
+                        </div>
 
+                        <div className="orders-empty-decoration">
+                          <span>𒀭</span>
+                          <span>◇</span>
+                          <span>𒂗</span>
+                        </div>
                       </div>
-
                     </td>
-
                   </tr>
                 ) : (
-
                   orders.map((order) => (
-
-                    <tr
-                      key={order.id}
-                      className="border-b border-[#003049]/10 transition hover:bg-[#FDF0D5]/30"
-                    >
-
-                      <td className="px-6 py-5">
-                        {order.id}
+                    <tr key={order.id}>
+                      <td>
+                        <span className="order-id">
+                          #{order.id}
+                        </span>
                       </td>
 
-                      <td className="px-6 py-5">
-                        {order.customer}
+                      <td>{order.customer}</td>
+
+                      <td>{order.products}</td>
+
+                      <td>{order.total}</td>
+
+                      <td>
+                        <span className="order-status">
+                          {order.status}
+                        </span>
                       </td>
 
-                      <td className="px-6 py-5">
-                        {order.products}
+                      <td>
+                        <button
+                          type="button"
+                          className="order-action-button"
+                        >
+                          Actions
+                        </button>
                       </td>
-
-                      <td className="px-6 py-5">
-                        {order.total}
-                      </td>
-
-                      <td className="px-6 py-5">
-                        {order.status}
-                      </td>
-
-                      <td className="px-6 py-5">
-                        Actions
-                      </td>
-
                     </tr>
-
                   ))
-
                 )}
-
               </tbody>
-
             </table>
-
           </div>
-
         </section>
 
-      </main>
+        {/* Bottom note */}
+        <div className="orders-footer-note">
+          <span className="orders-footer-symbol">✦</span>
 
+          <p>
+            Every order helps connect customers with Iraqi handmade
+            craftsmanship.
+          </p>
+
+          <span className="orders-footer-symbol">✦</span>
+        </div>
+      </main>
     </div>
   );
 }

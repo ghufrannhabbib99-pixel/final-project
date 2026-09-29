@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import productImages from "../../data/productImages";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import productImages from "../../data/productImages";
+import "./Cart.css";
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -76,170 +77,230 @@ const Cart = () => {
     0
   );
 
-  // Empty Cart
+  /* =====================================================
+     EMPTY CART
+     ===================================================== */
+
   if (cart.length === 0) {
     return (
-      <div className="min-h-screen bg-[#FDF0D5] px-6 py-10">
-        <div className="mx-auto max-w-5xl">
+      <main className="cart-page cart-empty-page">
+        <div className="cart-decoration cart-decoration-one" />
+        <div className="cart-decoration cart-decoration-two" />
 
+        <div className="cart-container">
           <button
             onClick={() => navigate("/artisans")}
-            className="mb-8 rounded-2xl bg-white px-5 py-3 font-bold text-[#003049] shadow-md transition hover:-translate-y-1"
+            className="cart-back-button"
           >
-            ← Back to Artisans
+            <span>←</span>
+            Back to Artisans
           </button>
 
-          <div className="rounded-3xl bg-white p-12 text-center shadow-xl">
-
-            <div className="text-7xl">
-              🛒
+          <section className="empty-cart-card">
+            <div className="empty-cart-icon">
+              <DotLottieReact
+                src="/animations/shopping-cart.lottie"
+                loop
+                autoplay
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
             </div>
 
-            <h1 className="mt-6 text-3xl font-black text-[#003049]">
-              Your Cart is Empty
-            </h1>
+            <span className="empty-cart-eyebrow">
+              ALHERFA COLLECTION
+            </span>
 
-            <p className="mt-3 text-gray-500">
-              You haven't added any products to your cart yet.
+            <h1>Your Cart is Empty</h1>
+
+            <p>
+              You haven't added any handcrafted products to your
+              cart yet.
             </p>
 
             <button
               onClick={() => navigate("/artisans")}
-              className="mt-7 rounded-2xl bg-[#780000] px-7 py-3 font-bold text-white transition hover:-translate-y-1 hover:bg-[#C1121F]"
+              className="primary-cart-button"
             >
               Explore Artisans
+              <span>→</span>
             </button>
-
-          </div>
+          </section>
         </div>
-      </div>
+      </main>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#FDF0D5] px-4 py-8 md:px-8">
-      <div className="mx-auto max-w-6xl">
+    <main className="cart-page">
+      <div className="cart-decoration cart-decoration-one" />
+      <div className="cart-decoration cart-decoration-two" />
 
-        {/* Header */}
-        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="cart-container">
 
-          <div>
-            <h1 className="flex items-center gap-3 text-4xl font-black text-[#003049]">
-  Shopping Cart
+        {/* =================================================
+            HEADER
+        ================================================= */}
 
-  <span className="inline-block h-14 w-14">
-    <DotLottieReact
-      src="/animations/shopping-cart.lottie"
-      loop
-      autoplay
-      style={{
-        width: "100%",
-        height: "100%",
-      }}
-    />
-  </span>
-</h1>
+        <header className="cart-header">
+          <div className="cart-title-area">
+            <span className="cart-eyebrow">
+              ALHERFA COLLECTION
+            </span>
 
-            <p className="mt-2 text-gray-600">
-              You have {totalItems}{" "}
-              {totalItems === 1 ? "item" : "items"} in your cart
-            </p>
+            <div className="cart-title-row">
+              <div className="cart-animation">
+                <DotLottieReact
+                  src="/animations/shopping-cart.lottie"
+                  loop
+                  autoplay
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                  }}
+                />
+              </div>
+
+              <div>
+                <h1>Shopping Cart</h1>
+
+                <p>
+                  You have{" "}
+                  <strong>{totalItems}</strong>{" "}
+                  {totalItems === 1 ? "item" : "items"} in
+                  your cart
+                </p>
+              </div>
+            </div>
           </div>
 
           <button
             onClick={clearCart}
-            className="rounded-2xl border-2 border-[#780000] bg-white px-5 py-3 font-bold text-[#780000] transition hover:bg-[#780000] hover:text-white"
+            className="clear-cart-button"
           >
+            <span>×</span>
             Clear Cart
           </button>
+        </header>
 
-        </div>
+        {/* =================================================
+            CART CONTENT
+        ================================================= */}
 
-        <div className="grid gap-8 lg:grid-cols-3">
+        <div className="cart-layout">
 
-          {/* Products */}
-          <div className="space-y-5 lg:col-span-2">
+          {/* PRODUCTS */}
 
-            {cart.map((item) => (
-              <div
-                key={item.id}
-                className="overflow-hidden rounded-3xl bg-white shadow-lg"
-              >
+          <section className="cart-products">
 
-                <div className="flex flex-col sm:flex-row">
+            <div className="cart-section-heading">
+              <div>
+                <span>YOUR SELECTION</span>
+                <h2>Selected Products</h2>
+              </div>
 
-                  {/* Image */}
-                  <div className="flex h-52 w-full items-center justify-center bg-[#FDF0D5] sm:h-auto sm:w-52">
+              <span className="cart-count-badge">
+                {totalItems}{" "}
+                {totalItems === 1 ? "item" : "items"}
+              </span>
+            </div>
 
-                    {item.image || productImages[item.name] ? (
-  <img
-    src={item.image || productImages[item.name]}
-    alt={item.name}
-    className="h-full w-full object-cover"
-  />
-) : (
-  <div className="text-6xl">
-    🛍️
-  </div>
-)}
+            <div className="cart-items-list">
 
+              {cart.map((item, index) => (
+                <article
+                  key={item.id}
+                  className="cart-item"
+                  style={{
+                    animationDelay: `${index * 0.08}s`,
+                  }}
+                >
+
+                  {/* IMAGE */}
+
+                  <div className="cart-item-image">
+                    {item.image ||
+                    productImages[item.name] ? (
+                      <img
+                        src={
+                          item.image ||
+                          productImages[item.name]
+                        }
+                        alt={item.name}
+                      />
+                    ) : (
+                      <div className="cart-fallback-icon">
+                        🛍️
+                      </div>
+                    )}
+
+                    <span className="cart-item-number">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
                   </div>
 
-                  {/* Info */}
-                  <div className="flex flex-1 flex-col justify-between p-6">
+                  {/* INFO */}
 
-                    <div>
-                      <div className="flex items-start justify-between gap-4">
+                  <div className="cart-item-content">
 
-                        <div>
-                          <h2 className="text-xl font-bold text-[#003049]">
-                            {item.name}
-                          </h2>
+                    <div className="cart-item-top">
 
-                          {item.craft_name && (
-                            <p className="mt-1 text-sm font-semibold text-[#780000]">
-                              {item.craft_name}
-                            </p>
-                          )}
-                        </div>
+                      <div>
+                        <span className="cart-item-label">
+                          HANDCRAFTED PRODUCT
+                        </span>
 
-                        <button
-                          onClick={() => removeItem(item.id)}
-                          className="text-2xl text-gray-400 transition hover:text-[#780000]"
-                          title="Remove product"
-                        >
-                          ×
-                        </button>
+                        <h3>{item.name}</h3>
 
+                        {item.craft_name && (
+                          <p className="cart-craft-name">
+                            {item.craft_name}
+                          </p>
+                        )}
                       </div>
 
-                      <p className="mt-3 leading-7 text-gray-500">
-                        {item.description}
-                      </p>
+                      <button
+                        onClick={() =>
+                          removeItem(item.id)
+                        }
+                        className="remove-cart-item"
+                        title="Remove product"
+                        aria-label={`Remove ${item.name}`}
+                      >
+                        ×
+                      </button>
+
                     </div>
 
-                    <div className="mt-6 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+                    {item.description && (
+                      <p className="cart-item-description">
+                        {item.description}
+                      </p>
+                    )}
 
-                      {/* Quantity */}
-                      <div>
-                        <p className="mb-2 text-sm font-semibold text-gray-500">
+                    <div className="cart-item-bottom">
+
+                      {/* QUANTITY */}
+
+                      <div className="quantity-area">
+                        <span className="quantity-label">
                           Quantity
-                        </p>
+                        </span>
 
-                        <div className="flex items-center gap-3">
+                        <div className="quantity-control">
 
                           <button
                             onClick={() =>
                               decreaseQuantity(item.id)
                             }
-                            className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FDF0D5] text-xl font-bold text-[#003049] transition hover:bg-[#669BBC] hover:text-white"
+                            aria-label="Decrease quantity"
                           >
                             −
                           </button>
 
-                          <span className="w-8 text-center text-lg font-black text-[#003049]">
-                            {item.quantity}
-                          </span>
+                          <span>{item.quantity}</span>
 
                           <button
                             onClick={() =>
@@ -249,109 +310,124 @@ const Cart = () => {
                               item.quantity >=
                               item.stock_quantity
                             }
-                            className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FDF0D5] text-xl font-bold text-[#003049] transition hover:bg-[#669BBC] hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+                            aria-label="Increase quantity"
                           >
                             +
                           </button>
 
                         </div>
+
+                        {item.stock_quantity && (
+                          <span className="stock-hint">
+                            {item.stock_quantity} available
+                          </span>
+                        )}
                       </div>
 
-                      {/* Price */}
-                      <div className="text-left">
+                      {/* PRICE */}
 
-                        <p className="text-sm text-gray-500">
-                          Price
-                        </p>
+                      <div className="cart-item-price">
+                        <span>ITEM TOTAL</span>
 
-                        <p className="text-2xl font-black text-[#780000]">
+                        <strong>
                           {(
                             Number(item.price) *
                             item.quantity
                           ).toLocaleString()}{" "}
                           IQD
-                        </p>
+                        </strong>
 
-                        <p className="mt-1 text-xs text-gray-400">
+                        <small>
                           {Number(
                             item.price
                           ).toLocaleString()}{" "}
                           IQD each
-                        </p>
-
+                        </small>
                       </div>
 
                     </div>
-
                   </div>
+                </article>
+              ))}
+
+            </div>
+          </section>
+
+          {/* =================================================
+              ORDER SUMMARY
+          ================================================= */}
+
+          <aside className="cart-summary-wrapper">
+
+            <div className="cart-summary">
+
+              <div className="summary-top">
+                <span>ORDER DETAILS</span>
+
+                <div className="summary-symbol">
+                  ✦
                 </div>
               </div>
-            ))}
 
-          </div>
+              <h2>Order Summary</h2>
 
-          {/* Order Summary */}
-          <div>
-            <div className="sticky top-6 rounded-3xl bg-white p-7 shadow-xl">
+              <div className="summary-divider" />
 
-              <h2 className="text-2xl font-black text-[#003049]">
-                Order Summary
-              </h2>
+              <div className="summary-row">
+                <span>Total Items</span>
+                <strong>{totalItems}</strong>
+              </div>
 
-              <div className="mt-6 space-y-4">
+              <div className="summary-row">
+                <span>Subtotal</span>
 
-                <div className="flex justify-between text-gray-600">
-                  <span>Total Items</span>
-                  <span className="font-bold">
-                    {totalItems}
-                  </span>
+                <strong>
+                  {totalPrice.toLocaleString()} IQD
+                </strong>
+              </div>
+
+              <div className="summary-note">
+                <span>✓</span>
+                Handmade products from Iraqi artisans
+              </div>
+
+              <div className="summary-total">
+                <div>
+                  <span>Total</span>
+                  <small>Including all selected items</small>
                 </div>
 
-                <div className="flex justify-between text-gray-600">
-                  <span>Subtotal</span>
-                  <span className="font-bold">
-                    {totalPrice.toLocaleString()} IQD
-                  </span>
-                </div>
-
-                <div className="border-t pt-4">
-
-                  <div className="flex items-center justify-between">
-
-                    <span className="text-lg font-bold text-[#003049]">
-                      Total
-                    </span>
-
-                    <span className="text-2xl font-black text-[#780000]">
-                      {totalPrice.toLocaleString()} IQD
-                    </span>
-
-                  </div>
-
-                </div>
-
+                <strong>
+                  {totalPrice.toLocaleString()} IQD
+                </strong>
               </div>
 
               <button
                 onClick={() => navigate("/checkout")}
-                className="mt-7 w-full rounded-2xl bg-[#780000] px-6 py-4 font-bold text-white transition hover:-translate-y-1 hover:bg-[#C1121F]"
+                className="checkout-button"
               >
-                Proceed to Checkout →
+                Proceed to Checkout
+                <span>→</span>
               </button>
 
               <button
                 onClick={() => navigate("/artisans")}
-                className="mt-3 w-full rounded-2xl bg-[#FDF0D5] px-6 py-4 font-bold text-[#003049] transition hover:bg-[#669BBC] hover:text-white"
+                className="continue-shopping-button"
               >
                 Continue Shopping
               </button>
 
+              <div className="summary-footer">
+                <span>𒀭</span>
+                Supporting Iraqi craftsmanship
+              </div>
+
             </div>
-          </div>
+          </aside>
 
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 

@@ -1,125 +1,223 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../../services/api";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  Package,
+  ArrowRight,
+  Search,
+  RefreshCw,
+  AlertCircle,
+  ShoppingBag,
+} from "lucide-react";
+
 import productImages from "../../data/productImages";
 
-function MyProducts() {
+import "./MyProducts.css";
+
+const API_URL = "http://localhost:5000/api";
+
+const normalizeArray = (response) => {
+  if (Array.isArray(response)) return response;
+
+  if (Array.isArray(response?.data)) {
+    return response.data;
+  }
+
+  if (Array.isArray(response?.data?.data)) {
+    return response.data.data;
+  }
+
+  return [];
+};
+
+const getStoredUser = () => {
+  try {
+    const raw = localStorage.getItem("user");
+
+    if (!raw) {
+      return null;
+    }
+
+    const parsed = JSON.parse(raw);
+
+    return parsed?.user || parsed;
+  } catch (error) {
+    console.error("Failed to read stored user:", error);
+    return null;
+  }
+};
+
+const getToken = () => {
+  return (
+    localStorage.getItem("token") ||
+    localStorage.getItem("accessToken") ||
+    ""
+  );
+};
+
+const apiRequest = async (endpoint, options = {}) => {
+  const token = getToken();
+
+  const headers = {
+    "Content-Type": "application/json",
+    ...(options.headers || {}),
+  };
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    ...options,
+    headers,
+  });
+
+  let data = null;
+
+  try {
+    data = await response.json();
+  } catch {
+    data = null;
+  }
+
+  if (!response.ok) {
+    throw new Error(
+      data?.message ||
+        data?.error ||
+        `Request failed with status ${response.status}`
+    );
+  }
+
+  return data;
+};
+
+const getProductImage = (product) => {
+  if (product?.image) {
+    return product.image;
+  }
+
+  if (product?.image_url) {
+    return product.image_url;
+  }
+
+  if (product?.imageUrl) {
+    return product.imageUrl;
+  }
+
+  if (product?.name && productImages?.[product.name]) {
+    return productImages[product.name];
+  }
+
+  return null;
+};
+
+const getProductPrice = (product) => {
+  const price = Number(product?.price);
+
+  if (!Number.isFinite(price)) {
+    return "0";
+  }
+
+  return price.toLocaleString("en-US");
+};
+
+export default function MyProducts() {
   const navigate = useNavigate();
 
   const [products, setProducts] = useState([]);
   const [artisan, setArtisan] = useState(null);
+
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState(null);
+
   const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
-        setError("");
+  const loadProducts = async () => {
+    try {
+      setLoading(true);
+      setError("");
 
-        // =========================
-        // 1. Get current user
-        // =========================
-        const storedUser = localStorage.getItem("user");
+      const storedUser = getStoredUser();
 
-        if (!storedUser) {
-          setError("Please login first.");
-          return;
-        }
+      if (!storedUser?.id) {
+        navigate("/login");
+        return;
+      }
 
-        const parsedUser = JSON.parse(storedUser);
+      // Get all artisans
+      const artisansResponse = await apiRequest("/artisans");
 
-        // Support both:
-        // { id: 11, ... }
-        // and
-        // { user: { id: 11, ... } }
-        const currentUser = parsedUser?.user || parsedUser;
+      const artisans = normalizeArray(artisansResponse);
 
-        const userId = currentUser?.id;
+      // Find artisan connected to logged-in user
+      const currentArtisan = artisans.find(
+        (item) =>
+          String(item?.user_id ?? item?.userId) ===
+          String(storedUser.id)
+      );
 
-        console.log("Current stored user:", parsedUser);
-        console.log("Current user ID:", userId);
-        console.log("Current user role:", currentUser?.role);
-
-        if (!userId) {
-          setError(
-            "Your login information is incomplete. Please logout and login again."
-          );
-          return;
-        }
-
-        // =========================
-        // 2. Get all artisans
-        // =========================
-        const artisanResponse = await api.artisans.getAll();
-
-        console.log("Artisans API response:", artisanResponse);
-
-        let artisans = [];
-
-        if (Array.isArray(artisanResponse)) {
-          artisans = artisanResponse;
-        } else if (Array.isArray(artisanResponse?.data)) {
-          artisans = artisanResponse.data;
-        } else if (Array.isArray(artisanResponse?.data?.data)) {
-          artisans = artisanResponse.data.data;
-        }
-
-        console.log("All artisans:", artisans);
-
-        // =========================
-        // 3. Find current artisan
-        // =========================
-        const currentArtisan = artisans.find(
-          (item) => Number(item.user_id) === Number(userId)
-        );
-
-        console.log("Current artisan:", currentArtisan);
-
-        if (!currentArtisan) {
-          setError(
-            `Artisan profile not found for user ID ${userId}. Please make sure this account has an artisan profile.`
-          );
-          return;
-        }
-
-        setArtisan(currentArtisan);
-
-        // =========================
-        // 4. Get artisan products
-        // =========================
-        const productResponse = await api.products.getByArtisan(
-          currentArtisan.id
-        );
-
-        console.log("Products API response:", productResponse);
-
-        let artisanProducts = [];
-
-        if (Array.isArray(productResponse)) {
-          artisanProducts = productResponse;
-        } else if (Array.isArray(productResponse?.data)) {
-          artisanProducts = productResponse.data;
-        } else if (Array.isArray(productResponse?.data?.data)) {
-          artisanProducts = productResponse.data.data;
-        }
-
-        setProducts(artisanProducts);
-      } catch (error) {
-        console.error("MyProducts error:", error);
+      if (!currentArtisan) {
+        setArtisan(null);
+        setProducts([]);
 
         setError(
-          error?.message || "Failed to load products."
+          "No artisan profile was found for this account."
         );
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    fetchProducts();
+        return;
+      }
+
+      setArtisan(currentArtisan);
+
+      // Get artisan products
+      const productsResponse = await apiRequest(
+        `/products/artisan/${currentArtisan.id}`
+      );
+
+      setProducts(normalizeArray(productsResponse));
+    } catch (err) {
+      console.error("My products error:", err);
+
+      setError(
+        err?.message ||
+          "Failed to load your products."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadProducts();
   }, []);
 
-  const deleteProduct = async (productId) => {
+  const filteredProducts = useMemo(() => {
+    const value = search.trim().toLowerCase();
+
+    if (!value) {
+      return products;
+    }
+
+    return products.filter((product) => {
+      const name = String(
+        product?.name || ""
+      ).toLowerCase();
+
+      const description = String(
+        product?.description || ""
+      ).toLowerCase();
+
+      return (
+        name.includes(value) ||
+        description.includes(value)
+      );
+    });
+  }, [products, search]);
+
+  const handleDelete = async (productId) => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this product?"
     );
@@ -129,352 +227,358 @@ function MyProducts() {
     }
 
     try {
-      await api.products.remove(productId);
+      setDeletingId(productId);
+      setError("");
 
-      setProducts((currentProducts) =>
-        currentProducts.filter(
-          (product) => Number(product.id) !== Number(productId)
+      await apiRequest(
+        `/products/${productId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      setProducts((current) =>
+        current.filter(
+          (product) => product.id !== productId
         )
       );
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error("Delete product error:", err);
 
-      alert(
-        error?.message || "Failed to delete product"
+      setError(
+        err?.message ||
+          "Failed to delete the product."
       );
+    } finally {
+      setDeletingId(null);
     }
   };
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#FDF0D5] px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="animate-pulse">
-            <div className="h-4 w-40 rounded bg-[#780000]/20" />
-            <div className="mt-4 h-12 w-72 rounded bg-[#003049]/15" />
-            <div className="mt-3 h-5 w-96 max-w-full rounded bg-[#669BBC]/15" />
+      <div className="my-products-page">
+        <div className="my-products-orb my-products-orb-one" />
+        <div className="my-products-orb my-products-orb-two" />
+
+        <div className="my-products-container">
+          <div className="products-loading-header">
+            <div className="loading-line loading-title" />
+            <div className="loading-line loading-subtitle" />
           </div>
 
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {[1, 2, 3, 4].map((item) => (
+          <div className="products-loading-grid">
+            {[1, 2, 3].map((item) => (
               <div
+                className="product-loading-card"
                 key={item}
-                className="h-[460px] animate-pulse rounded-3xl bg-white/70 shadow-md"
-              />
+              >
+                <div className="loading-image" />
+
+                <div className="loading-content">
+                  <div className="loading-line" />
+                  <div className="loading-line short" />
+                  <div className="loading-line medium" />
+                </div>
+              </div>
             ))}
           </div>
         </div>
-      </main>
-    );
-  }
-
-  if (error) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-[#FDF0D5] px-4">
-        <div className="w-full max-w-md rounded-3xl bg-white p-8 text-center shadow-xl">
-          <div className="mb-4 text-5xl">⚠️</div>
-
-          <h1 className="text-2xl font-bold text-[#003049]">
-            Something went wrong
-          </h1>
-
-          <p className="mt-3 text-[#669BBC]">
-            {error}
-          </p>
-
-          <Link
-            to="/artisan/dashboard"
-            className="mt-6 inline-block rounded-xl bg-[#780000] px-6 py-3 font-semibold text-[#FDF0D5] transition-all duration-300 hover:-translate-y-1 hover:bg-[#C1121F] hover:shadow-lg"
-          >
-            Back to Dashboard
-          </Link>
-        </div>
-      </main>
+      </div>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#FDF0D5]">
-      <section className="relative overflow-hidden px-4 py-12 sm:px-6 lg:px-8">
-        <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#669BBC]/10" />
-        <div className="absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-[#780000]/5" />
+    <div className="my-products-page">
+      <div className="my-products-orb my-products-orb-one" />
+      <div className="my-products-orb my-products-orb-two" />
 
-        <div className="relative mx-auto max-w-7xl">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+      <main className="my-products-container">
+        <header className="my-products-header">
+          <div>
+            <Link
+              to="/artisan/dashboard"
+              className="products-back-link"
+            >
+              <ArrowRight size={17} />
+
+              <span>
+                Back to dashboard
+              </span>
+            </Link>
+
+            <div className="products-kicker">
+              <Package size={16} />
+
+              <span>
+                Artisan workspace
+              </span>
+            </div>
+
+            <h1>
+              My Products
+            </h1>
+
+            <p>
+              Manage your handmade products,
+              update details, and keep your
+              collection organized.
+            </p>
+
+            {artisan && (
+              <div className="artisan-mini-badge">
+                <span className="artisan-status-dot" />
+
+                {artisan.craft_name ||
+                  artisan.craftName ||
+                  "Artisan account"}
+              </div>
+            )}
+          </div>
+
+          <Link
+            to="/artisan/products/add"
+            className="add-product-main-btn"
+          >
+            <Plus size={19} />
+
+            <span>
+              Add Product
+            </span>
+          </Link>
+        </header>
+
+        {error && (
+          <div className="products-alert">
+            <AlertCircle size={20} />
+
+            <span>
+              {error}
+            </span>
+
+            <button
+              type="button"
+              onClick={loadProducts}
+            >
+              <RefreshCw size={16} />
+
+              Retry
+            </button>
+          </div>
+        )}
+
+        <section className="products-toolbar">
+          <div className="products-count">
+            <div className="products-count-icon">
+              <ShoppingBag size={19} />
+            </div>
+
             <div>
-              <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#780000]">
-                Artisan Workspace
-              </p>
+              <strong>
+                {products.length}
+              </strong>
 
-              <h1 className="mt-3 text-4xl font-bold text-[#003049] sm:text-5xl">
-                My Products
-              </h1>
-
-              <p className="mt-3 max-w-2xl text-lg leading-8 text-[#669BBC]">
-                Manage your handmade products, update their details, and
-                control your available stock.
-              </p>
-
-              {artisan && (
-                <p className="mt-2 text-sm font-semibold text-[#780000]">
-                  Artisan: {artisan.artisan_name || artisan.craft_name}
-                </p>
-              )}
-            </div>
-
-            <div className="flex flex-wrap gap-3">
-              <Link
-                to="/artisan/dashboard"
-                className="inline-flex items-center gap-2 rounded-xl border border-[#003049]/15 bg-white px-5 py-3 font-semibold text-[#003049] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
-              >
-                <span>←</span>
-                Dashboard
-              </Link>
-
-              <button
-                type="button"
-                onClick={() => navigate("/artisan/products/add")}
-                className="inline-flex items-center gap-2 rounded-xl bg-[#780000] px-5 py-3 font-semibold text-[#FDF0D5] transition-all duration-300 hover:-translate-y-1 hover:bg-[#C1121F] hover:shadow-lg"
-              >
-                <span className="text-xl">+</span>
-                Add Product
-              </button>
+              <span>
+                Products in your collection
+              </span>
             </div>
           </div>
 
-          <div className="mt-10 grid gap-4 sm:grid-cols-3">
-            <div className="rounded-2xl bg-white p-5 shadow-sm">
-              <div className="flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#FDF0D5] text-2xl">
-                  🧺
-                </div>
+          <div className="products-search">
+            <Search size={18} />
 
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-[#669BBC]">
-                    Total Products
-                  </p>
+            <input
+              type="text"
+              placeholder="Search your products..."
+              value={search}
+              onChange={(event) =>
+                setSearch(event.target.value)
+              }
+            />
 
-                  <p className="mt-1 text-2xl font-bold text-[#003049]">
-                    {products.length}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-2xl bg-white p-5 shadow-sm">
-              <div className="flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#FDF0D5] text-2xl">
-                  ✓
-                </div>
-
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-[#669BBC]">
-                    In Stock
-                  </p>
-
-                  <p className="mt-1 text-2xl font-bold text-[#003049]">
-                    {
-                      products.filter(
-                        (product) =>
-                          Number(product.stock_quantity) > 0
-                      ).length
-                    }
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-2xl bg-white p-5 shadow-sm">
-              <div className="flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#FDF0D5] text-2xl">
-                  !
-                </div>
-
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-wider text-[#669BBC]">
-                    Out of Stock
-                  </p>
-
-                  <p className="mt-1 text-2xl font-bold text-[#780000]">
-                    {
-                      products.filter(
-                        (product) =>
-                          Number(product.stock_quantity) <= 0
-                      ).length
-                    }
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="px-4 pb-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          {products.length === 0 ? (
-            <div className="rounded-3xl bg-white px-6 py-20 text-center shadow-md">
-              <div className="mb-5 text-7xl">🧺</div>
-
-              <h2 className="text-3xl font-bold text-[#003049]">
-                No products yet
-              </h2>
-
-              <p className="mx-auto mt-3 max-w-md leading-7 text-[#669BBC]">
-                Start building your collection by adding your first handmade
-                product.
-              </p>
-
+            {search && (
               <button
                 type="button"
-                onClick={() => navigate("/artisan/products/add")}
-                className="mt-7 rounded-xl bg-[#780000] px-7 py-3 font-semibold text-[#FDF0D5] transition-all duration-300 hover:-translate-y-1 hover:bg-[#C1121F] hover:shadow-lg"
+                onClick={() => setSearch("")}
+                aria-label="Clear search"
               >
-                Add Your First Product
+                ×
               </button>
-            </div>
-          ) : (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {products.map((product) => {
-                const stock = Number(product.stock_quantity) || 0;
-                const isOutOfStock = stock <= 0;
+            )}
+          </div>
+        </section>
 
-                const productImage =
-                  product.image ||
-                  productImages[product.name] ||
-                  null;
+        {!error &&
+        products.length === 0 ? (
+          <section className="products-empty">
+            <div className="products-empty-icon">
+              <Package size={34} />
+            </div>
+
+            <h2>
+              Your collection is empty
+            </h2>
+
+            <p>
+              Start adding your handmade
+              products and showcase your
+              work on AlHerfa.
+            </p>
+
+            <Link
+              to="/artisan/products/add"
+              className="empty-add-btn"
+            >
+              <Plus size={18} />
+
+              Add your first product
+            </Link>
+          </section>
+        ) : filteredProducts.length === 0 ? (
+          <section className="products-empty search-empty">
+            <div className="products-empty-icon">
+              <Search size={32} />
+            </div>
+
+            <h2>
+              No products found
+            </h2>
+
+            <p>
+              Try searching with a different
+              product name.
+            </p>
+
+            <button
+              type="button"
+              className="empty-add-btn secondary"
+              onClick={() => setSearch("")}
+            >
+              Clear search
+            </button>
+          </section>
+        ) : (
+          <section className="my-products-grid">
+            {filteredProducts.map(
+              (product, index) => {
+                const image =
+                  getProductImage(product);
 
                 return (
                   <article
+                    className="my-product-card"
                     key={product.id}
-                    className="group overflow-hidden rounded-3xl bg-white shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+                    style={{
+                      "--card-delay":
+                        `${index * 70}ms`,
+                    }}
                   >
-                    <div className="relative h-60 overflow-hidden bg-gradient-to-br from-[#FDF0D5] to-[#669BBC]/20">
-                      {productImage ? (
+                    <div className="my-product-image-wrap">
+                      {image ? (
                         <img
-                          src={productImage}
-                          alt={product.name || "Product"}
-                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          src={image}
+                          alt={
+                            product.name ||
+                            "Product"
+                          }
+                          className="my-product-image"
                         />
                       ) : (
-                        <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#669BBC]/20 to-[#FDF0D5]">
-                          <div className="text-center">
-                            <div className="text-6xl">🧶</div>
+                        <div className="my-product-image-placeholder">
+                          <Package size={38} />
 
-                            <p className="mt-3 text-sm font-semibold text-[#669BBC]">
-                              Handmade Product
-                            </p>
-                          </div>
+                          <span>
+                            No image
+                          </span>
                         </div>
                       )}
 
-                      <div
-                        className={`absolute right-4 top-4 rounded-full px-3 py-1.5 text-xs font-bold shadow-md ${
-                          isOutOfStock
-                            ? "bg-[#003049] text-white"
-                            : "bg-white/90 text-[#780000] backdrop-blur-sm"
-                        }`}
-                      >
-                        {isOutOfStock
-                          ? "Out of Stock"
-                          : `${stock} in stock`}
-                      </div>
+                      <div className="product-image-overlay" />
+
+                      {product.stock !==
+                        undefined && (
+                        <span className="stock-badge">
+                          {Number(
+                            product.stock
+                          ) > 0
+                            ? `${product.stock} in stock`
+                            : "Out of stock"}
+                        </span>
+                      )}
                     </div>
 
-                    <div className="p-5">
-                      <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#780000]">
-                        {product.category_name || "Handmade"}
-                      </p>
+                    <div className="my-product-content">
+                      <div className="my-product-top">
+                        <span className="product-small-label">
+                          Handmade
+                        </span>
 
-                      <h2 className="mt-2 line-clamp-2 min-h-[56px] text-xl font-bold text-[#003049]">
-                        {product.name}
-                      </h2>
-
-                      <p className="mt-3 line-clamp-2 min-h-[48px] text-sm leading-6 text-[#669BBC]">
-                        {product.description ||
-                          "No description available for this product."}
-                      </p>
-
-                      <div className="mt-5 grid grid-cols-2 gap-3 border-t border-[#669BBC]/15 pt-4">
-                        <div>
-                          <p className="text-xs text-[#669BBC]">
-                            Price
-                          </p>
-
-                          <p className="mt-1 font-bold text-[#780000]">
-                            {Number(product.price).toLocaleString()} IQD
-                          </p>
-                        </div>
-
-                        <div className="text-right">
-                          <p className="text-xs text-[#669BBC]">
-                            Stock
-                          </p>
-
-                          <p className="mt-1 font-bold text-[#003049]">
-                            {stock}
-                          </p>
-                        </div>
+                        <strong className="my-product-price">
+                          {getProductPrice(
+                            product
+                          )}{" "}
+                          IQD
+                        </strong>
                       </div>
 
-                      <div className="mt-5 grid grid-cols-2 gap-3">
-                        <Link
-                          to={`/artisan/products/edit/${product.id}`}
-                          className="rounded-xl border border-[#003049]/15 bg-white px-4 py-3 text-center text-sm font-semibold text-[#003049] transition-all duration-300 hover:-translate-y-1 hover:border-[#003049] hover:shadow-md"
+                      <h2>
+                        {product.name ||
+                          "Untitled product"}
+                      </h2>
+
+                      <p>
+                        {product.description ||
+                          "A handmade product crafted with care."}
+                      </p>
+
+                      <div className="my-product-actions">
+                        <button
+                          type="button"
+                          className="product-edit-btn"
+                          onClick={() =>
+                            navigate(
+                              `/artisan/products/edit/${product.id}`
+                            )
+                          }
                         >
+                          <Pencil size={16} />
+
                           Edit
-                        </Link>
+                        </button>
 
                         <button
                           type="button"
-                          onClick={() => deleteProduct(product.id)}
-                          className="rounded-xl bg-[#780000] px-4 py-3 text-sm font-semibold text-[#FDF0D5] transition-all duration-300 hover:-translate-y-1 hover:bg-[#C1121F] hover:shadow-lg"
+                          className="product-delete-btn"
+                          disabled={
+                            deletingId ===
+                            product.id
+                          }
+                          onClick={() =>
+                            handleDelete(
+                              product.id
+                            )
+                          }
                         >
-                          Delete
+                          {deletingId ===
+                          product.id ? (
+                            <span className="mini-spinner" />
+                          ) : (
+                            <Trash2 size={16} />
+                          )}
+
+                          {deletingId ===
+                          product.id
+                            ? "Deleting..."
+                            : "Delete"}
                         </button>
                       </div>
                     </div>
                   </article>
                 );
-              })}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {products.length > 0 && (
-        <section className="px-4 pb-16 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-7xl rounded-3xl bg-[#003049] p-7 shadow-xl sm:p-9">
-            <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-              <div>
-                <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#669BBC]">
-                  Keep Creating
-                </p>
-
-                <h2 className="mt-2 text-2xl font-bold text-[#FDF0D5] sm:text-3xl">
-                  Add another handmade creation
-                </h2>
-
-                <p className="mt-2 max-w-2xl leading-7 text-[#FDF0D5]/70">
-                  Share more of your craftsmanship with customers through
-                  Alherfa.
-                </p>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => navigate("/artisan/products/add")}
-                className="inline-flex w-fit shrink-0 items-center gap-2 rounded-xl bg-[#780000] px-6 py-3 font-semibold text-[#FDF0D5] transition-all duration-300 hover:-translate-y-1 hover:bg-[#C1121F] hover:shadow-lg"
-              >
-                <span className="text-xl">+</span>
-                Add Product
-              </button>
-            </div>
-          </div>
-        </section>
-      )}
-    </main>
+              }
+            )}
+          </section>
+        )}
+      </main>
+    </div>
   );
 }
-
-export default MyProducts;

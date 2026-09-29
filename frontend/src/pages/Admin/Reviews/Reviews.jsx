@@ -1,227 +1,177 @@
+import { Search, Star, MessageSquare, Eye, EyeOff } from "lucide-react";
 import "./Reviews.css";
 
 function Reviews() {
   const reviews = [];
 
   return (
-    <div className="admin-reviews min-h-screen bg-[#FDF0D5]">
+    <div className="admin-reviews">
+      {/* Decorative background */}
+      <div className="reviews-orb reviews-orb-one" />
+      <div className="reviews-orb reviews-orb-two" />
 
-      {/* Main Content */}
+      <div className="reviews-cuneiform reviews-cuneiform-one">𒀭</div>
+      <div className="reviews-cuneiform reviews-cuneiform-two">𒂍</div>
+
       <main className="reviews-main">
-
         {/* Header */}
         <header className="reviews-header">
-
-          <div>
-            <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-[#780000]">
+          <div className="reviews-title-block">
+            <div className="reviews-kicker">
+              <span />
               Administration
-            </p>
+            </div>
 
-            <h1 className="text-3xl font-bold text-[#003049]">
-              Reviews Management
-            </h1>
+            <h1>Reviews Management</h1>
 
-            <p className="mt-2 text-sm text-[#003049]/60">
-              Review customer feedback and manage product reviews.
-            </p>
-          </div>
-
-          <div className="reviews-count rounded-2xl bg-white shadow-sm">
-            <p className="text-sm text-[#003049]/55">
-              Total Reviews
-            </p>
-
-            <p className="mt-1 text-2xl font-bold text-[#003049]">
-              {reviews.length}
+            <p>
+              Review customer feedback and manage product reviews from one
+              place.
             </p>
           </div>
 
+          <div className="reviews-count">
+            <div className="reviews-count-icon">
+              <Star size={19} fill="currentColor" />
+            </div>
+
+            <div>
+              <span>Total Reviews</span>
+              <strong>{reviews.length}</strong>
+            </div>
+          </div>
         </header>
 
-        {/* Search and Filters */}
-        <section className="reviews-toolbar rounded-2xl bg-white shadow-sm">
-
+        {/* Toolbar */}
+        <section className="reviews-toolbar">
           <div className="reviews-search">
+            <label htmlFor="review-search">Search Reviews</label>
 
-            <label
-              htmlFor="review-search"
-              className="mb-2 block text-sm font-semibold text-[#003049]"
-            >
-              Search Reviews
-            </label>
+            <div className="reviews-input-wrap">
+              <Search size={18} />
 
-            <input
-              id="review-search"
-              type="text"
-              placeholder="Search by customer or product..."
-              className="w-full rounded-xl border border-[#003049]/15 bg-[#FDF0D5]/40 text-sm text-[#003049] outline-none transition placeholder:text-[#003049]/35 focus:border-[#E6B566] focus:ring-2 focus:ring-[#E6B566]/20"
-            />
-
+              <input
+                id="review-search"
+                type="text"
+                placeholder="Search by customer or product..."
+              />
+            </div>
           </div>
 
           <div className="reviews-filter">
+            <label htmlFor="review-status">Status</label>
 
-            <label
-              htmlFor="review-status"
-              className="mb-2 block text-sm font-semibold text-[#003049]"
-            >
-              Status
-            </label>
-
-            <select
-              id="review-status"
-              className="w-full rounded-xl border border-[#003049]/15 bg-[#FDF0D5]/40 text-sm text-[#003049] outline-none transition focus:border-[#E6B566] focus:ring-2 focus:ring-[#E6B566]/20"
-            >
-              <option value="all">
-                All Status
-              </option>
-
-              <option value="visible">
-                Visible
-              </option>
-
-              <option value="hidden">
-                Hidden
-              </option>
+            <select id="review-status">
+              <option value="all">All Status</option>
+              <option value="visible">Visible</option>
+              <option value="hidden">Hidden</option>
             </select>
-
           </div>
-
         </section>
 
-        {/* Reviews Table */}
-        <section className="reviews-table-wrapper overflow-hidden rounded-2xl bg-white shadow-sm">
-
-          <div className="reviews-table-header flex items-center justify-between">
-
+        {/* Reviews */}
+        <section className="reviews-table-wrapper">
+          <div className="reviews-table-header">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#780000]">
-                Reviews
-              </p>
+              <div className="reviews-section-kicker">
+                <MessageSquare size={14} />
+                Customer Feedback
+              </div>
 
-              <h2 className="mt-1 text-xl font-bold text-[#003049]">
-                All Reviews
-              </h2>
+              <h2>All Reviews</h2>
             </div>
 
-            <p className="text-sm text-[#003049]/50">
+            <div className="reviews-total">
               {reviews.length} reviews
-            </p>
-
+            </div>
           </div>
 
-          <div className="overflow-x-auto">
-
-            <table className="w-full text-left">
-
+          <div className="reviews-table-scroll">
+            <table>
               <thead>
-                <tr className="border-b border-[#003049]/10 bg-[#FDF0D5]/40">
-
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Customer
-                  </th>
-
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Product
-                  </th>
-
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Rating
-                  </th>
-
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Review
-                  </th>
-
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Status
-                  </th>
-
-                  <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Actions
-                  </th>
-
+                <tr>
+                  <th>Customer</th>
+                  <th>Product</th>
+                  <th>Rating</th>
+                  <th>Review</th>
+                  <th>Status</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
 
               <tbody>
-
                 {reviews.length === 0 ? (
                   <tr>
-
-                    <td
-                      colSpan="6"
-                      className="reviews-empty-state text-center"
-                    >
-
-                      <div className="flex flex-col items-center justify-center">
-
-                        <div className="reviews-empty-icon flex items-center justify-center rounded-full bg-[#FDF0D5] text-2xl text-[#780000]">
-                          ★
+                    <td colSpan="6">
+                      <div className="reviews-empty-state">
+                        <div className="reviews-empty-icon">
+                          <Star size={27} />
                         </div>
 
-                        <p className="mt-4 text-sm font-medium text-[#003049]">
-                          No reviews available yet.
-                        </p>
+                        <h3>No reviews yet</h3>
 
-                        <p className="mt-1 text-sm text-[#003049]/50">
-                          Customer reviews will appear here once they are submitted.
+                        <p>
+                          Customer reviews will appear here once they are
+                          submitted.
                         </p>
-
                       </div>
-
                     </td>
-
                   </tr>
                 ) : (
-
                   reviews.map((review) => (
-
-                    <tr
-                      key={review.id}
-                      className="border-b border-[#003049]/10 transition hover:bg-[#FDF0D5]/30"
-                    >
-
-                      <td className="px-6 py-5">
-                        {review.customer}
+                    <tr key={review.id}>
+                      <td>
+                        <span className="review-customer">
+                          {review.customer}
+                        </span>
                       </td>
 
-                      <td className="px-6 py-5">
-                        {review.product}
+                      <td>{review.product}</td>
+
+                      <td>
+                        <div className="review-rating">
+                          <Star size={15} fill="currentColor" />
+                          {review.rating}
+                        </div>
                       </td>
 
-                      <td className="px-6 py-5">
-                        {review.rating}
+                      <td>
+                        <span className="review-comment">
+                          {review.comment}
+                        </span>
                       </td>
 
-                      <td className="px-6 py-5">
-                        {review.comment}
+                      <td>
+                        <span
+                          className={`review-status ${
+                            review.status === "hidden"
+                              ? "is-hidden"
+                              : "is-visible"
+                          }`}
+                        >
+                          {review.status === "hidden" ? (
+                            <EyeOff size={14} />
+                          ) : (
+                            <Eye size={14} />
+                          )}
+
+                          {review.status}
+                        </span>
                       </td>
 
-                      <td className="px-6 py-5">
-                        {review.status}
+                      <td>
+                        <div className="review-actions">
+                          Actions
+                        </div>
                       </td>
-
-                      <td className="px-6 py-5">
-                        Actions
-                      </td>
-
                     </tr>
-
                   ))
-
                 )}
-
               </tbody>
-
             </table>
-
           </div>
-
         </section>
-
       </main>
-
     </div>
   );
 }

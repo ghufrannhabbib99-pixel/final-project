@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import productImages from "../../data/productImages";
+import "./AddProduct.css";
 
 function AddProduct() {
   const navigate = useNavigate();
@@ -17,14 +18,10 @@ function AddProduct() {
 
   const [categories, setCategories] = useState([]);
   const [artisan, setArtisan] = useState(null);
-
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  // =========================
-  // Load artisan + categories
-  // =========================
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -35,7 +32,9 @@ function AddProduct() {
           localStorage.getItem("user") || "null"
         );
 
-        if (!storedUser?.id) {
+        const currentUser = storedUser?.user || storedUser;
+
+        if (!currentUser?.id) {
           setError("Please login first.");
           return;
         }
@@ -50,14 +49,16 @@ function AddProduct() {
           ? artisansResponse
           : artisansResponse?.data || [];
 
-        const loadedCategories = Array.isArray(categoriesResponse)
+        const loadedCategories = Array.isArray(
+          categoriesResponse
+        )
           ? categoriesResponse
           : categoriesResponse?.data || [];
 
         const currentArtisan = artisans.find(
           (item) =>
-            Number(item.user_id) === Number(storedUser.id) ||
-            Number(item.userId) === Number(storedUser.id)
+            Number(item.user_id) === Number(currentUser.id) ||
+            Number(item.userId) === Number(currentUser.id)
         );
 
         if (!currentArtisan) {
@@ -70,10 +71,14 @@ function AddProduct() {
         setArtisan(currentArtisan);
         setCategories(loadedCategories);
       } catch (err) {
-        console.error("Failed to load add product data:", err);
+        console.error(
+          "Failed to load add product data:",
+          err
+        );
 
         setError(
-          err.message || "Failed to load artisan information."
+          err.message ||
+            "Failed to load artisan information."
         );
       } finally {
         setLoading(false);
@@ -83,9 +88,6 @@ function AddProduct() {
     loadData();
   }, []);
 
-  // =========================
-  // Handle input
-  // =========================
   const handleChange = (event) => {
     const { name, value } = event.target;
 
@@ -93,19 +95,15 @@ function AddProduct() {
       ...currentData,
       [name]: value,
     }));
+
+    setError("");
   };
 
-  // =========================
-  // Preview image
-  // =========================
   const previewImage =
     formData.image.trim() ||
     productImages[formData.name.trim()] ||
     null;
 
-  // =========================
-  // Submit
-  // =========================
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -150,7 +148,9 @@ function AddProduct() {
 
         price: Number(formData.price),
 
-        stock_quantity: Number(formData.stock_quantity),
+        stock_quantity: Number(
+          formData.stock_quantity
+        ),
 
         image:
           formData.image.trim() ||
@@ -162,7 +162,10 @@ function AddProduct() {
 
       navigate("/artisan/products");
     } catch (err) {
-      console.error("Failed to add product:", err);
+      console.error(
+        "Failed to add product:",
+        err
+      );
 
       setError(
         err.message || "Failed to add product."
@@ -172,445 +175,361 @@ function AddProduct() {
     }
   };
 
-  // =========================
-  // Loading
-  // =========================
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#FDF0D5] px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl">
-          <div className="rounded-3xl bg-white p-10 text-center shadow-xl">
-            <div className="text-5xl">🧺</div>
-
-            <h1 className="mt-5 text-2xl font-bold text-[#003049]">
-              Loading artisan information...
-            </h1>
-
-            <p className="mt-2 text-[#669BBC]">
-              Please wait a moment.
-            </p>
+      <main className="artisan-add-loading">
+        <div className="artisan-add-loading-card">
+          <div className="artisan-add-loading-icon">
+            🧺
           </div>
+
+          <div className="artisan-add-loading-line large" />
+          <div className="artisan-add-loading-line small" />
         </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#FDF0D5]">
+    <main className="artisan-add-page">
+      <div className="artisan-add-decoration artisan-add-decoration-one">
+        𒀭
+      </div>
+
+      <div className="artisan-add-decoration artisan-add-decoration-two">
+        ◇
+      </div>
+
       {/* Header */}
-      <section className="relative overflow-hidden px-4 py-12 sm:px-6 lg:px-8">
-        <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#669BBC]/10" />
+      <section className="artisan-add-header">
+        <div className="artisan-add-header-inner">
+          <div>
+            <p className="artisan-add-kicker">
+              Artisan Workspace
+            </p>
 
-        <div className="absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-[#780000]/5" />
+            <h1 className="artisan-add-title">
+              Add Product
+            </h1>
 
-        <div className="relative mx-auto max-w-6xl">
-          <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#780000]">
-                Artisan Workspace
-              </p>
+            <p className="artisan-add-description">
+              Add a new handmade product to your marketplace
+              collection.
+            </p>
 
-              <h1 className="mt-3 text-4xl font-bold text-[#003049] sm:text-5xl">
-                Add Product
-              </h1>
-
-              <p className="mt-3 max-w-2xl text-lg leading-8 text-[#669BBC]">
-                Add a new handmade product to your marketplace collection.
-              </p>
-
-              {artisan && (
-                <p className="mt-3 text-sm font-semibold text-[#003049]/60">
-                  Artisan:{" "}
-                  {artisan.artisan_name ||
-                    artisan.name ||
-                    artisan.craft_name ||
-                    `#${artisan.id}`}
-                </p>
-              )}
-            </div>
-
-            <Link
-              to="/artisan/products"
-              className="inline-flex w-fit items-center gap-2 rounded-xl border border-[#003049]/15 bg-white px-5 py-3 font-semibold text-[#003049] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
-            >
-              <span>←</span>
-              My Products
-            </Link>
+            {artisan && (
+              <div className="artisan-add-artisan-badge">
+                Artisan:{" "}
+                {artisan.artisan_name ||
+                  artisan.name ||
+                  artisan.craft_name ||
+                  `#${artisan.id}`}
+              </div>
+            )}
           </div>
+
+          <Link
+            to="/artisan/products"
+            className="artisan-add-back"
+          >
+            <span>←</span>
+            My Products
+          </Link>
         </div>
       </section>
 
-      {/* Form */}
-      <section className="px-4 pb-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl">
-          <div className="grid gap-8 lg:grid-cols-3">
+      {/* Content */}
+      <section className="artisan-add-content">
+        <div className="artisan-add-layout">
+          {/* Form */}
+          <div className="artisan-add-form-card">
+            <div className="artisan-add-form-heading">
+              <p>Product Details</p>
 
-            {/* Form Card */}
-            <div className="rounded-3xl bg-white p-7 shadow-xl sm:p-9 lg:col-span-2">
-              <div className="mb-8">
-                <p className="text-sm font-bold uppercase tracking-[0.3em] text-[#780000]">
-                  Product Details
-                </p>
+              <h2>Create a new product</h2>
 
-                <h2 className="mt-2 text-2xl font-bold text-[#003049]">
-                  Create a new product
-                </h2>
-
-                <p className="mt-2 text-sm leading-6 text-[#669BBC]">
-                  Fill in the information below to publish your handmade
-                  product.
-                </p>
-              </div>
-
-              {/* Error */}
-              {error && (
-                <div className="mb-6 rounded-2xl border border-[#780000]/20 bg-[#780000]/5 p-4">
-                  <div className="flex items-start gap-3">
-                    <span className="text-xl">⚠️</span>
-
-                    <div>
-                      <p className="font-semibold text-[#780000]">
-                        Unable to add product
-                      </p>
-
-                      <p className="mt-1 text-sm text-[#780000]/80">
-                        {error}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <form
-                onSubmit={handleSubmit}
-                className="space-y-6"
-              >
-                {/* Product Name */}
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="mb-2 block text-sm font-bold text-[#003049]"
-                  >
-                    Product Name
-                  </label>
-
-                  <input
-                    id="name"
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="Enter product name"
-                    required
-                    className="w-full rounded-xl border border-[#669BBC]/25 bg-[#FDF0D5]/30 px-4 py-3.5 text-[#003049] outline-none transition-all duration-300 placeholder:text-[#669BBC]/60 focus:border-[#780000] focus:bg-white focus:ring-2 focus:ring-[#780000]/10"
-                  />
-                </div>
-
-                {/* Description */}
-                <div>
-                  <label
-                    htmlFor="description"
-                    className="mb-2 block text-sm font-bold text-[#003049]"
-                  >
-                    Description
-                  </label>
-
-                  <textarea
-                    id="description"
-                    name="description"
-                    value={formData.description}
-                    onChange={handleChange}
-                    placeholder="Describe your handmade product..."
-                    rows={5}
-                    className="w-full resize-none rounded-xl border border-[#669BBC]/25 bg-[#FDF0D5]/30 px-4 py-3.5 text-[#003049] outline-none transition-all duration-300 placeholder:text-[#669BBC]/60 focus:border-[#780000] focus:bg-white focus:ring-2 focus:ring-[#780000]/10"
-                  />
-                </div>
-
-                {/* Price + Stock */}
-                <div className="grid gap-6 sm:grid-cols-2">
-
-                  {/* Price */}
-                  <div>
-                    <label
-                      htmlFor="price"
-                      className="mb-2 block text-sm font-bold text-[#003049]"
-                    >
-                      Price
-                    </label>
-
-                    <div className="relative">
-                      <input
-                        id="price"
-                        type="number"
-                        name="price"
-                        value={formData.price}
-                        onChange={handleChange}
-                        placeholder="25000"
-                        min="1"
-                        step="0.01"
-                        required
-                        className="w-full rounded-xl border border-[#669BBC]/25 bg-[#FDF0D5]/30 px-4 py-3.5 pr-16 text-[#003049] outline-none transition-all duration-300 placeholder:text-[#669BBC]/60 focus:border-[#780000] focus:bg-white focus:ring-2 focus:ring-[#780000]/10"
-                      />
-
-                      <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-[#669BBC]">
-                        IQD
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Stock */}
-                  <div>
-                    <label
-                      htmlFor="stock_quantity"
-                      className="mb-2 block text-sm font-bold text-[#003049]"
-                    >
-                      Stock Quantity
-                    </label>
-
-                    <input
-                      id="stock_quantity"
-                      type="number"
-                      name="stock_quantity"
-                      value={formData.stock_quantity}
-                      onChange={handleChange}
-                      placeholder="10"
-                      min="0"
-                      required
-                      className="w-full rounded-xl border border-[#669BBC]/25 bg-[#FDF0D5]/30 px-4 py-3.5 text-[#003049] outline-none transition-all duration-300 placeholder:text-[#669BBC]/60 focus:border-[#780000] focus:bg-white focus:ring-2 focus:ring-[#780000]/10"
-                    />
-                  </div>
-                </div>
-
-                {/* Category */}
-                <div>
-                  <label
-                    htmlFor="category_id"
-                    className="mb-2 block text-sm font-bold text-[#003049]"
-                  >
-                    Category
-                  </label>
-
-                  <select
-                    id="category_id"
-                    name="category_id"
-                    value={formData.category_id}
-                    onChange={handleChange}
-                    className="w-full rounded-xl border border-[#669BBC]/25 bg-[#FDF0D5]/30 px-4 py-3.5 text-[#003049] outline-none transition-all duration-300 focus:border-[#780000] focus:bg-white focus:ring-2 focus:ring-[#780000]/10"
-                  >
-                    <option value="">
-                      Select a category
-                    </option>
-
-                    {categories.map((category) => (
-                      <option
-                        key={category.id}
-                        value={category.id}
-                      >
-                        {category.name ||
-                          category.category_name ||
-                          `Category ${category.id}`}
-                      </option>
-                    ))}
-                  </select>
-
-                  <p className="mt-2 text-xs text-[#669BBC]">
-                    Category is optional.
-                  </p>
-                </div>
-
-                {/* Image */}
-                <div>
-                  <label
-                    htmlFor="image"
-                    className="mb-2 block text-sm font-bold text-[#003049]"
-                  >
-                    Image URL
-                  </label>
-
-                  <input
-                    id="image"
-                    type="text"
-                    name="image"
-                    value={formData.image}
-                    onChange={handleChange}
-                    placeholder="https://example.com/product-image.jpg"
-                    className="w-full rounded-xl border border-[#669BBC]/25 bg-[#FDF0D5]/30 px-4 py-3.5 text-[#003049] outline-none transition-all duration-300 placeholder:text-[#669BBC]/60 focus:border-[#780000] focus:bg-white focus:ring-2 focus:ring-[#780000]/10"
-                  />
-
-                  <p className="mt-2 text-xs text-[#669BBC]">
-                    Leave empty to use the default product image.
-                  </p>
-                </div>
-
-                {/* Buttons */}
-                <div className="flex flex-col-reverse gap-3 border-t border-[#669BBC]/15 pt-6 sm:flex-row sm:justify-end">
-                  <Link
-                    to="/artisan/products"
-                    className="rounded-xl border border-[#003049]/15 bg-white px-6 py-3 text-center font-semibold text-[#003049] transition-all duration-300 hover:-translate-y-1 hover:border-[#003049] hover:shadow-md"
-                  >
-                    Cancel
-                  </Link>
-
-                  <button
-                    type="submit"
-                    disabled={saving}
-                    className={`rounded-xl px-6 py-3 font-semibold transition-all duration-300 ${
-                      saving
-                        ? "cursor-not-allowed bg-[#780000]/50 text-[#FDF0D5]"
-                        : "bg-[#780000] text-[#FDF0D5] hover:-translate-y-1 hover:bg-[#C1121F] hover:shadow-lg"
-                    }`}
-                  >
-                    {saving ? "Adding Product..." : "Add Product"}
-                  </button>
-                </div>
-              </form>
+              <span>
+                Fill in the information below to publish your
+                handmade product.
+              </span>
             </div>
 
-            {/* Side Information */}
-            <aside className="space-y-6">
+            {error && (
+              <div className="artisan-add-error">
+                <span>⚠️</span>
 
-              {/* Live Preview */}
-              <div className="overflow-hidden rounded-3xl bg-white shadow-xl">
-                <div className="border-b border-[#669BBC]/15 px-6 py-5">
-                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#780000]">
-                    Preview
-                  </p>
+                <div>
+                  <strong>Unable to add product</strong>
+                  <p>{error}</p>
+                </div>
+              </div>
+            )}
 
-                  <h3 className="mt-1 text-xl font-bold text-[#003049]">
-                    Product Preview
-                  </h3>
+            <form
+              onSubmit={handleSubmit}
+              className="artisan-add-form"
+            >
+              <div className="artisan-add-field">
+                <label htmlFor="name">
+                  Product Name
+                </label>
+
+                <input
+                  id="name"
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Enter product name"
+                  required
+                />
+              </div>
+
+              <div className="artisan-add-field">
+                <label htmlFor="description">
+                  Description
+                </label>
+
+                <textarea
+                  id="description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  placeholder="Describe your handmade product..."
+                  rows={5}
+                />
+              </div>
+
+              <div className="artisan-add-two-columns">
+                <div className="artisan-add-field">
+                  <label htmlFor="price">
+                    Price
+                  </label>
+
+                  <div className="artisan-add-input-suffix">
+                    <input
+                      id="price"
+                      type="number"
+                      name="price"
+                      value={formData.price}
+                      onChange={handleChange}
+                      placeholder="25000"
+                      min="1"
+                      step="0.01"
+                      required
+                    />
+
+                    <span>IQD</span>
+                  </div>
                 </div>
 
-                <div className="p-6">
-                  <div className="flex h-48 items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#FDF0D5] to-[#669BBC]/20">
-                    {previewImage ? (
-                      <img
-                        src={previewImage}
-                        alt={formData.name || "Product preview"}
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <div className="text-center">
-                        <div className="text-6xl">
-                          🧶
-                        </div>
+                <div className="artisan-add-field">
+                  <label htmlFor="stock_quantity">
+                    Stock Quantity
+                  </label>
 
-                        <p className="mt-2 text-sm font-semibold text-[#669BBC]">
-                          Product Image
-                        </p>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="mt-5">
-                    <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#780000]">
-                      Handmade
-                    </p>
-
-                    <h4 className="mt-2 line-clamp-2 text-xl font-bold text-[#003049]">
-                      {formData.name || "Product Name"}
-                    </h4>
-
-                    <p className="mt-3 line-clamp-3 text-sm leading-6 text-[#669BBC]">
-                      {formData.description ||
-                        "Your product description will appear here."}
-                    </p>
-
-                    <div className="mt-5 flex items-center justify-between border-t border-[#669BBC]/15 pt-4">
-                      <div>
-                        <p className="text-xs text-[#669BBC]">
-                          Price
-                        </p>
-
-                        <p className="mt-1 font-bold text-[#780000]">
-                          {formData.price
-                            ? `${Number(
-                                formData.price
-                              ).toLocaleString()} IQD`
-                            : "0 IQD"}
-                        </p>
-                      </div>
-
-                      <div className="text-right">
-                        <p className="text-xs text-[#669BBC]">
-                          Stock
-                        </p>
-
-                        <p className="mt-1 font-semibold text-[#003049]">
-                          {formData.stock_quantity || 0}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                  <input
+                    id="stock_quantity"
+                    type="number"
+                    name="stock_quantity"
+                    value={formData.stock_quantity}
+                    onChange={handleChange}
+                    placeholder="10"
+                    min="0"
+                    required
+                  />
                 </div>
               </div>
 
-              {/* Tips */}
-              <div className="rounded-3xl bg-[#003049] p-7 text-[#FDF0D5] shadow-xl">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#780000] text-3xl">
-                  🧺
-                </div>
+              <div className="artisan-add-field">
+                <label htmlFor="category_id">
+                  Category
+                </label>
 
-                <h2 className="mt-6 text-2xl font-bold">
-                  Product Tips
-                </h2>
+                <select
+                  id="category_id"
+                  name="category_id"
+                  value={formData.category_id}
+                  onChange={handleChange}
+                >
+                  <option value="">
+                    Select a category
+                  </option>
 
-                <div className="mt-5 space-y-4 text-sm leading-6 text-[#FDF0D5]/75">
-                  <div className="flex gap-3">
-                    <span className="text-[#669BBC]">✓</span>
-                    <p>
-                      Use a clear and descriptive product name.
-                    </p>
-                  </div>
+                  {categories.map((category) => (
+                    <option
+                      key={category.id}
+                      value={category.id}
+                    >
+                      {category.name ||
+                        category.category_name ||
+                        `Category ${category.id}`}
+                    </option>
+                  ))}
+                </select>
 
-                  <div className="flex gap-3">
-                    <span className="text-[#669BBC]">✓</span>
-                    <p>
-                      Describe the materials and craftsmanship.
-                    </p>
-                  </div>
-
-                  <div className="flex gap-3">
-                    <span className="text-[#669BBC]">✓</span>
-                    <p>
-                      Set an accurate price and stock quantity.
-                    </p>
-                  </div>
-
-                  <div className="flex gap-3">
-                    <span className="text-[#669BBC]">✓</span>
-                    <p>
-                      Use a high-quality product image.
-                    </p>
-                  </div>
-                </div>
+                <small>
+                  Category is optional.
+                </small>
               </div>
 
-              {/* Navigation */}
-              <div className="rounded-3xl bg-white p-7 shadow-md">
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#780000]">
-                  Need Help?
-                </p>
+              <div className="artisan-add-field">
+                <label htmlFor="image">
+                  Image URL
+                </label>
 
-                <h3 className="mt-2 text-xl font-bold text-[#003049]">
-                  Manage your products
-                </h3>
+                <input
+                  id="image"
+                  type="text"
+                  name="image"
+                  value={formData.image}
+                  onChange={handleChange}
+                  placeholder="https://example.com/product-image.jpg"
+                />
 
-                <p className="mt-3 text-sm leading-6 text-[#669BBC]">
-                  After adding your product, you can edit or delete it from
-                  your products page.
-                </p>
+                <small>
+                  Leave empty to use the default product image.
+                </small>
+              </div>
 
+              <div className="artisan-add-actions">
                 <Link
                   to="/artisan/products"
-                  className="mt-5 inline-flex items-center gap-2 font-semibold text-[#780000] transition-colors duration-300 hover:text-[#C1121F]"
+                  className="artisan-add-cancel"
                 >
-                  Go to My Products
-                  <span>→</span>
+                  Cancel
                 </Link>
+
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="artisan-add-submit"
+                >
+                  {saving
+                    ? "Adding Product..."
+                    : "Add Product"}
+                </button>
               </div>
-            </aside>
+            </form>
           </div>
+
+          {/* Sidebar */}
+          <aside className="artisan-add-sidebar">
+            {/* Preview */}
+            <div className="artisan-add-preview-card">
+              <div className="artisan-add-preview-heading">
+                <p>Preview</p>
+                <h3>Product Preview</h3>
+              </div>
+
+              <div className="artisan-add-preview-image">
+                {previewImage ? (
+                  <img
+                    src={previewImage}
+                    alt={
+                      formData.name ||
+                      "Product preview"
+                    }
+                  />
+                ) : (
+                  <div>
+                    <span>🧶</span>
+                    <p>Product Image</p>
+                  </div>
+                )}
+              </div>
+
+              <div className="artisan-add-preview-body">
+                <p className="artisan-add-preview-label">
+                  Handmade
+                </p>
+
+                <h4>
+                  {formData.name || "Product Name"}
+                </h4>
+
+                <p>
+                  {formData.description ||
+                    "Your product description will appear here."}
+                </p>
+
+                <div className="artisan-add-preview-meta">
+                  <div>
+                    <small>Price</small>
+                    <strong>
+                      {formData.price
+                        ? `${Number(
+                            formData.price
+                          ).toLocaleString()} IQD`
+                        : "0 IQD"}
+                    </strong>
+                  </div>
+
+                  <div>
+                    <small>Stock</small>
+                    <strong>
+                      {formData.stock_quantity || 0}
+                    </strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Tips */}
+            <div className="artisan-add-tips">
+              <div className="artisan-add-tips-icon">
+                🧺
+              </div>
+
+              <h2>Product Tips</h2>
+
+              <div className="artisan-add-tip-list">
+                <div>
+                  <span>✓</span>
+                  <p>
+                    Use a clear and descriptive product name.
+                  </p>
+                </div>
+
+                <div>
+                  <span>✓</span>
+                  <p>
+                    Describe the materials and craftsmanship.
+                  </p>
+                </div>
+
+                <div>
+                  <span>✓</span>
+                  <p>
+                    Set an accurate price and stock quantity.
+                  </p>
+                </div>
+
+                <div>
+                  <span>✓</span>
+                  <p>
+                    Use a high-quality product image.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Help */}
+            <div className="artisan-add-help">
+              <p>Need Help?</p>
+
+              <h3>Manage your products</h3>
+
+              <span>
+                After adding your product, you can edit or
+                delete it from your products page.
+              </span>
+
+              <Link to="/artisan/products">
+                Go to My Products →
+              </Link>
+            </div>
+          </aside>
         </div>
       </section>
     </main>

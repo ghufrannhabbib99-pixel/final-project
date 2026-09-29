@@ -7,111 +7,171 @@ function Dashboard() {
       title: "Users",
       value: "0",
       icon: "♙",
+      className: "admin-stat-blue",
     },
     {
       title: "Artisans",
       value: "0",
       icon: "♢",
+      className: "admin-stat-red",
     },
     {
       title: "Products",
       value: "0",
       icon: "▣",
+      className: "admin-stat-gold",
     },
     {
       title: "Orders",
       value: "0",
       icon: "◷",
+      className: "admin-stat-green",
     },
   ];
 
   return (
-    <div className="admin-dashboard min-h-screen bg-[#FDF0D5]">
+    <div className="admin-dashboard">
+      <div className="admin-decoration admin-decoration-one" />
+      <div className="admin-decoration admin-decoration-two" />
+      <div className="admin-cuneiform admin-cuneiform-one">
+        𒀭
+      </div>
+      <div className="admin-cuneiform admin-cuneiform-two">
+        𒂗
+      </div>
 
-      {/* Main Content */}
-      <main className="admin-main min-h-screen">
-
+      <main className="admin-main">
         {/* Header */}
         <header className="admin-header">
+          <div className="admin-header-top">
+            <div>
+              <div className="admin-kicker">
+                <span />
+                ALHERFA ADMIN
+                <span />
+              </div>
 
-          <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-[#780000]">
-            Admin Dashboard
-          </p>
+              <h1>Welcome back, Admin</h1>
 
-          <h2 className="text-3xl font-bold text-[#003049]">
-            Welcome back, Admin
-          </h2>
+              <p>
+                Manage your marketplace and keep track of
+                everything from one place.
+              </p>
+            </div>
 
-          <p className="mt-2 text-sm text-[#003049]/60">
-            Manage your marketplace and keep track of everything.
-          </p>
+            <div className="admin-header-symbol">
+              <span>𒀭</span>
+            </div>
+          </div>
 
+          <div className="admin-header-line">
+            <span />
+            <b>✦</b>
+            <span />
+          </div>
         </header>
 
         {/* Statistics */}
-        <section className="admin-stats grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
-
-          {stats.map((stat) => (
-            <div
+        <section className="admin-stats">
+          {stats.map((stat, index) => (
+            <article
               key={stat.title}
-              className="admin-stat-card rounded-2xl bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-md"
+              className={`admin-stat-card ${stat.className}`}
+              style={{
+                animationDelay: `${index * 0.1}s`,
+              }}
             >
-              <div className="flex items-start justify-between">
+              <div className="admin-stat-top">
+                <span className="admin-stat-label">
+                  {stat.title}
+                </span>
 
-                <div>
-                  <p className="text-sm text-[#003049]/55">
-                    {stat.title}
-                  </p>
-
-                  <p className="admin-stat-value text-3xl font-bold text-[#003049]">
-                    {stat.value}
-                  </p>
-                </div>
-
-                <div className="admin-stat-icon flex items-center justify-center rounded-xl bg-[#FDF0D5] text-lg text-[#780000]">
+                <div className="admin-stat-icon">
                   {stat.icon}
                 </div>
-
               </div>
-            </div>
-          ))}
 
+              <div className="admin-stat-bottom">
+                <strong>{stat.value}</strong>
+
+                <span className="admin-stat-status">
+                  Current
+                </span>
+              </div>
+
+              <div className="admin-stat-shine" />
+            </article>
+          ))}
         </section>
 
-        {/* Recent Orders */}
-        <section className="admin-orders rounded-2xl bg-white shadow-sm">
-
-          <div className="admin-orders-header flex items-center justify-between">
-
+        {/* Orders */}
+        <section className="admin-orders">
+          <div className="admin-orders-header">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#780000]">
-                Overview
-              </p>
+              <span className="admin-section-kicker">
+                OVERVIEW
+              </span>
 
-              <h3 className="mt-1 text-xl font-bold text-[#003049]">
-                Recent Orders
-              </h3>
+              <h2>Recent Orders</h2>
+
+              <p>
+                Keep track of the latest marketplace activity.
+              </p>
             </div>
 
             <Link
               to="/admin/orders"
-              className="rounded-full bg-[#003049] px-5 py-2 text-sm font-medium text-white transition hover:bg-[#780000]"
+              className="admin-view-all"
             >
               View All
+              <span>→</span>
             </Link>
-
           </div>
 
-          <div className="admin-empty-orders rounded-xl border border-[#003049]/10 text-center">
-            <p className="text-sm text-[#003049]/50">
-              No orders available yet.
+          <div className="admin-orders-content">
+            <div className="admin-empty-icon">
+              ◷
+            </div>
+
+            <span className="admin-empty-label">
+              ORDER ACTIVITY
+            </span>
+
+            <h3>No orders available yet</h3>
+
+            <p>
+              Orders will appear here once customers start
+              making purchases.
             </p>
-          </div>
 
+            <Link
+              to="/admin/orders"
+              className="admin-empty-button"
+            >
+              Go to Orders
+              <span>→</span>
+            </Link>
+          </div>
         </section>
 
-      </main>
+        {/* Bottom info */}
+        <section className="admin-bottom-banner">
+          <div className="admin-banner-symbol">
+            𒀭
+          </div>
 
+          <div>
+            <span>ALHERFA MARKETPLACE</span>
+            <h3>
+              Supporting Iraqi craftsmanship
+            </h3>
+          </div>
+
+          <div className="admin-banner-decoration">
+            ✦
+          </div>
+        </section>
+      </main>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../../services/api";
+import "./ProductCard.css";
 
 const productImages = {
   19: "/images/products/copper/copper-tray.jpg",
@@ -47,13 +48,10 @@ function ProductCard({ product }) {
     product.price || 0
   ).toLocaleString("en-US");
 
-  // Check whether this product is already in favorites
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    if (!token) {
-      return;
-    }
+    if (!token) return;
 
     const checkFavorite = async () => {
       try {
@@ -102,7 +100,6 @@ function ProductCard({ product }) {
 
       if (isFavorite) {
         await api.favorites.remove(product.id);
-
         setIsFavorite(false);
       } else {
         await api.favorites.add({
@@ -127,39 +124,36 @@ function ProductCard({ product }) {
   };
 
   return (
-    <article className="group overflow-hidden rounded-2xl bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+    <article className="product-card group">
 
-      {/* Product Image */}
-      <div className="relative">
+      {/* Image */}
+      <div className="product-card-image-wrapper">
 
         <Link to={`/products/${product.id}`}>
-          <div className="aspect-square overflow-hidden bg-[#FDF0D5]">
+          <div className="product-card-image">
 
             {imageSrc ? (
               <img
                 src={imageSrc}
-                alt={
-                  product.name ||
-                  "Handmade product"
-                }
-                className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                alt={product.name || "Handmade product"}
               />
             ) : (
-              <div className="flex h-full w-full flex-col items-center justify-center text-[#780000]">
-                <span className="text-5xl">
-                  𒀭
-                </span>
-
-                <span className="mt-3 text-sm font-medium text-[#003049]/60">
-                  Handmade Product
-                </span>
+              <div className="product-card-no-image">
+                <span>𒀭</span>
+                <p>Handmade Product</p>
               </div>
             )}
 
+            <div className="product-card-image-overlay" />
           </div>
         </Link>
 
-        {/* Favorite Button */}
+        {/* Category */}
+        <div className="product-card-category">
+          {categoryName}
+        </div>
+
+        {/* Favorite */}
         <button
           type="button"
           onClick={toggleFavorite}
@@ -174,55 +168,55 @@ function ProductCard({ product }) {
               ? "Remove from favorites"
               : "Add to favorites"
           }
-          className="absolute right-3 top-3 flex h-11 w-11 items-center justify-center rounded-full bg-white/95 text-2xl shadow-md backdrop-blur-sm transition duration-300 hover:scale-110 hover:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+          className="product-card-favorite"
         >
-          <span
-            className={
-              isFavorite
-                ? "text-[#780000]"
-                : "text-[#003049]"
-            }
-          >
-            {favoriteLoading
-              ? "…"
-              : isFavorite
-              ? "♥"
-              : "♡"}
-          </span>
+          {favoriteLoading
+            ? "…"
+            : isFavorite
+            ? "♥"
+            : "♡"}
         </button>
-
       </div>
 
-      {/* Product Info */}
-      <div className="p-5">
+      {/* Content */}
+      <div className="product-card-content">
 
-        <p className="text-xs font-medium uppercase tracking-wider text-[#780000]">
-          {categoryName}
-        </p>
-
-        <Link
-          to={`/products/${product.id}`}
-        >
-          <h3 className="mt-2 text-lg font-semibold text-[#003049] transition hover:text-[#780000]">
-            {product.name}
+        <Link to={`/products/${product.id}`}>
+          <h3 className="product-card-title">
+            {product.name || "Handmade Product"}
           </h3>
         </Link>
 
-        <div className="mt-4 flex items-center justify-between">
-
-          <p className="font-semibold text-[#003049]">
-            {formattedPrice} IQD
+        {product.description && (
+          <p className="product-card-description">
+            {product.description}
           </p>
+        )}
+
+        <div className="product-card-divider" />
+
+        <div className="product-card-bottom">
+
+          <div>
+            <span className="product-card-price-label">
+              Price
+            </span>
+
+            <p className="product-card-price">
+              {formattedPrice}
+              <span> IQD</span>
+            </p>
+          </div>
 
           <Link
             to={`/products/${product.id}`}
-            className="rounded-full bg-[#003049] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#780000]"
+            className="product-card-view"
           >
             View
+            <span>→</span>
           </Link>
 
         </div>
-
       </div>
     </article>
   );

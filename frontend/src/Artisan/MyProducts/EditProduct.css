@@ -1,0 +1,588 @@
+.artisan-edit-page {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 8% 10%, rgba(102,155,188,.13), transparent 25%),
+    radial-gradient(circle at 92% 18%, rgba(120,0,0,.08), transparent 25%),
+    #fdf0d5;
+  color: #003049;
+}
+
+.artisan-edit-decoration {
+  position: fixed;
+  pointer-events: none;
+  color: rgba(0,48,73,.035);
+  z-index: 0;
+}
+
+.artisan-edit-decoration-one {
+  right: 3%;
+  top: 18%;
+  font-size: 9rem;
+  animation: editFloat 8s ease-in-out infinite;
+}
+
+.artisan-edit-decoration-two {
+  left: 3%;
+  bottom: 15%;
+  color: rgba(120,0,0,.035);
+  font-size: 7rem;
+  animation: editFloat 10s ease-in-out infinite reverse;
+}
+
+.artisan-edit-header {
+  position: relative;
+  z-index: 2;
+  padding: 3.5rem 1.5rem 2rem;
+}
+
+.artisan-edit-header-inner {
+  max-width: 1200px;
+  margin: auto;
+  animation: editEnter .7s ease both;
+}
+
+.artisan-edit-back {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  color: #780000;
+  font-size: .9rem;
+  font-weight: 850;
+  transition: .3s ease;
+}
+
+.artisan-edit-back:hover {
+  color: #c1121f;
+  transform: translateX(-3px);
+}
+
+.artisan-edit-kicker {
+  margin-top: 2rem;
+  color: #780000;
+  font-size: .72rem;
+  font-weight: 900;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+}
+
+.artisan-edit-title {
+  margin-top: .7rem;
+  font-size: clamp(2.7rem, 5vw, 4.4rem);
+  line-height: .95;
+  font-weight: 900;
+  letter-spacing: -.05em;
+}
+
+.artisan-edit-description {
+  max-width: 680px;
+  margin-top: 1.1rem;
+  color: #669bbc;
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.artisan-edit-content {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: auto;
+  padding: 1rem 1.5rem 5rem;
+}
+
+.artisan-edit-success,
+.artisan-edit-error {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  margin-bottom: 1rem;
+  padding: 1rem 1.1rem;
+  border-radius: 16px;
+  font-weight: 750;
+  animation: editEnter .4s ease both;
+}
+
+.artisan-edit-success {
+  background: #effaf1;
+  border: 1px solid #c9ebd0;
+  color: #27763a;
+}
+
+.artisan-edit-error {
+  background: rgba(120,0,0,.055);
+  border: 1px solid rgba(120,0,0,.15);
+  color: #780000;
+}
+
+.artisan-edit-layout {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) 360px;
+  gap: 2rem;
+  align-items: start;
+}
+
+.artisan-edit-form-card,
+.artisan-edit-preview-card {
+  background: rgba(255,255,255,.95);
+  border-radius: 28px;
+  box-shadow: 0 20px 55px rgba(0,48,73,.09);
+}
+
+.artisan-edit-form-card {
+  padding: clamp(1.5rem,4vw,2.5rem);
+  animation: editCardEnter .7s ease both;
+}
+
+.artisan-edit-form-heading p,
+.artisan-edit-preview-heading p {
+  color: #780000;
+  font-size: .7rem;
+  font-weight: 900;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+
+.artisan-edit-form-heading h2 {
+  margin-top: .4rem;
+  font-size: 1.8rem;
+  font-weight: 900;
+}
+
+.artisan-edit-form-heading span {
+  display: block;
+  margin-top: .5rem;
+  color: #669bbc;
+  font-size: .9rem;
+  line-height: 1.7;
+}
+
+.artisan-edit-form {
+  display: grid;
+  gap: 1.35rem;
+  margin-top: 2rem;
+}
+
+.artisan-edit-field label {
+  display: block;
+  margin-bottom: .5rem;
+  color: #003049;
+  font-size: .85rem;
+  font-weight: 850;
+}
+
+.artisan-edit-field input,
+.artisan-edit-field textarea,
+.artisan-edit-field select {
+  width: 100%;
+  border: 1px solid rgba(102,155,188,.25);
+  border-radius: 14px;
+  background: rgba(253,240,213,.35);
+  padding: .85rem 1rem;
+  color: #003049;
+  outline: none;
+  font: inherit;
+  transition: .3s ease;
+}
+
+.artisan-edit-field textarea {
+  resize: vertical;
+  min-height: 135px;
+}
+
+.artisan-edit-field input:focus,
+.artisan-edit-field textarea:focus,
+.artisan-edit-field select:focus {
+  background: #fff;
+  border-color: #780000;
+  box-shadow: 0 0 0 4px rgba(120,0,0,.08);
+}
+
+.artisan-edit-field small {
+  display: block;
+  margin-top: .4rem;
+  color: #669bbc;
+  font-size: .72rem;
+}
+
+.artisan-edit-two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+}
+
+.artisan-edit-actions {
+  display: flex;
+  gap: .75rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid rgba(102,155,188,.15);
+}
+
+.artisan-edit-primary,
+.artisan-edit-secondary {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 13px;
+  padding: .75rem 1.35rem;
+  font-weight: 850;
+  transition: .3s ease;
+}
+
+.artisan-edit-primary {
+  flex: 1;
+  border: 0;
+  background: #780000;
+  color: #fdf0d5;
+  cursor: pointer;
+}
+
+.artisan-edit-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  background: #c1121f;
+  box-shadow: 0 12px 28px rgba(120,0,0,.22);
+}
+
+.artisan-edit-primary:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.artisan-edit-secondary {
+  flex: 1;
+  border: 1px solid rgba(0,48,73,.13);
+  color: #003049;
+}
+
+.artisan-edit-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(0,48,73,.08);
+}
+
+.artisan-edit-danger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid rgba(120,0,0,.12);
+}
+
+.artisan-edit-danger p {
+  color: #780000;
+  font-size: .7rem;
+  font-weight: 900;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+
+.artisan-edit-danger h3 {
+  margin-top: .35rem;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.artisan-edit-danger span {
+  display: block;
+  margin-top: .35rem;
+  color: #669bbc;
+  font-size: .78rem;
+  line-height: 1.5;
+}
+
+.artisan-edit-delete {
+  flex-shrink: 0;
+  border: 1px solid rgba(120,0,0,.25);
+  border-radius: 12px;
+  background: #fff;
+  padding: .7rem 1rem;
+  color: #780000;
+  font-weight: 800;
+  transition: .3s ease;
+  cursor: pointer;
+}
+
+.artisan-edit-delete:hover:not(:disabled) {
+  background: #780000;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.artisan-edit-delete:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+/* Preview */
+.artisan-edit-preview-card {
+  overflow: hidden;
+  position: sticky;
+  top: 1.5rem;
+  animation: editCardEnter .8s .1s ease both;
+}
+
+.artisan-edit-preview-heading {
+  padding: 1.4rem;
+  border-bottom: 1px solid rgba(102,155,188,.13);
+}
+
+.artisan-edit-preview-heading h2 {
+  margin-top: .3rem;
+  font-size: 1.3rem;
+  font-weight: 900;
+}
+
+.artisan-edit-preview-image {
+  height: 260px;
+  margin: 1.2rem 1.2rem 0;
+  overflow: hidden;
+  border-radius: 20px;
+  background: linear-gradient(135deg,#fdf0d5,rgba(102,155,188,.2));
+}
+
+.artisan-edit-preview-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: previewImage .4s ease both;
+}
+
+.artisan-edit-preview-image > div {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.artisan-edit-preview-image span {
+  font-size: 4.5rem;
+}
+
+.artisan-edit-preview-image p {
+  margin-top: .6rem;
+  color: #669bbc;
+  font-size: .8rem;
+  font-weight: 750;
+}
+
+.artisan-edit-preview-body {
+  padding: 1.3rem;
+}
+
+.artisan-edit-preview-category {
+  color: #780000;
+  font-size: .65rem;
+  font-weight: 900;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.artisan-edit-preview-body h3 {
+  margin-top: .45rem;
+  color: #003049;
+  font-size: 1.45rem;
+  font-weight: 900;
+}
+
+.artisan-edit-preview-description {
+  margin-top: .65rem;
+  color: #669bbc;
+  font-size: .82rem;
+  line-height: 1.7;
+}
+
+.artisan-edit-preview-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.2rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(102,155,188,.14);
+}
+
+.artisan-edit-preview-meta small {
+  display: block;
+  color: #669bbc;
+  font-size: .7rem;
+}
+
+.artisan-edit-preview-meta strong {
+  display: block;
+  margin-top: .25rem;
+  color: #780000;
+}
+
+.artisan-edit-preview-meta div:last-child {
+  text-align: right;
+}
+
+/* Loading */
+.artisan-edit-loading,
+.artisan-edit-error-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  background: #fdf0d5;
+}
+
+.artisan-edit-loading-card,
+.artisan-edit-error-card {
+  width: min(100%, 500px);
+  padding: 2.5rem;
+  border-radius: 28px;
+  background: #fff;
+  text-align: center;
+  box-shadow: 0 20px 55px rgba(0,48,73,.1);
+}
+
+.artisan-edit-loading-icon {
+  font-size: 3.5rem;
+  animation: editFloat 2s ease-in-out infinite;
+}
+
+.artisan-edit-loading-line {
+  margin: 1.3rem auto 0;
+  border-radius: 999px;
+  background: #fdf0d5;
+  animation: editPulse 1.4s ease-in-out infinite;
+}
+
+.artisan-edit-loading-line.large {
+  width: 70%;
+  height: 18px;
+}
+
+.artisan-edit-loading-line.small {
+  width: 45%;
+  height: 12px;
+}
+
+.artisan-edit-loading-box {
+  height: 300px;
+  margin-top: 2rem;
+  border-radius: 22px;
+  background: rgba(253,240,213,.65);
+  animation: editPulse 1.4s ease-in-out infinite;
+}
+
+.artisan-edit-error-icon {
+  font-size: 4rem;
+}
+
+.artisan-edit-error-card h1 {
+  margin-top: 1rem;
+  font-size: 1.6rem;
+  font-weight: 900;
+}
+
+.artisan-edit-error-card p {
+  margin-top: .7rem;
+  color: #669bbc;
+  line-height: 1.7;
+}
+
+.artisan-edit-error-card .artisan-edit-primary {
+  margin-top: 1.5rem;
+}
+
+/* Animations */
+@keyframes editEnter {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes editCardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes editFloat {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-13px); }
+}
+
+@keyframes editPulse {
+  0%,100% { opacity: .55; }
+  50% { opacity: 1; }
+}
+
+@keyframes previewImage {
+  from {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 900px) {
+  .artisan-edit-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .artisan-edit-preview-card {
+    position: static;
+  }
+}
+
+@media (max-width: 650px) {
+  .artisan-edit-header {
+    padding: 2.5rem 1rem 1.5rem;
+  }
+
+  .artisan-edit-content {
+    padding: 1rem 1rem 4rem;
+  }
+
+  .artisan-edit-title {
+    font-size: 2.7rem;
+  }
+
+  .artisan-edit-two-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .artisan-edit-actions {
+    flex-direction: column;
+  }
+
+  .artisan-edit-primary,
+  .artisan-edit-secondary {
+    width: 100%;
+  }
+
+  .artisan-edit-danger {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .artisan-edit-delete {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .artisan-edit-page *,
+  .artisan-edit-page::before,
+  .artisan-edit-page::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -25,7 +25,6 @@ import AdminProducts from "./pages/Admin/Products/Products";
 import AdminCategories from "./pages/Admin/Categories/Categories";
 import AdminOrders from "./pages/Admin/Orders/Orders";
 import AdminReviews from "./pages/Admin/Reviews/Reviews";
-import Favorites from "./pages/Favorites/Favorites";
 
 import Dashboard from "./Artisan/Dashboard/Dashboard";
 import Profile from "./Artisan/Profile/Profile";
@@ -37,6 +36,7 @@ import AI from "./pages/AI/AI";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+
 
 function App() {
   return (

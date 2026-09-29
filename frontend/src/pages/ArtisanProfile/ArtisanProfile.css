@@ -1,0 +1,1515 @@
+.artisan-profile-page {
+  --cream: #fdf0d5;
+  --cream-light: #fffaf0;
+  --blue: #003049;
+  --blue-light: #669bbc;
+  --burgundy: #780000;
+  --gold: #e6b566;
+  --text: #23313a;
+
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(230, 181, 102, 0.13), transparent 25%),
+    radial-gradient(circle at 90% 35%, rgba(102, 155, 188, 0.12), transparent 28%),
+    var(--cream);
+  color: var(--text);
+  direction: rtl;
+  overflow: hidden;
+  position: relative;
+}
+
+/* =========================
+   BACKGROUND
+========================= */
+
+.artisan-profile-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(2px);
+  z-index: 0;
+}
+
+.artisan-profile-orb-one {
+  width: 280px;
+  height: 280px;
+  top: 500px;
+  right: -140px;
+  background: rgba(230, 181, 102, 0.12);
+  animation: artisanOrbFloat 8s ease-in-out infinite;
+}
+
+.artisan-profile-orb-two {
+  width: 220px;
+  height: 220px;
+  top: 1200px;
+  left: -100px;
+  background: rgba(102, 155, 188, 0.1);
+  animation: artisanOrbFloat 10s ease-in-out infinite reverse;
+}
+
+.artisan-profile-cuneiform {
+  position: absolute;
+  color: rgba(120, 0, 0, 0.07);
+  font-size: 110px;
+  font-family: serif;
+  pointer-events: none;
+  z-index: 0;
+  animation: artisanSymbolFloat 7s ease-in-out infinite;
+}
+
+.artisan-cuneiform-one {
+  top: 700px;
+  left: 5%;
+}
+
+.artisan-cuneiform-two {
+  top: 1550px;
+  right: 4%;
+  animation-delay: 1.5s;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.artisan-profile-container {
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.artisan-profile-hero {
+  min-height: 760px;
+  position: relative;
+  padding: 34px 0 100px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0, 48, 73, 0.98),
+      rgba(0, 48, 73, 0.92)
+    );
+  color: white;
+  overflow: hidden;
+}
+
+.artisan-profile-pattern {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border: 1px solid rgba(230, 181, 102, 0.15);
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+.artisan-pattern-one {
+  top: -300px;
+  left: -180px;
+  animation: artisanPatternFloat 12s ease-in-out infinite;
+}
+
+.artisan-pattern-two {
+  bottom: -330px;
+  right: -180px;
+  animation: artisanPatternFloat 14s ease-in-out infinite reverse;
+}
+
+.artisan-back-button {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: white;
+  border-radius: 999px;
+  padding: 11px 18px;
+  font-size: 0.88rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  backdrop-filter: blur(12px);
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease,
+    border-color 0.3s ease;
+  animation: artisanFadeDown 0.7s ease both;
+}
+
+.artisan-back-button:hover {
+  transform: translateX(5px);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(230, 181, 102, 0.5);
+}
+
+.artisan-hero-grid {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 80px;
+  align-items: center;
+  margin-top: 65px;
+}
+
+/* =========================
+   HERO IMAGE
+========================= */
+
+.artisan-hero-image-column {
+  animation: artisanImageEnter 0.9s 0.15s ease both;
+}
+
+.artisan-image-frame {
+  position: relative;
+  width: min(450px, 100%);
+  margin: auto;
+  padding: 14px;
+}
+
+.artisan-image-inner {
+  position: relative;
+  height: 530px;
+  border-radius: 32px;
+  overflow: hidden;
+  background: #eee0c5;
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.28),
+    0 0 0 1px rgba(230, 181, 102, 0.25);
+  transform: rotate(-2deg);
+  transition:
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.6s ease;
+}
+
+.artisan-image-frame:hover .artisan-image-inner {
+  transform: rotate(0deg) scale(1.015);
+  box-shadow:
+    0 38px 90px rgba(0, 0, 0, 0.34),
+    0 0 0 1px rgba(230, 181, 102, 0.45);
+}
+
+.artisan-main-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.8s ease;
+}
+
+.artisan-image-frame:hover .artisan-main-image {
+  transform: scale(1.055);
+}
+
+.artisan-image-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 36px;
+  background: rgba(230, 181, 102, 0.18);
+  filter: blur(35px);
+  z-index: -1;
+}
+
+.artisan-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: var(--burgundy);
+}
+
+.artisan-image-placeholder span {
+  font-size: 80px;
+}
+
+.artisan-image-placeholder p {
+  margin: 8px 0 0;
+  font-weight: 700;
+}
+
+.artisan-image-corner {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border-color: var(--gold);
+  border-style: solid;
+  z-index: 3;
+}
+
+.corner-top {
+  top: 0;
+  right: 0;
+  border-width: 3px 3px 0 0;
+}
+
+.corner-bottom {
+  bottom: 0;
+  left: 0;
+  border-width: 0 0 3px 3px;
+}
+
+.artisan-image-badge {
+  position: absolute;
+  bottom: 35px;
+  right: 0;
+  background: var(--gold);
+  color: var(--blue);
+  padding: 11px 17px;
+  border-radius: 999px 0 0 999px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+  animation: artisanBadgeFloat 4s ease-in-out infinite;
+}
+
+.artisan-image-badge span {
+  font-size: 1rem;
+}
+
+/* =========================
+   HERO CONTENT
+========================= */
+
+.artisan-hero-content {
+  text-align: right;
+  animation: artisanContentEnter 0.85s 0.3s ease both;
+}
+
+.artisan-hero-kicker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--gold);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  margin-bottom: 20px;
+}
+
+.kicker-line {
+  width: 32px;
+  height: 1px;
+  background: var(--gold);
+}
+
+.artisan-craft-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid rgba(230, 181, 102, 0.3);
+  background: rgba(230, 181, 102, 0.08);
+  color: #f4ce8a;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  margin-bottom: 18px;
+}
+
+.artisan-profile-title {
+  font-size: clamp(2.8rem, 6vw, 5.5rem);
+  line-height: 0.98;
+  margin: 0;
+  color: white;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.artisan-title-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 25px 0;
+}
+
+.artisan-title-line span {
+  width: 55px;
+  height: 1px;
+  background: rgba(230, 181, 102, 0.45);
+}
+
+.artisan-title-line b {
+  color: var(--gold);
+  font-size: 0.9rem;
+  animation: artisanDiamondPulse 2.5s ease-in-out infinite;
+}
+
+.artisan-profile-bio {
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 2;
+  max-width: 640px;
+  font-size: 1rem;
+  margin: 0 0 30px;
+}
+
+.artisan-hero-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.artisan-stat-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease;
+}
+
+.artisan-stat-card:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.artisan-stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 13px;
+  background: rgba(230, 181, 102, 0.12);
+  color: var(--gold);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.artisan-stat-card small {
+  display: block;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.68rem;
+  margin-bottom: 3px;
+}
+
+.artisan-stat-card strong {
+  display: block;
+  color: white;
+  font-size: 0.86rem;
+}
+
+.artisan-hero-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.artisan-primary-button,
+.artisan-secondary-button {
+  border-radius: 999px;
+  padding: 13px 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  font-weight: 800;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
+}
+
+.artisan-primary-button {
+  background: var(--gold);
+  color: var(--blue);
+  border: 1px solid var(--gold);
+}
+
+.artisan-primary-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px rgba(230, 181, 102, 0.2);
+}
+
+.artisan-secondary-button {
+  background: transparent;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.artisan-secondary-button:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.artisan-scroll-indicator {
+  position: absolute;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.7rem;
+  animation: artisanScrollFloat 2s ease-in-out infinite;
+}
+
+.artisan-scroll-indicator span {
+  width: 30px;
+  height: 1px;
+  background: rgba(230, 181, 102, 0.5);
+}
+
+/* =========================
+   SECTION HEADINGS
+========================= */
+
+.artisan-about-section,
+.artisan-process-section,
+.artisan-products-section {
+  position: relative;
+  padding: 105px 0;
+}
+
+.artisan-about-section {
+  background: var(--cream-light);
+}
+
+.artisan-section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 42px;
+}
+
+.artisan-section-heading.centered {
+  justify-content: center;
+  text-align: center;
+}
+
+.artisan-section-heading > div:first-child > span {
+  display: block;
+  color: var(--burgundy);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  margin-bottom: 9px;
+}
+
+.artisan-section-heading h2 {
+  margin: 0;
+  color: var(--blue);
+  font-size: clamp(2rem, 4vw, 3.1rem);
+  font-weight: 900;
+}
+
+.artisan-section-symbol {
+  color: var(--gold);
+  font-size: 3rem;
+  animation: artisanSymbolFloat 4s ease-in-out infinite;
+}
+
+.artisan-products-count {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  color: var(--burgundy);
+  font-size: 1.6rem;
+  font-weight: 900;
+}
+
+.artisan-products-count span {
+  color: #777;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* =========================
+   ABOUT
+========================= */
+
+.artisan-about-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 0.65fr;
+  gap: 20px;
+}
+
+.artisan-story-card {
+  min-height: 360px;
+  border-radius: 30px;
+  padding: 42px;
+  position: relative;
+  overflow: hidden;
+  animation: artisanRevealUp 0.8s ease both;
+}
+
+.artisan-story-main {
+  background: var(--blue);
+  color: white;
+}
+
+.artisan-story-side {
+  background: white;
+  border: 1px solid rgba(0, 48, 73, 0.08);
+  animation-delay: 0.15s;
+}
+
+.story-card-number {
+  position: absolute;
+  top: 25px;
+  left: 30px;
+  color: rgba(230, 181, 102, 0.45);
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+}
+
+.story-card-kicker {
+  color: var(--gold);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+
+.artisan-story-card h3 {
+  margin: 22px 0 18px;
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+  line-height: 1.2;
+}
+
+.artisan-story-card h3 span {
+  color: var(--gold);
+}
+
+.artisan-story-card p {
+  line-height: 2;
+  margin: 0;
+  max-width: 650px;
+}
+
+.artisan-story-main p {
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.artisan-story-side h3 {
+  color: var(--blue);
+  font-size: 1.8rem;
+}
+
+.artisan-story-side p {
+  color: #68747a;
+}
+
+.story-card-decoration {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 35px;
+}
+
+.story-card-decoration span {
+  width: 50px;
+  height: 1px;
+  background: rgba(230, 181, 102, 0.4);
+}
+
+.story-card-decoration b {
+  color: var(--gold);
+}
+
+.specialty-list {
+  margin-top: 25px;
+  display: grid;
+  gap: 10px;
+}
+
+.specialty-list div {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 12px;
+  background: #faf5e8;
+  border-radius: 12px;
+  color: var(--blue);
+  font-size: 0.85rem;
+}
+
+.specialty-list span {
+  color: var(--gold);
+}
+
+/* =========================
+   PROCESS
+========================= */
+
+.artisan-process-section {
+  background:
+    radial-gradient(circle at 80% 20%, rgba(102, 155, 188, 0.08), transparent 25%),
+    var(--cream);
+}
+
+.artisan-process-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.artisan-process-card {
+  background: white;
+  border-radius: 26px;
+  padding: 32px;
+  min-height: 290px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(0, 48, 73, 0.06);
+  transition:
+    transform 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+.artisan-process-card:hover {
+  transform: translateY(-9px);
+  box-shadow: 0 25px 55px rgba(0, 48, 73, 0.1);
+}
+
+.artisan-process-card.featured {
+  background: var(--burgundy);
+  color: white;
+  transform: translateY(-12px);
+}
+
+.artisan-process-card.featured:hover {
+  transform: translateY(-20px);
+}
+
+.process-number {
+  position: absolute;
+  top: 20px;
+  left: 25px;
+  color: rgba(0, 48, 73, 0.2);
+  font-weight: 900;
+}
+
+.featured .process-number {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.process-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: rgba(230, 181, 102, 0.13);
+  color: var(--burgundy);
+  font-size: 1.5rem;
+  margin-bottom: 25px;
+}
+
+.featured .process-icon {
+  color: var(--gold);
+}
+
+.artisan-process-card h3 {
+  margin: 0 0 12px;
+  color: var(--blue);
+  font-size: 1.25rem;
+}
+
+.featured h3 {
+  color: white;
+}
+
+.artisan-process-card p {
+  color: #6f7a80;
+  line-height: 1.9;
+  margin: 0;
+}
+
+.featured p {
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.process-arrow {
+  position: absolute;
+  bottom: 25px;
+  left: 28px;
+  color: var(--gold);
+  font-size: 1.3rem;
+}
+
+/* =========================
+   PRODUCTS
+========================= */
+
+.artisan-products-section {
+  background: var(--cream-light);
+}
+
+.artisan-products-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.artisan-product-card {
+  background: white;
+  border-radius: 27px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 48, 73, 0.07);
+  box-shadow: 0 12px 35px rgba(0, 48, 73, 0.045);
+  animation: artisanProductEnter 0.7s ease both;
+  transition:
+    transform 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+.artisan-product-card:hover {
+  transform: translateY(-9px);
+  box-shadow: 0 28px 60px rgba(0, 48, 73, 0.13);
+}
+
+.artisan-product-image {
+  height: 285px;
+  position: relative;
+  overflow: hidden;
+  background: #f0e5cf;
+}
+
+.artisan-product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.7s ease;
+}
+
+.artisan-product-card:hover .artisan-product-image img {
+  transform: scale(1.08);
+}
+
+.artisan-product-placeholder {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: var(--burgundy);
+  font-size: 65px;
+}
+
+.artisan-product-number {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--blue);
+  font-size: 0.72rem;
+  font-weight: 900;
+  backdrop-filter: blur(8px);
+}
+
+.artisan-out-of-stock {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: var(--burgundy);
+  color: white;
+  border-radius: 999px;
+  padding: 7px 11px;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.artisan-product-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 18px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 48, 73, 0.72),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.artisan-product-card:hover .artisan-product-overlay {
+  opacity: 1;
+}
+
+.artisan-product-overlay button {
+  border: 0;
+  background: white;
+  color: var(--blue);
+  border-radius: 999px;
+  padding: 10px 17px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  transform: translateY(12px);
+  transition: transform 0.35s ease;
+}
+
+.artisan-product-card:hover .artisan-product-overlay button {
+  transform: translateY(0);
+}
+
+.artisan-product-content {
+  padding: 22px;
+}
+
+.artisan-product-label {
+  color: var(--burgundy);
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.artisan-product-content h3 {
+  margin: 8px 0;
+  color: var(--blue);
+  font-size: 1.2rem;
+}
+
+.artisan-product-content > p {
+  color: #7a858a;
+  line-height: 1.7;
+  font-size: 0.82rem;
+  margin: 0 0 18px;
+  min-height: 45px;
+}
+
+.artisan-product-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.artisan-product-price small {
+  display: block;
+  color: #899197;
+  font-size: 0.65rem;
+  margin-bottom: 3px;
+}
+
+.artisan-product-price strong {
+  color: var(--burgundy);
+  font-size: 1.1rem;
+}
+
+.artisan-add-cart {
+  border: 0;
+  border-radius: 13px;
+  padding: 10px 13px;
+  background: var(--blue);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 800;
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease;
+}
+
+.artisan-add-cart:hover:not(:disabled) {
+  transform: translateY(-3px);
+  background: var(--burgundy);
+}
+
+.artisan-add-cart:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.artisan-stock-line {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 15px;
+  color: #829096;
+  font-size: 0.7rem;
+}
+
+.artisan-stock-line span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4c956c;
+  box-shadow: 0 0 0 5px rgba(76, 149, 108, 0.08);
+}
+
+.artisan-no-products {
+  text-align: center;
+  padding: 80px 20px;
+  background: white;
+  border-radius: 28px;
+  border: 1px dashed rgba(0, 48, 73, 0.15);
+}
+
+.artisan-no-products > div {
+  font-size: 55px;
+  color: var(--gold);
+  margin-bottom: 15px;
+}
+
+.artisan-no-products h3 {
+  color: var(--blue);
+  margin: 0 0 8px;
+}
+
+.artisan-no-products p {
+  color: #7d888c;
+  margin: 0;
+}
+
+/* =========================
+   CTA
+========================= */
+
+.artisan-final-cta {
+  position: relative;
+  overflow: hidden;
+  padding: 100px 0;
+  background: var(--burgundy);
+  color: white;
+}
+
+.artisan-cta-pattern {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border: 1px solid rgba(230, 181, 102, 0.13);
+  transform: rotate(45deg);
+  top: -400px;
+  right: -180px;
+  pointer-events: none;
+  animation: artisanPatternFloat 14s ease-in-out infinite;
+}
+
+.artisan-final-cta .artisan-profile-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+}
+
+.artisan-cta-content > span {
+  color: var(--gold);
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+
+.artisan-cta-content h2 {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  line-height: 1.05;
+  margin: 18px 0;
+}
+
+.artisan-cta-content h2 strong {
+  color: var(--gold);
+}
+
+.artisan-cta-content p {
+  color: rgba(255, 255, 255, 0.68);
+  max-width: 560px;
+  line-height: 1.9;
+}
+
+.artisan-cta-button {
+  margin-top: 18px;
+  border: 0;
+  border-radius: 999px;
+  padding: 14px 21px;
+  background: var(--gold);
+  color: var(--blue);
+  font-weight: 900;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.artisan-cta-button:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+.artisan-cta-symbol {
+  font-size: 180px;
+  line-height: 1;
+  color: rgba(230, 181, 102, 0.13);
+  animation: artisanSymbolFloat 5s ease-in-out infinite;
+}
+
+/* =========================
+   LOADING
+========================= */
+
+.artisan-profile-loading {
+  min-height: 100vh;
+  padding: 80px 0;
+}
+
+.artisan-profile-loading-container {
+  width: min(1100px, calc(100% - 40px));
+  margin: auto;
+}
+
+.artisan-loading-hero {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.artisan-skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 48, 73, 0.07) 25%,
+    rgba(0, 48, 73, 0.13) 50%,
+    rgba(0, 48, 73, 0.07) 75%
+  );
+  background-size: 200% 100%;
+  animation: artisanSkeleton 1.5s infinite;
+}
+
+.artisan-skeleton-image {
+  height: 500px;
+  border-radius: 30px;
+}
+
+.artisan-loading-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.artisan-skeleton-small {
+  width: 120px;
+  height: 20px;
+  border-radius: 999px;
+}
+
+.artisan-skeleton-title {
+  width: 75%;
+  height: 75px;
+  border-radius: 15px;
+}
+
+.artisan-skeleton-line {
+  width: 90%;
+  height: 16px;
+  border-radius: 999px;
+}
+
+.artisan-skeleton-line.short {
+  width: 60%;
+}
+
+.artisan-loading-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.artisan-skeleton-stat {
+  height: 75px;
+  border-radius: 18px;
+}
+
+.artisan-skeleton-section {
+  margin-top: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.artisan-skeleton-heading {
+  width: 220px;
+  height: 45px;
+  border-radius: 10px;
+}
+
+/* =========================
+   ERROR
+========================= */
+
+.artisan-profile-error-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 30px;
+}
+
+.artisan-profile-error-card {
+  width: min(520px, 100%);
+  background: white;
+  padding: 50px;
+  text-align: center;
+  border-radius: 30px;
+  box-shadow: 0 25px 70px rgba(0, 48, 73, 0.1);
+  animation: artisanRevealUp 0.7s ease both;
+}
+
+.artisan-error-icon {
+  font-size: 65px;
+  color: var(--gold);
+  animation: artisanSymbolFloat 4s ease-in-out infinite;
+}
+
+.artisan-profile-error-card > span {
+  display: block;
+  color: var(--burgundy);
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  margin: 15px 0;
+}
+
+.artisan-profile-error-card h1 {
+  color: var(--blue);
+  margin: 0 0 10px;
+}
+
+.artisan-profile-error-card p {
+  color: #778287;
+  line-height: 1.8;
+}
+
+.artisan-error-button {
+  margin-top: 18px;
+  border: 0;
+  background: var(--blue);
+  color: white;
+  border-radius: 999px;
+  padding: 13px 20px;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+@keyframes artisanFadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes artisanImageEnter {
+  from {
+    opacity: 0;
+    transform: translateX(-40px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes artisanContentEnter {
+  from {
+    opacity: 0;
+    transform: translateX(35px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes artisanRevealUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes artisanProductEnter {
+  from {
+    opacity: 0;
+    transform: translateY(35px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes artisanOrbFloat {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+
+  50% {
+    transform: translateY(-25px) translateX(15px);
+  }
+}
+
+@keyframes artisanSymbolFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-12px) rotate(4deg);
+  }
+}
+
+@keyframes artisanPatternFloat {
+  0%,
+  100% {
+    transform: rotate(45deg) translate(0, 0);
+  }
+
+  50% {
+    transform: rotate(50deg) translate(15px, -15px);
+  }
+}
+
+@keyframes artisanBadgeFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes artisanDiamondPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: scale(1.35);
+    opacity: 1;
+  }
+}
+
+@keyframes artisanScrollFloat {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  50% {
+    transform: translateX(-50%) translateY(6px);
+  }
+}
+
+@keyframes artisanSkeleton {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1000px) {
+  .artisan-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 55px;
+  }
+
+  .artisan-hero-image-column {
+    order: 1;
+  }
+
+  .artisan-hero-content {
+    order: 2;
+    text-align: center;
+  }
+
+  .artisan-hero-kicker,
+  .artisan-title-line {
+    justify-content: center;
+  }
+
+  .artisan-profile-bio {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .artisan-hero-stats {
+    max-width: 700px;
+    margin: auto;
+  }
+
+  .artisan-hero-actions {
+    justify-content: center;
+  }
+
+  .artisan-about-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .artisan-products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .artisan-loading-hero {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .artisan-profile-container {
+    width: min(100% - 28px, 1180px);
+  }
+
+  .artisan-profile-hero {
+    min-height: auto;
+    padding-bottom: 90px;
+  }
+
+  .artisan-hero-grid {
+    margin-top: 45px;
+  }
+
+  .artisan-image-inner {
+    height: 420px;
+  }
+
+  .artisan-profile-title {
+    font-size: 3rem;
+  }
+
+  .artisan-hero-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .artisan-hero-actions {
+    flex-direction: column;
+  }
+
+  .artisan-primary-button,
+  .artisan-secondary-button {
+    width: 100%;
+  }
+
+  .artisan-section-heading {
+    align-items: flex-start;
+  }
+
+  .artisan-process-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .artisan-process-card.featured {
+    transform: none;
+  }
+
+  .artisan-products-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .artisan-story-card {
+    padding: 30px;
+    min-height: auto;
+  }
+
+  .artisan-final-cta .artisan-profile-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .artisan-cta-symbol {
+    display: none;
+  }
+
+  .artisan-loading-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .artisan-profile-title {
+    font-size: 2.5rem;
+  }
+
+  .artisan-image-inner {
+    height: 360px;
+  }
+
+  .artisan-profile-hero {
+    padding-top: 24px;
+  }
+
+  .artisan-section-heading h2 {
+    font-size: 1.8rem;
+  }
+
+  .artisan-about-section,
+  .artisan-process-section,
+  .artisan-products-section,
+  .artisan-final-cta {
+    padding: 75px 0;
+  }
+
+  .artisan-product-bottom {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .artisan-add-cart {
+    justify-content: center;
+  }
+
+  .artisan-profile-error-card {
+    padding: 35px 22px;
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .artisan-profile-page *,
+  .artisan-profile-page *::before,
+  .artisan-profile-page *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -2,19 +2,15 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import productImages from "../../data/productImages";
 import api from "../../services/api";
+import "./Checkout.css";
 
 function Checkout() {
   const navigate = useNavigate();
 
   const [cartItems] = useState(() => {
     try {
-      const savedCart = JSON.parse(
-        localStorage.getItem("cart") || "[]"
-      );
-
-      return Array.isArray(savedCart)
-        ? savedCart
-        : [];
+      const saved = JSON.parse(localStorage.getItem("cart") || "[]");
+      return Array.isArray(saved) ? saved : [];
     } catch {
       return [];
     }
@@ -25,20 +21,17 @@ function Checkout() {
 
   const total = cartItems.reduce(
     (sum, item) =>
-      sum +
-      Number(item.price || 0) *
-        Number(item.quantity || 0),
+      sum + Number(item.price || 0) * Number(item.quantity || 0),
     0
   );
 
   const totalItems = cartItems.reduce(
-    (sum, item) =>
-      sum + Number(item.quantity || 0),
+    (sum, item) => sum + Number(item.quantity || 0),
     0
   );
 
   const createOrder = async () => {
-    if (cartItems.length === 0) {
+    if (!cartItems.length) {
       setError("Your cart is empty.");
       return;
     }
@@ -46,9 +39,7 @@ function Checkout() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setError(
-        "Please login before placing your order."
-      );
+      setError("Please login before placing your order.");
       return;
     }
 
@@ -56,16 +47,10 @@ function Checkout() {
       setLoading(true);
       setError("");
 
-      /*
-       * STEP 1
-       * Create the main order
-       */
       const order = await api.orders.create({
         total_amount: total,
         status: "pending",
       });
-
-      console.log("ORDER CREATED:", order);
 
       if (!order?.id) {
         throw new Error(
@@ -73,55 +58,28 @@ function Checkout() {
         );
       }
 
-      /*
-       * STEP 2
-       * Create an order item for every
-       * product in the cart
-       */
       for (const item of cartItems) {
-        const orderItem =
-          await api.orderItems.create({
-            order_id: order.id,
-            product_id: item.id,
-            quantity: Number(item.quantity),
-            price: Number(item.price),
-          });
-
-        console.log(
-          "ORDER ITEM CREATED:",
-          orderItem
-        );
+        await api.orderItems.create({
+          order_id: order.id,
+          product_id: item.id,
+          quantity: Number(item.quantity),
+          price: Number(item.price),
+        });
       }
 
-      /*
-       * STEP 3
-       * Clear cart only after everything
-       * was successfully created
-       */
       localStorage.removeItem("cart");
 
       alert("Order placed successfully!");
 
-      /*
-       * STEP 4
-       * Go to user's orders
-       */
       navigate("/my-orders");
     } catch (err) {
-      console.error(
-        "Failed to create order:",
-        err
-      );
+      console.error("Failed to create order:", err);
 
       if (
         err.message?.toLowerCase().includes("401") ||
-        err.message
-          ?.toLowerCase()
-          .includes("unauthorized")
+        err.message?.toLowerCase().includes("unauthorized")
       ) {
-        setError(
-          "Your session has expired. Please login again."
-        );
+        setError("Your session has expired. Please login again.");
       } else {
         setError(
           err.message ||
@@ -134,226 +92,338 @@ function Checkout() {
   };
 
   return (
-    <main className="min-h-screen bg-[#FDF0D5] px-4 py-12 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl">
+    <main className="checkout-page">
 
-        {/* Header */}
-        <div className="mb-10 text-center">
-          <p className="mb-2 text-sm font-bold tracking-[0.3em] text-[#780000]">
-            ALHERFA
-          </p>
+      {/* decorative background */}
+      <div className="checkout-orb checkout-orb-one" />
+      <div className="checkout-orb checkout-orb-two" />
+      <div className="checkout-cuneiform">𒀭</div>
 
-          <h1 className="text-4xl font-bold text-[#003049] sm:text-5xl">
-            Checkout
-          </h1>
+      <div className="checkout-container">
 
-          <p className="mt-3 text-[#669BBC]">
-            Review your order before placing it.
-          </p>
-        </div>
+        {/* ================= HERO ================= */}
 
-        {/* Error */}
+        <section className="checkout-hero">
+
+          <div className="checkout-hero-top">
+            <div>
+              <span className="checkout-kicker">
+                ALHERFA COLLECTION
+              </span>
+
+              <h1>
+                Complete Your
+                <span> Order</span>
+              </h1>
+
+              <p>
+                Review your handcrafted products and place your
+                order with confidence.
+              </p>
+            </div>
+
+            <div className="checkout-hero-badge">
+              <span>✦</span>
+              <strong>HANDMADE</strong>
+              <small>IRAQI CRAFT</small>
+            </div>
+          </div>
+
+          {/* progress */}
+          <div className="checkout-progress">
+
+            <div className="progress-step active">
+              <div className="progress-circle">
+                01
+              </div>
+
+              <div>
+                <strong>Review</strong>
+                <small>Your selection</small>
+              </div>
+            </div>
+
+            <div className="progress-line">
+              <span />
+            </div>
+
+            <div className="progress-step">
+              <div className="progress-circle">
+                02
+              </div>
+
+              <div>
+                <strong>Confirm</strong>
+                <small>Place your order</small>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+        {/* ================= ERROR ================= */}
+
         {error && (
-          <div className="mx-auto mb-6 max-w-3xl rounded-xl border border-red-300 bg-red-100 px-5 py-4 text-center font-medium text-red-700">
-            {error}
+          <div className="checkout-error">
+            <div className="checkout-error-icon">!</div>
+
+            <div>
+              <strong>Something went wrong</strong>
+              <p>{error}</p>
+            </div>
           </div>
         )}
 
-        {/* Empty Cart */}
-        {cartItems.length === 0 ? (
-          <div className="mx-auto max-w-xl rounded-3xl bg-white/70 p-10 text-center shadow-xl">
+        {/* ================= EMPTY ================= */}
 
-            <div className="mb-5 text-6xl">
+        {cartItems.length === 0 ? (
+          <section className="checkout-empty">
+
+            <div className="empty-cart-animation">
               🛒
             </div>
 
-            <h2 className="text-2xl font-bold text-[#003049]">
-              Your cart is empty
-            </h2>
+            <span>YOUR CART</span>
 
-            <p className="mt-3 text-[#669BBC]">
+            <h2>Your cart is empty</h2>
+
+            <p>
               Add some handmade products before checking out.
             </p>
 
             <button
-              type="button"
               onClick={() => navigate("/products")}
-              className="mt-7 rounded-xl bg-[#780000] px-7 py-3 font-semibold text-[#FDF0D5] transition-all duration-300 hover:-translate-y-1 hover:bg-[#C1121F] hover:shadow-lg"
+              className="checkout-main-button"
             >
-              Continue Shopping
+              Explore Products
+              <span>→</span>
             </button>
 
-          </div>
+          </section>
         ) : (
 
-          <div className="grid gap-8 lg:grid-cols-[1fr_350px]">
+          <div className="checkout-main-layout">
 
-            {/* ================= ORDER ITEMS ================= */}
-            <section className="space-y-5">
+            {/* ================= LEFT ================= */}
 
-              <div className="rounded-3xl bg-white/70 p-6 shadow-md">
+            <section className="checkout-selection">
 
-                <h2 className="text-2xl font-bold text-[#003049]">
-                  Order Details
-                </h2>
+              <div className="section-heading">
 
-                <p className="mt-1 text-[#669BBC]">
-                  {totalItems} item
-                  {totalItems !== 1 ? "s" : ""}
-                </p>
+                <div>
+                  <span>YOUR SELECTION</span>
+
+                  <h2>
+                    Selected Products
+                  </h2>
+                </div>
+
+                <div className="items-pill">
+                  {totalItems}{" "}
+                  {totalItems === 1 ? "ITEM" : "ITEMS"}
+                </div>
 
               </div>
 
-              {cartItems.map((item) => {
+              <div className="checkout-products-list">
 
-                const productImage =
-                  item.image ||
-                  productImages[item.name] ||
-                  null;
+                {cartItems.map((item, index) => {
 
-                const itemTotal =
-                  Number(item.price || 0) *
-                  Number(item.quantity || 0);
+                  const image =
+                    item.image ||
+                    productImages[item.name] ||
+                    null;
 
-                return (
-                  <article
-                    key={item.id}
-                    className="flex flex-col gap-5 rounded-2xl bg-white/70 p-5 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl sm:flex-row sm:items-center"
-                  >
+                  const itemTotal =
+                    Number(item.price || 0) *
+                    Number(item.quantity || 0);
 
-                    {/* Image */}
-                    <div className="h-28 w-full shrink-0 overflow-hidden rounded-xl bg-[#669BBC] sm:w-28">
+                  return (
+                    <article
+                      key={item.id}
+                      className="checkout-item"
+                      style={{
+                        animationDelay: `${index * 120}ms`,
+                      }}
+                    >
 
-                      {productImage ? (
-                        <img
-                          src={productImage}
-                          alt={item.name}
-                          className="h-full w-full object-cover"
-                        />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center">
-                          <span className="text-lg font-bold text-[#FDF0D5]">
-                            Alherfa
+                      <div className="item-index">
+                        {String(index + 1).padStart(2, "0")}
+                      </div>
+
+                      <div className="item-image">
+
+                        {image ? (
+                          <img
+                            src={image}
+                            alt={item.name}
+                          />
+                        ) : (
+                          <div className="item-image-empty">
+                            ✦
+                          </div>
+                        )}
+
+                      </div>
+
+                      <div className="item-information">
+
+                        <span className="item-label">
+                          HANDCRAFTED PRODUCT
+                        </span>
+
+                        <h3>{item.name}</h3>
+
+                        {item.craft_name && (
+                          <p className="item-craft">
+                            {item.craft_name}
+                          </p>
+                        )}
+
+                        <div className="item-details">
+
+                          <span>
+                            Quantity
+                            <strong>
+                              {item.quantity}
+                            </strong>
                           </span>
+
+                          <span>
+                            Unit price
+                            <strong>
+                              {Number(
+                                item.price
+                              ).toLocaleString()}{" "}
+                              IQD
+                            </strong>
+                          </span>
+
                         </div>
-                      )}
 
-                    </div>
+                      </div>
 
-                    {/* Product Info */}
-                    <div className="flex-1">
+                      <div className="item-total">
 
-                      <h3 className="text-xl font-bold text-[#003049]">
-                        {item.name}
-                      </h3>
+                        <span>ITEM TOTAL</span>
 
-                      {item.craft_name && (
-                        <p className="mt-1 text-sm font-semibold text-[#780000]">
-                          {item.craft_name}
-                        </p>
-                      )}
+                        <strong>
+                          {itemTotal.toLocaleString()} IQD
+                        </strong>
 
-                      <p className="mt-1 text-[#669BBC]">
-                        Quantity: {item.quantity}
-                      </p>
+                      </div>
 
-                      <p className="mt-2 font-semibold text-[#780000]">
-                        {Number(
-                          item.price
-                        ).toLocaleString()}{" "}
-                        IQD each
-                      </p>
+                    </article>
+                  );
+                })}
 
-                    </div>
+              </div>
 
-                    {/* Subtotal */}
-                    <div className="text-right">
-
-                      <p className="text-sm text-[#669BBC]">
-                        Subtotal
-                      </p>
-
-                      <p className="mt-1 text-lg font-bold text-[#003049]">
-                        {itemTotal.toLocaleString()} IQD
-                      </p>
-
-                    </div>
-
-                  </article>
-                );
-              })}
+              <button
+                onClick={() => navigate("/cart")}
+                className="back-cart-link"
+                disabled={loading}
+              >
+                <span>←</span>
+                Back to shopping cart
+              </button>
 
             </section>
 
-            {/* ================= SUMMARY ================= */}
-            <aside className="h-fit rounded-3xl bg-[#003049] p-7 text-[#FDF0D5] shadow-xl lg:sticky lg:top-6">
+            {/* ================= RIGHT ================= */}
 
-              <h2 className="text-2xl font-bold">
-                Order Summary
-              </h2>
+            <aside className="checkout-summary">
 
-              <div className="mt-6 flex justify-between text-[#669BBC]">
+              <div className="summary-decoration">
+                ✦
+              </div>
 
-                <span>
-                  Items
-                </span>
+              <div className="summary-heading">
+                <span>ORDER DETAILS</span>
 
-                <span>
-                  {totalItems}
-                </span>
+                <h2>
+                  Order Summary
+                </h2>
+              </div>
+
+              <div className="summary-line" />
+
+              <div className="summary-information">
+
+                <div className="summary-row">
+                  <span>Products</span>
+                  <strong>{totalItems}</strong>
+                </div>
+
+                <div className="summary-row">
+                  <span>Subtotal</span>
+
+                  <strong>
+                    {total.toLocaleString()} IQD
+                  </strong>
+                </div>
 
               </div>
 
-              <div className="mt-4 flex justify-between text-[#669BBC]">
+              <div className="summary-note">
+                <div>✓</div>
 
-                <span>
-                  Subtotal
-                </span>
-
-                <span>
-                  {total.toLocaleString()} IQD
-                </span>
-
+                <p>
+                  Every product in your order is
+                  handcrafted by Iraqi artisans.
+                </p>
               </div>
 
-              <div className="my-5 h-px bg-[#FDF0D5]/20" />
+              <div className="summary-total">
 
-              <div className="flex justify-between text-xl font-bold">
+                <div>
+                  <span>TOTAL</span>
+                  <small>Final order amount</small>
+                </div>
 
-                <span>
-                  Total
-                </span>
-
-                <span>
+                <strong>
                   {total.toLocaleString()} IQD
-                </span>
+                </strong>
 
               </div>
 
               <button
-                type="button"
                 onClick={createOrder}
                 disabled={loading}
-                className="mt-7 w-full rounded-xl bg-[#780000] px-5 py-3 font-bold text-[#FDF0D5] transition-all duration-300 hover:-translate-y-1 hover:bg-[#C1121F] hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
+                className="place-order-button"
               >
-                {loading
-                  ? "Placing Order..."
-                  : "Place Order"}
+                {loading ? (
+                  <>
+                    <span className="spinner" />
+                    Placing Order
+                  </>
+                ) : (
+                  <>
+                    Place Order
+                    <span>→</span>
+                  </>
+                )}
               </button>
 
               <button
-                type="button"
                 onClick={() => navigate("/cart")}
                 disabled={loading}
-                className="mt-3 w-full rounded-xl border border-[#669BBC] px-5 py-3 font-semibold text-[#FDF0D5] transition-all duration-300 hover:bg-[#669BBC] hover:text-[#003049]"
+                className="summary-cart-button"
               >
-                Back to Cart
+                Return to Cart
               </button>
+
+              <div className="summary-footer">
+                <span>𒀭</span>
+                Supporting Iraqi craftsmanship
+              </div>
 
             </aside>
 
           </div>
         )}
+
       </div>
     </main>
   );

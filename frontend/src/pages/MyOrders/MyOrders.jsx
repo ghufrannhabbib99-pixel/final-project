@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../../services/api";
+import "./MyOrders.css";
 
 function MyOrders() {
   const [orders, setOrders] = useState([]);
@@ -58,17 +59,17 @@ function MyOrders() {
   const getStatusStyle = (status) => {
     switch (status) {
       case "completed":
-        return "bg-green-100 text-green-700";
+        return "status-completed";
       case "shipped":
-        return "bg-blue-100 text-blue-700";
+        return "status-shipped";
       case "confirmed":
-        return "bg-yellow-100 text-yellow-700";
+        return "status-confirmed";
       case "pending":
-        return "bg-orange-100 text-orange-700";
+        return "status-pending";
       case "cancelled":
-        return "bg-red-100 text-red-700";
+        return "status-cancelled";
       default:
-        return "bg-gray-100 text-gray-700";
+        return "status-default";
     }
   };
 
@@ -97,24 +98,31 @@ function MyOrders() {
 
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#FDF0D5] px-6 py-12">
-        <div className="mx-auto max-w-6xl">
-          <div className="h-10 w-64 animate-pulse rounded-lg bg-gray-200" />
+      <main className="orders-page orders-loading-page">
+        <div className="orders-orb orders-orb-one" />
+        <div className="orders-orb orders-orb-two" />
 
-          <div className="mt-8 grid gap-5 md:grid-cols-3">
+        <div className="orders-container">
+          <div className="orders-loading-header">
+            <div className="orders-skeleton orders-skeleton-small" />
+            <div className="orders-skeleton orders-skeleton-title" />
+            <div className="orders-skeleton orders-skeleton-text" />
+          </div>
+
+          <div className="orders-stats-grid">
             {[1, 2, 3].map((item) => (
               <div
                 key={item}
-                className="h-32 animate-pulse rounded-3xl bg-white shadow"
+                className="orders-skeleton orders-skeleton-stat"
               />
             ))}
           </div>
 
-          <div className="mt-8 space-y-5">
+          <div className="orders-loading-list">
             {[1, 2, 3].map((item) => (
               <div
                 key={item}
-                className="h-56 animate-pulse rounded-3xl bg-white shadow"
+                className="orders-skeleton orders-skeleton-order"
               />
             ))}
           </div>
@@ -125,145 +133,173 @@ function MyOrders() {
 
   if (error) {
     return (
-      <main className="min-h-screen bg-[#FDF0D5] px-6 py-12">
-        <div className="mx-auto max-w-3xl rounded-3xl bg-white p-10 text-center shadow-xl">
-          <h1 className="text-3xl font-black text-[#780000]">
-            Something went wrong
-          </h1>
+      <main className="orders-page">
+        <div className="orders-orb orders-orb-one" />
+        <div className="orders-orb orders-orb-two" />
 
-          <p className="mt-4 text-gray-600">
-            {error}
-          </p>
+        <div className="orders-container">
+          <section className="orders-error-card">
+            <div className="orders-error-icon">!</div>
 
-          <Link
-            to="/products"
-            className="mt-7 inline-flex rounded-xl bg-[#003049] px-6 py-3 font-bold text-white transition hover:-translate-y-1"
-          >
-            Continue Shopping
-          </Link>
+            <span className="orders-kicker">
+              ALHERFA COLLECTION
+            </span>
+
+            <h1>Something went wrong</h1>
+
+            <p>{error}</p>
+
+            <Link
+              to="/products"
+              className="orders-primary-button"
+            >
+              Continue Shopping
+              <span>→</span>
+            </Link>
+          </section>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#FDF0D5] px-4 py-10 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl">
+    <main className="orders-page">
+      <div className="orders-orb orders-orb-one" />
+      <div className="orders-orb orders-orb-two" />
+      <div className="orders-cuneiform">𒀭</div>
 
+      <div className="orders-container">
         {/* Header */}
-        <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
-          <div>
-            <p className="text-sm font-bold uppercase tracking-wider text-[#669BBC]">
-              Customer Workspace
-            </p>
+        <header className="orders-header">
+          <div className="orders-header-content">
+            <span className="orders-kicker">
+              ALHERFA COLLECTION
+            </span>
 
-            <h1 className="mt-2 text-4xl font-black text-[#003049]">
-              My Orders
+            <h1>
+              My
+              <span> Orders</span>
             </h1>
 
-            <p className="mt-2 text-gray-600">
-              Track and manage all your orders in one place.
+            <p>
+              Track and manage all your handcrafted orders
+              in one place.
             </p>
           </div>
 
           <Link
             to="/products"
-            className="inline-flex w-fit rounded-xl bg-[#003049] px-6 py-3 font-bold text-white transition hover:-translate-y-1 hover:bg-[#780000]"
+            className="orders-shopping-button"
           >
             Continue Shopping
+            <span>→</span>
           </Link>
+        </header>
+
+        {/* Decorative line */}
+        <div className="orders-header-line">
+          <span />
         </div>
 
-        {/* Summary */}
-        <div className="mt-8 grid gap-5 md:grid-cols-3">
+        {/* Stats */}
+        <section className="orders-stats-grid">
+          <article className="order-stat-card order-stat-blue">
+            <div className="stat-icon">✦</div>
 
-          <div className="rounded-3xl bg-white p-6 shadow-lg">
-            <p className="text-sm font-medium text-gray-500">
-              Total Orders
-            </p>
+            <div className="stat-content">
+              <span>Total Orders</span>
+              <strong>{orders.length}</strong>
+            </div>
 
-            <p className="mt-2 text-4xl font-black text-[#003049]">
-              {orders.length}
-            </p>
-          </div>
+            <div className="stat-symbol">01</div>
+          </article>
 
-          <div className="rounded-3xl bg-white p-6 shadow-lg">
-            <p className="text-sm font-medium text-gray-500">
-              Completed
-            </p>
+          <article className="order-stat-card order-stat-gold">
+            <div className="stat-icon">𒀭</div>
 
-            <p className="mt-2 text-4xl font-black text-green-600">
-              {completedOrders}
-            </p>
-          </div>
+            <div className="stat-content">
+              <span>Completed</span>
+              <strong>{completedOrders}</strong>
+            </div>
 
-          <div className="rounded-3xl bg-white p-6 shadow-lg">
-            <p className="text-sm font-medium text-gray-500">
-              Active Orders
-            </p>
+            <div className="stat-symbol">02</div>
+          </article>
 
-            <p className="mt-2 text-4xl font-black text-[#C1121F]">
-              {activeOrders}
-            </p>
-          </div>
+          <article className="order-stat-card order-stat-red">
+            <div className="stat-icon">◇</div>
 
-        </div>
+            <div className="stat-content">
+              <span>Active Orders</span>
+              <strong>{activeOrders}</strong>
+            </div>
 
-        {/* Orders */}
-        <section className="mt-10">
+            <div className="stat-symbol">03</div>
+          </article>
+        </section>
 
-          <div className="mb-5 flex items-center justify-between">
-            <h2 className="text-2xl font-black text-[#003049]">
-              Your Orders
-            </h2>
+        {/* Orders section */}
+        <section className="orders-section">
+          <div className="orders-section-heading">
+            <div>
+              <span>YOUR PURCHASE HISTORY</span>
 
-            <span className="rounded-full bg-white px-4 py-2 text-sm font-bold text-[#003049] shadow">
-              {orders.length} Orders
-            </span>
+              <h2>Your Orders</h2>
+            </div>
+
+            <div className="orders-count-pill">
+              {orders.length}{" "}
+              {orders.length === 1 ? "ORDER" : "ORDERS"}
+            </div>
           </div>
 
           {orders.length === 0 ? (
-            <div className="rounded-3xl bg-white p-12 text-center shadow-xl">
-              <div className="text-6xl">
+            <div className="orders-empty-card">
+              <div className="orders-empty-icon">
                 🛍️
               </div>
 
-              <h2 className="mt-5 text-2xl font-black text-[#003049]">
-                No orders yet
-              </h2>
+              <span>YOUR COLLECTION</span>
 
-              <p className="mt-2 text-gray-600">
-                Start shopping from our talented artisans.
+              <h2>No orders yet</h2>
+
+              <p>
+                Start shopping from our talented Iraqi
+                artisans and discover something special.
               </p>
 
               <Link
                 to="/products"
-                className="mt-6 inline-flex rounded-xl bg-[#003049] px-6 py-3 font-bold text-white transition hover:-translate-y-1"
+                className="orders-primary-button"
               >
                 Explore Products
+                <span>→</span>
               </Link>
             </div>
           ) : (
-            <div className="space-y-5">
-
-              {orders.map((order) => {
+            <div className="orders-list">
+              {orders.map((order, index) => {
                 const progress = getProgress(order.status);
 
                 return (
                   <article
                     key={order.id}
-                    className="rounded-3xl bg-white p-6 shadow-xl transition duration-300 hover:-translate-y-1"
+                    className="order-card"
+                    style={{
+                      animationDelay: `${index * 120}ms`,
+                    }}
                   >
+                    <div className="order-card-number">
+                      {String(index + 1).padStart(2, "0")}
+                    </div>
 
-                    {/* Order top */}
-                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    {/* Top */}
+                    <div className="order-card-top">
+                      <div className="order-meta">
+                        <span>ORDER</span>
 
-                      <div>
-                        <p className="text-sm font-semibold text-gray-500">
-                          Order #{order.id}
-                        </p>
+                        <h3>#{order.id}</h3>
 
-                        <p className="mt-1 text-sm text-gray-500">
+                        <p>
                           {order.created_at
                             ? new Date(
                                 order.created_at
@@ -273,79 +309,118 @@ function MyOrders() {
                       </div>
 
                       <span
-                        className={`w-fit rounded-full px-4 py-2 text-sm font-bold ${getStatusStyle(
+                        className={`order-status ${getStatusStyle(
                           order.status
                         )}`}
                       >
+                        <span className="status-dot" />
                         {getStatusText(order.status)}
                       </span>
-
                     </div>
 
-                    {/* Order info */}
-                    <div className="mt-6 grid gap-4 border-y border-gray-100 py-5 sm:grid-cols-2">
+                    {/* Information */}
+                    <div className="order-information">
+                      <div className="order-information-block">
+                        <span>Total Amount</span>
 
-                      <div>
-                        <p className="text-sm text-gray-500">
-                          Total Amount
-                        </p>
-
-                        <p className="mt-1 text-2xl font-black text-[#780000]">
+                        <strong>
                           {Number(
                             order.total_amount || 0
                           ).toLocaleString()}{" "}
                           IQD
-                        </p>
+                        </strong>
                       </div>
 
-                      <div>
-                        <p className="text-sm text-gray-500">
-                          Order Status
-                        </p>
+                      <div className="order-information-divider" />
 
-                        <p className="mt-1 font-bold text-[#003049]">
+                      <div className="order-information-block">
+                        <span>Order Status</span>
+
+                        <strong className="order-status-text">
                           {getStatusText(order.status)}
-                        </p>
+                        </strong>
                       </div>
-
                     </div>
 
                     {/* Progress */}
                     {order.status !== "cancelled" && (
-                      <div className="mt-5">
+                      <div className="order-progress">
+                        <div className="progress-labels">
+                          <span
+                            className={
+                              order.status !== "pending"
+                                ? "progress-active"
+                                : ""
+                            }
+                          >
+                            Pending
+                          </span>
 
-                        <div className="flex justify-between text-xs font-semibold text-gray-500">
-                          <span>Pending</span>
-                          <span>Confirmed</span>
-                          <span>Shipped</span>
-                          <span>Completed</span>
+                          <span
+                            className={
+                              ["confirmed", "shipped", "completed"].includes(
+                                order.status
+                              )
+                                ? "progress-active"
+                                : ""
+                            }
+                          >
+                            Confirmed
+                          </span>
+
+                          <span
+                            className={
+                              ["shipped", "completed"].includes(
+                                order.status
+                              )
+                                ? "progress-active"
+                                : ""
+                            }
+                          >
+                            Shipped
+                          </span>
+
+                          <span
+                            className={
+                              order.status === "completed"
+                                ? "progress-active"
+                                : ""
+                            }
+                          >
+                            Completed
+                          </span>
                         </div>
 
-                        <div className="mt-3 h-2 overflow-hidden rounded-full bg-gray-200">
+                        <div className="progress-track">
                           <div
-                            className="h-full rounded-full bg-[#780000] transition-all duration-700"
+                            className="progress-fill"
                             style={{
                               width: progress,
                             }}
-                          />
+                          >
+                            <span />
+                          </div>
                         </div>
-
                       </div>
                     )}
 
                     {order.status === "cancelled" && (
-                      <div className="mt-5 rounded-xl bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
-                        This order has been cancelled.
+                      <div className="cancelled-message">
+                        <span>×</span>
+
+                        <div>
+                          <strong>Order Cancelled</strong>
+                          <p>
+                            This order has been cancelled.
+                          </p>
+                        </div>
                       </div>
                     )}
-
                   </article>
                 );
               })}
-
             </div>
           )}
-
         </section>
       </div>
     </main>

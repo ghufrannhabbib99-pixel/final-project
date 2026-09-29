@@ -1,0 +1,666 @@
+/* =========================================================
+   ALHERFA — ARTISAN MY PRODUCTS
+   ========================================================= */
+
+.artisan-products-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 8% 12%, rgba(102, 155, 188, 0.14), transparent 24%),
+    radial-gradient(circle at 92% 8%, rgba(120, 0, 0, 0.08), transparent 22%),
+    #fdf0d5;
+  color: #003049;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative background */
+.artisan-products-page::before {
+  content: "𒀭";
+  position: fixed;
+  right: 4%;
+  top: 16%;
+  font-size: 8rem;
+  color: rgba(0, 48, 73, 0.035);
+  pointer-events: none;
+  animation: productsSymbolFloat 7s ease-in-out infinite;
+}
+
+.artisan-products-page::after {
+  content: "◇";
+  position: fixed;
+  left: 4%;
+  bottom: 14%;
+  font-size: 7rem;
+  color: rgba(120, 0, 0, 0.035);
+  pointer-events: none;
+  animation: productsSymbolFloat 9s ease-in-out infinite reverse;
+}
+
+/* Header */
+.artisan-products-header {
+  position: relative;
+  padding: 4rem 1.5rem 2rem;
+}
+
+.artisan-products-header-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+  animation: productsHeaderEnter 0.7s ease both;
+}
+
+.artisan-products-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #780000;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.artisan-products-kicker::before {
+  content: "";
+  width: 32px;
+  height: 2px;
+  background: #780000;
+  border-radius: 999px;
+}
+
+.artisan-products-title {
+  margin: 0.75rem 0 0;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  line-height: 0.95;
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  color: #003049;
+}
+
+.artisan-products-description {
+  max-width: 680px;
+  margin-top: 1.25rem;
+  color: #669bbc;
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+/* Artisan badge */
+.artisan-products-artisan {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 1rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(120, 0, 0, 0.07);
+  border: 1px solid rgba(120, 0, 0, 0.12);
+  color: #780000;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+/* Buttons */
+.artisan-products-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.artisan-products-button {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  border-radius: 14px;
+  padding: 0.75rem 1.15rem;
+  font-weight: 800;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
+}
+
+.artisan-products-button:hover {
+  transform: translateY(-3px);
+}
+
+.artisan-products-button-primary {
+  color: #fdf0d5;
+  background: #780000;
+  box-shadow: 0 12px 30px rgba(120, 0, 0, 0.2);
+}
+
+.artisan-products-button-primary:hover {
+  background: #c1121f;
+  box-shadow: 0 16px 35px rgba(120, 0, 0, 0.28);
+}
+
+.artisan-products-button-secondary {
+  color: #003049;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 48, 73, 0.12);
+}
+
+/* Stats */
+.artisan-products-stats {
+  max-width: 1280px;
+  margin: 2.5rem auto 0;
+  padding: 0 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.artisan-product-stat {
+  position: relative;
+  overflow: hidden;
+  padding: 1.35rem;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  box-shadow: 0 15px 40px rgba(0, 48, 73, 0.07);
+  backdrop-filter: blur(14px);
+  animation: productCardEnter 0.7s ease both;
+}
+
+.artisan-product-stat:nth-child(2) {
+  animation-delay: 0.08s;
+}
+
+.artisan-product-stat:nth-child(3) {
+  animation-delay: 0.16s;
+}
+
+.artisan-product-stat::after {
+  content: "";
+  position: absolute;
+  right: -30px;
+  bottom: -35px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: rgba(102, 155, 188, 0.08);
+}
+
+.artisan-product-stat-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  background: #fdf0d5;
+  font-size: 1.45rem;
+}
+
+.artisan-product-stat-label {
+  margin-top: 1rem;
+  color: #669bbc;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.artisan-product-stat-value {
+  margin-top: 0.25rem;
+  color: #003049;
+  font-size: 2rem;
+  line-height: 1;
+  font-weight: 900;
+}
+
+.artisan-product-stat-danger .artisan-product-stat-value {
+  color: #780000;
+}
+
+/* Products section */
+.artisan-products-content {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 5rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* Grid */
+.artisan-products-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.4rem;
+}
+
+/* Product card */
+.artisan-product-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 26px;
+  background: #fff;
+  box-shadow: 0 12px 35px rgba(0, 48, 73, 0.08);
+  border: 1px solid rgba(0, 48, 73, 0.045);
+  animation: productCardEnter 0.65s ease both;
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.artisan-product-card:hover {
+  transform: translateY(-9px);
+  box-shadow: 0 25px 55px rgba(0, 48, 73, 0.15);
+}
+
+/* Image */
+.artisan-product-image {
+  position: relative;
+  height: 250px;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    #fdf0d5,
+    rgba(102, 155, 188, 0.18)
+  );
+}
+
+.artisan-product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s ease;
+}
+
+.artisan-product-card:hover .artisan-product-image img {
+  transform: scale(1.08);
+}
+
+.artisan-product-stock {
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  z-index: 2;
+  padding: 0.5rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  color: #780000;
+  font-size: 0.7rem;
+  font-weight: 800;
+  box-shadow: 0 8px 20px rgba(0, 48, 73, 0.12);
+  backdrop-filter: blur(12px);
+}
+
+.artisan-product-stock.out {
+  background: #003049;
+  color: #fff;
+}
+
+/* Card body */
+.artisan-product-body {
+  padding: 1.3rem;
+}
+
+.artisan-product-category {
+  color: #780000;
+  font-size: 0.65rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.artisan-product-name {
+  min-height: 54px;
+  margin-top: 0.45rem;
+  color: #003049;
+  font-size: 1.2rem;
+  line-height: 1.35;
+  font-weight: 850;
+}
+
+.artisan-product-description {
+  min-height: 46px;
+  margin-top: 0.7rem;
+  color: #669bbc;
+  font-size: 0.83rem;
+  line-height: 1.65;
+}
+
+.artisan-product-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+  margin-top: 1.1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(102, 155, 188, 0.15);
+}
+
+.artisan-product-meta-label {
+  color: #669bbc;
+  font-size: 0.68rem;
+}
+
+.artisan-product-price {
+  margin-top: 0.2rem;
+  color: #780000;
+  font-size: 0.95rem;
+  font-weight: 900;
+}
+
+.artisan-product-stock-number {
+  margin-top: 0.2rem;
+  color: #003049;
+  font-weight: 900;
+  text-align: right;
+}
+
+/* Card buttons */
+.artisan-product-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+  margin-top: 1.15rem;
+}
+
+.artisan-product-edit,
+.artisan-product-delete {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  transition: all 0.3s ease;
+}
+
+.artisan-product-edit {
+  color: #003049;
+  background: #fff;
+  border: 1px solid rgba(0, 48, 73, 0.13);
+}
+
+.artisan-product-edit:hover {
+  transform: translateY(-2px);
+  border-color: #003049;
+  box-shadow: 0 8px 20px rgba(0, 48, 73, 0.1);
+}
+
+.artisan-product-delete {
+  color: #fdf0d5;
+  background: #780000;
+}
+
+.artisan-product-delete:hover {
+  transform: translateY(-2px);
+  background: #c1121f;
+  box-shadow: 0 10px 25px rgba(120, 0, 0, 0.2);
+}
+
+/* Empty */
+.artisan-products-empty {
+  padding: 5rem 1.5rem;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.88);
+  text-align: center;
+  box-shadow: 0 18px 45px rgba(0, 48, 73, 0.08);
+  animation: productsEmptyEnter 0.7s ease both;
+}
+
+.artisan-products-empty-icon {
+  font-size: 5rem;
+  animation: productsFloat 4s ease-in-out infinite;
+}
+
+.artisan-products-empty h2 {
+  margin-top: 1rem;
+  color: #003049;
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+.artisan-products-empty p {
+  max-width: 440px;
+  margin: 0.75rem auto 0;
+  color: #669bbc;
+  line-height: 1.8;
+}
+
+/* Bottom banner */
+.artisan-products-banner {
+  max-width: 1280px;
+  margin: 0 auto 4rem;
+  padding: 2rem;
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at 85% 20%, rgba(102, 155, 188, 0.18), transparent 28%),
+    #003049;
+  color: #fdf0d5;
+  box-shadow: 0 20px 50px rgba(0, 48, 73, 0.18);
+}
+
+.artisan-products-banner-title {
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 900;
+}
+
+.artisan-products-banner-text {
+  max-width: 650px;
+  margin-top: 0.5rem;
+  color: rgba(253, 240, 213, 0.7);
+  line-height: 1.7;
+}
+
+.artisan-products-banner-button {
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 13px;
+  padding: 0.7rem 1.15rem;
+  background: #780000;
+  color: #fdf0d5;
+  font-weight: 800;
+  transition: all 0.3s ease;
+}
+
+.artisan-products-banner-button:hover {
+  transform: translateY(-3px);
+  background: #c1121f;
+  box-shadow: 0 12px 28px rgba(120, 0, 0, 0.3);
+}
+
+/* Loading */
+.artisan-products-loading {
+  min-height: 100vh;
+  padding: 5rem 1.5rem;
+  background: #fdf0d5;
+}
+
+.artisan-products-skeleton-header {
+  height: 150px;
+  max-width: 650px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.65);
+  animation: productsSkeleton 1.4s ease-in-out infinite;
+}
+
+.artisan-products-skeleton-grid {
+  max-width: 1280px;
+  margin: 3rem auto 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.4rem;
+}
+
+.artisan-products-skeleton-card {
+  height: 430px;
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.7);
+  animation: productsSkeleton 1.4s ease-in-out infinite;
+}
+
+/* Error */
+.artisan-products-error {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: #fdf0d5;
+}
+
+.artisan-products-error-card {
+  width: min(100%, 480px);
+  padding: 2.5rem;
+  border-radius: 28px;
+  background: #fff;
+  text-align: center;
+  box-shadow: 0 20px 55px rgba(0, 48, 73, 0.12);
+}
+
+.artisan-products-error-icon {
+  font-size: 4rem;
+}
+
+.artisan-products-error-title {
+  margin-top: 1rem;
+  color: #003049;
+  font-size: 1.6rem;
+  font-weight: 900;
+}
+
+.artisan-products-error-message {
+  margin-top: 0.75rem;
+  color: #669bbc;
+  line-height: 1.7;
+}
+
+/* Animations */
+@keyframes productsHeaderEnter {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes productCardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes productsEmptyEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes productsFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes productsSymbolFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-18px) rotate(5deg);
+  }
+}
+
+@keyframes productsSkeleton {
+  0%, 100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .artisan-products-grid,
+  .artisan-products-skeleton-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 820px) {
+  .artisan-products-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .artisan-products-grid,
+  .artisan-products-skeleton-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .artisan-products-header {
+    padding-top: 3rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .artisan-products-header {
+    padding: 2.5rem 1rem 1.5rem;
+  }
+
+  .artisan-products-content,
+  .artisan-products-stats {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .artisan-products-title {
+    font-size: 2.6rem;
+  }
+
+  .artisan-products-actions {
+    width: 100%;
+  }
+
+  .artisan-products-button {
+    width: 100%;
+  }
+
+  .artisan-products-grid,
+  .artisan-products-skeleton-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .artisan-product-image {
+    height: 270px;
+  }
+
+  .artisan-products-banner {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .artisan-products-page *,
+  .artisan-products-page::before,
+  .artisan-products-page::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
