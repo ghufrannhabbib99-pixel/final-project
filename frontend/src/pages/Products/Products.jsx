@@ -12,13 +12,13 @@ function Products() {
   const [error, setError] = useState("");
 
   const categories = [
-    { name: "All", symbol: "✦" },
-    { name: "Pottery", symbol: "𒀭" },
-    { name: "Weaving", symbol: "◇" },
-    { name: "Copper", symbol: "𒂗" },
-    { name: "Jewelry", symbol: "✧" },
-  ];
-
+  { name: "All", label: "الكل", symbol: "✦" },
+  { name: "Woodwork", label: "نجارة", symbol: "𒆠" },
+  { name: "Copper", label: "نحاس", symbol: "𒂗" },
+  { name: "Sewing", label: "خياطة", symbol: "◇" },
+  { name: "Embroidery", label: "تطريز", symbol: "✧" },
+  { name: "Decoration", label: "زخرفة", symbol: "𒀭" },
+];
   useEffect(() => {
     const loadProducts = async () => {
       try {
@@ -30,7 +30,7 @@ function Products() {
         setProducts(Array.isArray(response) ? response : []);
       } catch (err) {
         console.error("Failed to load products:", err);
-        setError(err.message || "Failed to load products");
+        setError(err.message || "تعذر تحميل المنتجات");
       } finally {
         setLoading(false);
       }
@@ -52,10 +52,11 @@ function Products() {
     }
 
     const categoryMap = {
-      Pottery: "فخار وخزف",
-      Weaving: "خياطة وتطريز",
-      Copper: "نحاس وأعمال معدنية",
-      Jewelry: "مجوهرات",
+      Woodwork: "نجارة",
+      Copper: "نحاس",
+      Sewing: "خياطة",
+      Embroidery: "تطريز",
+      Decoration: "زخرفة",
     };
 
     const matchesCategory =
@@ -68,9 +69,15 @@ function Products() {
     setSearchTerm(value);
   };
 
-  return (
-    <main className="products-page min-h-screen overflow-hidden bg-[#FDF0D5]">
+  const selectedCategoryLabel =
+    categories.find((category) => category.name === selectedCategory)?.label ||
+    "الكل";
 
+  return (
+    <main
+      className="products-page min-h-screen overflow-hidden bg-[#FDF0D5]"
+      dir="rtl"
+    >
       {/* ================= HERO ================= */}
       <section className="px-4 pt-5 sm:px-6 md:px-8 md:pt-7">
         <div className="products-hero relative overflow-hidden rounded-[2rem] bg-[#003049] px-6 py-20 text-center shadow-xl sm:px-10 md:px-14 md:py-24">
@@ -119,20 +126,20 @@ function Products() {
               </div>
             </div>
 
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#E6B566] sm:text-sm">
-              Iraqi Handmade Collection
+            <p className="text-xs font-semibold tracking-[0.25em] text-[#E6B566] sm:text-sm">
+              مجموعة الحِرفة العراقية
             </p>
 
-            <h1 className="mt-5 text-4xl font-bold leading-[1.05] tracking-tight text-[#FDF0D5] sm:text-5xl md:text-6xl">
-              Crafted by Hand,
+            <h1 className="mt-5 text-4xl font-bold leading-[1.2] tracking-tight text-[#FDF0D5] sm:text-5xl md:text-6xl">
+              صُنعت باليد،
               <span className="mt-3 block text-[#E6B566]">
-                Made with Heritage
+                وصُنعت بتراث
               </span>
             </h1>
 
             <p className="mx-auto mt-7 max-w-2xl text-sm leading-7 text-[#FDF0D5]/65 sm:text-base md:text-lg">
-              Discover unique handmade pieces created by Iraqi artisans,
-              inspired by traditions passed from one generation to another.
+              اكتشف قطعاً يدوية مميزة صنعت بأيادٍ عراقية،
+              مستوحاة من تراث انتقل من جيل إلى آخر.
             </p>
 
             <div className="mt-9 flex items-center justify-center gap-4 text-[#E6B566]/60">
@@ -154,60 +161,57 @@ function Products() {
           <div className="products-top">
 
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.25em] text-[#780000]">
-                Our Collection
-              </p>
-
+             
               <h2 className="mt-3 text-3xl font-bold tracking-tight text-[#003049] md:text-4xl">
-                Explore Products
+                استكشف المنتجات
               </h2>
 
-              <p className="mt-3 max-w-xl text-sm leading-6 text-[#003049]/55">
-                Explore handmade products crafted by talented Iraqi artisans.
+              <p className="mt-3 max-w-xl text-[20px] leading-6 text-[#003049]/55">
+                اكتشف منتجات يدوية صنعت بعناية على يد حرفيين عراقيين موهوبين.
               </p>
             </div>
 
             <div className="products-count">
               <span>{filteredProducts.length}</span>
-              <p>Products</p>
+              <p>منتج</p>
             </div>
           </div>
 
           {/* Search */}
-          <div className="products-toolbar">
+         <div className="products-toolbar">
+  {/* التصنيفات - جهة اليمين */}
+  <div className="products-categories">
+    {categories.map((category) => (
+      <button
+        key={category.name}
+        type="button"
+        onClick={() => setSelectedCategory(category.name)}
+        className={`products-category ${
+          selectedCategory === category.name
+            ? "products-category-active"
+            : ""
+        }`}
+      >
+        <span>{category.symbol}</span>
+        {category.label}
+      </button>
+    ))}
+  </div>
 
-            <div className="products-search">
-              <SearchBar onSearch={handleSearch} />
-            </div>
-
-            <div className="products-categories">
-              {categories.map((category) => (
-                <button
-                  key={category.name}
-                  type="button"
-                  onClick={() => setSelectedCategory(category.name)}
-                  className={`products-category ${
-                    selectedCategory === category.name
-                      ? "products-category-active"
-                      : ""
-                  }`}
-                >
-                  <span>{category.symbol}</span>
-                  {category.name}
-                </button>
-              ))}
-            </div>
-          </div>
-
+  {/* البحث - جهة اليسار */}
+  <div className="products-search">
+    <SearchBar onSearch={setSearchTerm} />
+  </div>
+</div>
           {/* Results label */}
           {!loading && !error && (
             <div className="mb-6 flex items-center justify-between">
               <p className="text-sm font-medium text-[#003049]/50">
                 {searchTerm
-                  ? `Results for "${searchTerm}"`
+                  ? `نتائج البحث عن "${searchTerm}"`
                   : selectedCategory === "All"
-                  ? "All handmade products"
-                  : `${selectedCategory} collection`}
+                  ? "جميع المنتجات اليدوية"
+                  : `مجموعة ${selectedCategoryLabel}`}
               </p>
 
               {searchTerm && (
@@ -216,7 +220,7 @@ function Products() {
                   onClick={() => setSearchTerm("")}
                   className="text-xs font-semibold text-[#780000] transition hover:text-[#5f0000]"
                 >
-                  Clear search
+                  مسح البحث
                 </button>
               )}
             </div>
@@ -231,6 +235,7 @@ function Products() {
                   className="products-skeleton animate-pulse"
                 >
                   <div className="h-64 bg-[#003049]/10" />
+
                   <div className="space-y-3 p-5">
                     <div className="h-3 w-20 rounded bg-[#780000]/10" />
                     <div className="h-5 w-3/4 rounded bg-[#003049]/10" />
@@ -248,7 +253,7 @@ function Products() {
                 ⚠️
               </div>
 
-              <h3>Could not load products</h3>
+              <h3>تعذر تحميل المنتجات</h3>
 
               <p>{error}</p>
             </div>
@@ -276,10 +281,10 @@ function Products() {
                   𒀭
                 </div>
 
-                <h3>No products found</h3>
+                <h3>لم يتم العثور على منتجات</h3>
 
                 <p>
-                  Try another search or choose a different category.
+                  جرّب البحث عن كلمة أخرى أو اختر تصنيفاً مختلفاً.
                 </p>
 
                 <button
@@ -290,7 +295,7 @@ function Products() {
                   }}
                   className="mt-6 rounded-full bg-[#780000] px-6 py-3 text-sm font-semibold text-[#FDF0D5] transition hover:-translate-y-1 hover:bg-[#5f0000]"
                 >
-                  Reset Filters
+                  إعادة ضبط الفلاتر
                 </button>
               </div>
             )}

@@ -1,0 +1,134 @@
+.iraqi-craft {
+  padding-top: 35px;
+  padding-bottom: 120px;
+}
+
+.iraqi-craft__divider {
+  width: 100%;
+  height: 30px;
+}
+
+.iraqi-craft__container {
+  width: min(1500px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.iraqi-craft__header {
+  margin-top: 70px;
+}
+
+.iraqi-craft__title {
+  margin-top: 18px;
+}
+
+.iraqi-craft__intro {
+  margin-top: 25px;
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center !important;
+}
+
+.iraqi-craft__visual {
+  width: 100%;
+  height: 560px;
+  margin-top: 75px;
+}
+
+.iraqi-craft__image-content {
+  padding: 40px;
+}
+
+.iraqi-craft__description {
+  margin-top: 22px;
+}
+
+.iraqi-craft__values {
+  width: 100%;
+  margin-top: 75px;
+}
+
+.iraqi-craft__value {
+  min-height: 150px;
+  padding: 20px 35px;
+}
+.iraqi-craft__image-content {
+  padding: 40px;
+}
+
+.iraqi-craft__image-content h3 {
+  font-size: 48px;
+  font-weight: 800;
+}
+
+.iraqi-craft__image-content p {
+  max-width: 750px;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 2;
+  margin-top: 25px;
+}
+.iraqi-divider {
+  width: 100%;
+  height: 55px;
+}
+/* Responsive */
+
+@media (max-width: 900px) {
+  .iraqi-craft {
+    padding-top: 25px;
+    padding-bottom: 90px;
+  }
+
+  .iraqi-craft__container {
+    width: calc(100% - 40px);
+  }
+
+  .iraqi-craft__header {
+    margin-top: 55px;
+  }
+
+  .iraqi-craft__visual {
+    height: 500px;
+    margin-top: 55px;
+  }
+
+  .iraqi-craft__values {
+    gap: 20px;
+    margin-top: 60px;
+  }
+
+  .iraqi-craft__value {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 650px) {
+  .iraqi-craft__container {
+    width: calc(100% - 30px);
+  }
+
+  .iraqi-craft__header {
+    margin-top: 45px;
+  }
+
+  .iraqi-craft__visual {
+    height: 430px;
+    margin-top: 45px;
+  }
+
+  .iraqi-craft__image-content {
+    padding: 25px;
+  }
+
+  .iraqi-craft__values {
+    grid-template-columns: 1fr;
+    gap: 35px;
+    margin-top: 50px;
+  }
+
+  .iraqi-craft__value {
+    min-height: auto;
+    padding: 10px 20px 35px;
+    border-left: none;
+  }
+}

@@ -12,11 +12,11 @@ function Products() {
   const [error, setError] = useState("");
 
   const categories = [
-    { name: "All", symbol: "✦" },
-    { name: "Pottery", symbol: "𒀭" },
-    { name: "Weaving", symbol: "◇" },
-    { name: "Copper", symbol: "𒂗" },
-    { name: "Jewelry", symbol: "✧" },
+    { name: "All", label: "الكل", symbol: "✦" },
+    { name: "Pottery", label: "فخار", symbol: "𒀭" },
+    { name: "Weaving", label: "نسيج", symbol: "◇" },
+    { name: "Copper", label: "نحاس", symbol: "𒂗" },
+    { name: "Jewelry", label: "مجوهرات", symbol: "✧" },
   ];
 
   useEffect(() => {
@@ -57,7 +57,8 @@ function Products() {
   };
 
   return (
-    <main className="products-page min-h-screen overflow-hidden bg-[#FDF0D5]">
+    <main className="products-page min-h-screen overflow-hidden bg-[#FDF0D5]"
+     dir="rtl">
 
       {/* ================= HERO ================= */}
       <section className="px-5 md:px-8">
@@ -105,19 +106,19 @@ function Products() {
             </div>
 
             <p className="text-sm font-medium uppercase tracking-[0.3em] text-[#E6B566]">
-              Iraqi Handmade Collection
+              مجموعة الحرف اليدوية العراقية
             </p>
 
             <h1 className="mt-5 text-4xl font-bold leading-tight tracking-tight text-[#FDF0D5] md:text-6xl">
-              Crafted by Hand,
+              صُنعت بأيادٍ ماهرة،
               <span className="mt-2 block text-[#E6B566]">
-                Made with Heritage
+                وصيغت بروح التراث
               </span>
             </h1>
 
             <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-[#FDF0D5]/70 md:text-lg">
-              Discover unique handmade pieces created by Iraqi artisans,
-              inspired by traditions passed from one generation to another.
+              اكتشف قطعاً يدوية مميزة صنعها حرفيون عراقيون،
+              مستوحاة من تراث انتقل من جيل إلى آخر.
             </p>
 
             {/* Heritage decoration */}
@@ -143,15 +144,15 @@ function Products() {
             <div className="products-heading">
 
               <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#780000]">
-                Our Collection
+                مجموعتنا
               </p>
 
               <h2 className="mt-3 text-3xl font-bold text-[#003049] md:text-4xl">
-                Products
+                المنتجات
               </h2>
 
               <p className="mt-3 text-[#003049]/60">
-                Explore handmade products crafted by talented Iraqi artisans.
+                استكشف المنتجات اليدوية التي صنعها حرفيون عراقيون موهوبون.
               </p>
 
             </div>
@@ -165,7 +166,7 @@ function Products() {
             <div className="mt-2">
 
               <p className="mb-5 text-xs font-semibold uppercase tracking-[0.2em] text-[#003049]/50">
-                Browse by Craft
+                تصفح حسب الحرفة
               </p>
 
               <div className="products-categories">
@@ -190,7 +191,7 @@ function Products() {
                       {category.symbol}
                     </span>
 
-                    {category.name}
+                    {category.label}
                   </button>
                 ))}
 
@@ -211,11 +212,11 @@ function Products() {
                   </div>
 
                   <h3 className="text-xl font-semibold text-[#003049]">
-                    Loading products...
+                    جارٍ تحميل المنتجات...
                   </h3>
 
                   <p className="mt-2 text-sm text-[#003049]/55">
-                    Please wait while we load the handmade collection.
+                    يرجى الانتظار بينما نقوم بتحميل مجموعة المنتجات اليدوية.
                   </p>
 
                 </div>
@@ -232,7 +233,7 @@ function Products() {
                   </div>
 
                   <h3 className="text-xl font-semibold text-red-700">
-                    Could not load products
+                    تعذّر تحميل المنتجات
                   </h3>
 
                   <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#003049]/55">
@@ -260,6 +261,7 @@ function Products() {
               {!loading &&
                 !error &&
                 filteredProducts.length === 0 && (
+                
                   <div className="mx-auto max-w-2xl rounded-[2rem] border border-[#003049]/10 bg-white px-6 py-16 text-center shadow-sm">
 
                     <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-[#E6B566]/50 bg-[#FDF0D5]">
@@ -269,11 +271,11 @@ function Products() {
                     </div>
 
                     <h3 className="text-xl font-semibold text-[#003049]">
-                      No products available
+                      لا توجد منتجات متاحة
                     </h3>
 
                     <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#003049]/55">
-                      No products match your current search.
+                      لا توجد منتجات تطابق بحثك الحالي.
                     </p>
 
                     <div className="mt-7 flex justify-center gap-3 text-[#E6B566]">

@@ -14,21 +14,21 @@ function Categories() {
 
           <div>
             <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-[#780000]">
-              Administration
+              الإدارة
             </p>
 
             <h1 className="text-3xl font-bold text-[#003049]">
-              Categories Management
+              إدارة الفئات
             </h1>
 
             <p className="mt-2 text-sm text-[#003049]/60">
-              Manage product categories available on the marketplace.
+              إدارة فئات المنتجات المتاحة على المنصة.
             </p>
           </div>
 
           <div className="categories-count rounded-2xl bg-white shadow-sm">
             <p className="text-sm text-[#003049]/55">
-              Total Categories
+              إجمالي الفئات
             </p>
 
             <p className="mt-1 text-2xl font-bold text-[#003049]">
@@ -45,16 +45,16 @@ function Categories() {
 
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#780000]">
-                Categories
+                الفئات
               </p>
 
               <h2 className="mt-1 text-xl font-bold text-[#003049]">
-                All Categories
+                جميع الفئات
               </h2>
             </div>
 
             <p className="text-sm text-[#003049]/50">
-              {categories.length} categories
+              {categories.length} فئة
             </p>
 
           </div>
@@ -67,19 +67,19 @@ function Categories() {
                 <tr className="border-b border-[#003049]/10 bg-[#FDF0D5]/40">
 
                   <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Category
+                    الفئة
                   </th>
 
                   <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Products
+                    المنتجات
                   </th>
 
                   <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Status
+                    الحالة
                   </th>
 
                   <th className="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-[#003049]/60">
-                    Actions
+                    الإجراءات
                   </th>
 
                 </tr>
@@ -102,11 +102,11 @@ function Categories() {
                         </div>
 
                         <p className="mt-4 text-sm font-medium text-[#003049]">
-                          No categories available yet.
+                          لا توجد فئات متاحة حالياً.
                         </p>
 
                         <p className="mt-1 text-sm text-[#003049]/50">
-                          Categories will appear here once they are added.
+                          ستظهر الفئات هنا بعد إضافتها.
                         </p>
 
                       </div>
@@ -136,7 +136,7 @@ function Categories() {
                       </td>
 
                       <td className="px-6 py-5">
-                        Actions
+                        الإجراءات
                       </td>
 
                     </tr>

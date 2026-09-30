@@ -27,14 +27,14 @@ function Profile() {
     user?.name ||
     user?.full_name ||
     user?.username ||
-    "User";
+    "مستخدم";
 
-  const userEmail = user?.email || "Email not available";
+  const userEmail = user?.email || "البريد الإلكتروني غير متوفر";
 
   const userInitial = userName.charAt(0).toUpperCase();
 
   return (
-    <main className="profile-page">
+    <main className="profile-page" dir="rtl">
       {/* Decorative background */}
       <div className="profile-orb profile-orb-one" />
       <div className="profile-orb profile-orb-two" />
@@ -47,14 +47,14 @@ function Profile() {
 
         <div className="profile-hero-content">
           <div className="profile-kicker">
-            <span className="profile-kicker-line" />
-            MY ACCOUNT
+            <span className="profile-kicker-line " />
+            حسابي
             <span className="profile-kicker-line" />
           </div>
 
           <h1 className="profile-title">
-            My
-            <span> Profile</span>
+            الملف
+            <span> الشخصي</span>
           </h1>
 
           <div className="profile-title-decoration">
@@ -64,8 +64,8 @@ function Profile() {
           </div>
 
           <p className="profile-description">
-            Manage your account and explore everything
-            you have saved on AlHerfa.
+            أدِر حسابك واستكشف كل ما قمت بحفظه
+            على الحرفة.
           </p>
         </div>
       </section>
@@ -87,7 +87,7 @@ function Profile() {
 
             <div className="profile-user-info">
               <span className="profile-label">
-                WELCOME BACK
+                أهلاً بعودتك
               </span>
 
               <h2>{userName}</h2>
@@ -96,7 +96,7 @@ function Profile() {
 
               <div className="profile-member-badge">
                 <span>✦</span>
-                AlHerfa Member
+                عضو في الحرفة
               </div>
             </div>
 
@@ -105,15 +105,15 @@ function Profile() {
               className="profile-edit-button"
             >
               <span>✎</span>
-              Edit Profile
+              تعديل الملف الشخصي
             </button>
           </section>
 
           {/* Quick access */}
           <div className="profile-section-heading">
             <div>
-              <span>QUICK ACCESS</span>
-              <h2>Your Space</h2>
+              <span>الوصول السريع</span>
+              <h2>مساحتك</h2>
             </div>
 
             <span className="profile-section-symbol">
@@ -137,16 +137,15 @@ function Profile() {
               </div>
 
               <div className="profile-option-content">
-                <h3>My Orders</h3>
+                <h3>طلباتي</h3>
 
                 <p>
-                  View and track all your orders and
-                  purchases.
+                  عرض وتتبع جميع طلباتك ومشترياتك.
                 </p>
               </div>
 
               <span className="profile-option-arrow">
-                →
+                ←
               </span>
             </Link>
 
@@ -165,16 +164,15 @@ function Profile() {
               </div>
 
               <div className="profile-option-content">
-                <h3>Favorites</h3>
+                <h3>المفضلة</h3>
 
                 <p>
-                  Explore the handcrafted products you
-                  saved.
+                  استكشف المنتجات الحرفية التي حفظتها.
                 </p>
               </div>
 
               <span className="profile-option-arrow">
-                →
+                ←
               </span>
             </Link>
 
@@ -193,16 +191,15 @@ function Profile() {
               </div>
 
               <div className="profile-option-content">
-                <h3>My Cart</h3>
+                <h3>سلتي</h3>
 
                 <p>
-                  Continue shopping and complete your
-                  checkout.
+                  واصل التسوق وأكمل عملية الشراء.
                 </p>
               </div>
 
               <span className="profile-option-arrow">
-                →
+                ←
               </span>
             </Link>
           </div>
@@ -214,11 +211,11 @@ function Profile() {
             </div>
 
             <div>
-              <span>ALHERFA COLLECTION</span>
+              <span>مجموعة الحرفة</span>
 
               <p>
-                Supporting Iraqi artisans, one
-                handcrafted piece at a time.
+                ندعم الحرفيين العراقيين، قطعة يدوية
+                أصيلة في كل مرة.
               </p>
             </div>
           </div>
@@ -230,7 +227,7 @@ function Profile() {
               onClick={handleLogout}
               className="profile-logout-button"
             >
-              <span>Logout</span>
+              <span>تسجيل الخروج</span>
               <span>↗</span>
             </button>
           </div>

@@ -98,51 +98,51 @@ function Navbar() {
         </Link>
 
         {/* ================= CENTER NAV ================= */}
-        <div className="hidden items-center gap-7 md:flex">
+        <div className="hidden items-center gap-8 md:flex  !ml-160 mr-0">
 
           <Link
             to="/"
-            className="relative text-sm font-medium text-[#FDF0D5] transition-all duration-300 hover:text-[#E6B566]"
+            className="relative text-[20px] font-medium text-[#FDF0D5] transition-all duration-300 hover:text-[#E6B566]"
           >
-            Home
+            الرئيسية
           </Link>
 
           <Link
             to="/products"
-            className="relative text-sm font-medium text-[#FDF0D5] transition-all duration-300 hover:text-[#E6B566]"
+            className="relative text-[20px] font-medium text-[#FDF0D5] transition-all duration-300 hover:text-[#E6B566]"
           >
-            Products
+            المنتجات
           </Link>
 
           <Link
             to="/artisans"
-            className="relative text-sm font-medium text-[#FDF0D5] transition-all duration-300 hover:text-[#E6B566]"
+            className="relative text-[20px] font-medium text-[#FDF0D5] transition-all duration-300 hover:text-[#E6B566]"
           >
-            Artisans
+            الحرفيون
           </Link>
 
           <Link
             to="/ai"
-            className="rounded-full px-4 py-2 text-sm font-semibold text-[#FDF0D5] transition-all duration-300 hover:bg-[#003049] hover:text-[#E6B566]"
+            className="rounded-full px-4 py-2 text-[16px] font-semibold text-[#FDF0D5] transition-all duration-300 hover:bg-[#003049] hover:text-[#E6B566]"
           >
             AI
           </Link>
 
           <Link
             to="/favorites"
-            className="text-sm font-medium text-[#FDF0D5] transition-all duration-300 hover:text-[#E6B566]"
+            className="text-[20px] font-medium text-[#FDF0D5] transition-all duration-300 hover:text-[#E6B566]"
           >
-            Favorites
+            المفضلة
           </Link>
         </div>
 
         {/* ================= RIGHT ACTIONS ================= */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 !ml-130">
 
           {/* Cart */}
           <Link
             to="/cart"
-            aria-label="Cart"
+            aria-label="السلة"
             className="flex h-10 w-10 items-center justify-center rounded-full text-lg text-[#FDF0D5] transition-all duration-300 hover:bg-[#003049] hover:text-[#E6B566]"
           >
             🛒
@@ -156,7 +156,7 @@ function Navbar() {
             <button
               type="button"
               onClick={() => setMenuOpen((prev) => !prev)}
-              aria-label="Open menu"
+              aria-label="فتح القائمة"
               aria-expanded={menuOpen}
               className="flex h-10 w-10 items-center justify-center rounded-full text-2xl font-bold leading-none text-[#FDF0D5] transition-all duration-300 hover:bg-[#003049] hover:text-[#E6B566]"
             >
@@ -175,7 +175,7 @@ function Navbar() {
                     </p>
 
                     <p className="mt-1 text-xs capitalize text-[#003049]/60">
-                      {user.role || "user"}
+                      {user.role || "مستخدم"}
                     </p>
                   </div>
                 )}
@@ -187,7 +187,7 @@ function Navbar() {
                     onClick={() => setMenuOpen(false)}
                     className="block rounded-xl px-3 py-2.5 text-sm font-medium text-[#003049] transition hover:bg-[#003049] hover:text-[#FDF0D5]"
                   >
-                    My Profile
+                    إدارة الحساب
                   </Link>
                 )}
 
@@ -198,7 +198,7 @@ function Navbar() {
                     onClick={() => setMenuOpen(false)}
                     className="block rounded-xl px-3 py-2.5 text-sm font-medium text-[#003049] transition hover:bg-[#003049] hover:text-[#FDF0D5]"
                   >
-                    My Orders
+                    طلباتي
                   </Link>
                 )}
 
@@ -210,7 +210,7 @@ function Navbar() {
                       onClick={() => setMenuOpen(false)}
                       className="block rounded-xl px-3 py-2.5 text-sm font-medium text-[#003049] transition hover:bg-[#003049] hover:text-[#FDF0D5]"
                     >
-                      Dashboard
+                      لوحة الحرفي
                     </Link>
 
                     <Link
@@ -218,7 +218,7 @@ function Navbar() {
                       onClick={() => setMenuOpen(false)}
                       className="block rounded-xl px-3 py-2.5 text-sm font-medium text-[#003049] transition hover:bg-[#003049] hover:text-[#FDF0D5]"
                     >
-                      Artisan Profile
+                      ملف الحرفي
                     </Link>
 
                     <Link
@@ -226,7 +226,7 @@ function Navbar() {
                       onClick={() => setMenuOpen(false)}
                       className="block rounded-xl px-3 py-2.5 text-sm font-medium text-[#003049] transition hover:bg-[#003049] hover:text-[#FDF0D5]"
                     >
-                      My Products
+                      منتجاتي
                     </Link>
 
                     <Link
@@ -234,7 +234,7 @@ function Navbar() {
                       onClick={() => setMenuOpen(false)}
                       className="block rounded-xl px-3 py-2.5 text-sm font-medium text-[#003049] transition hover:bg-[#003049] hover:text-[#FDF0D5]"
                     >
-                      My Orders
+                      طلباتي
                     </Link>
                   </>
                 )}
@@ -246,7 +246,7 @@ function Navbar() {
                     onClick={() => setMenuOpen(false)}
                     className="block rounded-xl px-3 py-2.5 text-sm font-medium text-[#003049] transition hover:bg-[#003049] hover:text-[#FDF0D5]"
                   >
-                    Admin Dashboard
+                    لوحة الإدارة
                   </Link>
                 )}
 
@@ -257,7 +257,7 @@ function Navbar() {
                     onClick={() => setMenuOpen(false)}
                     className="block rounded-xl px-3 py-2.5 text-sm font-semibold text-[#003049] transition hover:bg-[#003049] hover:text-[#FDF0D5]"
                   >
-                    Login
+                    تسجيل الدخول
                   </Link>
                 )}
 
@@ -268,7 +268,7 @@ function Navbar() {
                     onClick={handleLogout}
                     className="mt-1 w-full rounded-xl border-t border-[#003049]/10 px-3 py-2.5 text-left text-sm font-semibold text-[#780000] transition hover:bg-[#780000] hover:text-[#FDF0D5]"
                   >
-                    Logout
+                    تسجيل الخروج
                   </button>
                 )}
               </div>
@@ -280,25 +280,26 @@ function Navbar() {
       {/* Mobile Navigation */}
       <div className="border-t border-[#FDF0D5]/10 px-4 py-3 md:hidden">
         <div className="flex items-center justify-center gap-4 overflow-x-auto">
+
           <Link
             to="/"
             className="whitespace-nowrap text-xs font-medium text-[#FDF0D5]"
           >
-            Home
+            الرئيسية
           </Link>
 
           <Link
             to="/products"
             className="whitespace-nowrap text-xs font-medium text-[#FDF0D5]"
           >
-            Products
+            المنتجات
           </Link>
 
           <Link
             to="/artisans"
             className="whitespace-nowrap text-xs font-medium text-[#FDF0D5]"
           >
-            Artisans
+            الحرفيون
           </Link>
 
           <Link
@@ -312,8 +313,9 @@ function Navbar() {
             to="/favorites"
             className="whitespace-nowrap text-xs font-medium text-[#FDF0D5]"
           >
-            Favorites
+            المفضلة
           </Link>
+
         </div>
       </div>
 

@@ -19,14 +19,13 @@ function Reviews() {
           <div className="reviews-title-block">
             <div className="reviews-kicker">
               <span />
-              Administration
+              الإدارة
             </div>
 
-            <h1>Reviews Management</h1>
+            <h1>إدارة التقييمات</h1>
 
             <p>
-              Review customer feedback and manage product reviews from one
-              place.
+              مراجعة آراء العملاء وإدارة تقييمات المنتجات من مكان واحد.
             </p>
           </div>
 
@@ -36,7 +35,7 @@ function Reviews() {
             </div>
 
             <div>
-              <span>Total Reviews</span>
+              <span>إجمالي التقييمات</span>
               <strong>{reviews.length}</strong>
             </div>
           </div>
@@ -45,7 +44,7 @@ function Reviews() {
         {/* Toolbar */}
         <section className="reviews-toolbar">
           <div className="reviews-search">
-            <label htmlFor="review-search">Search Reviews</label>
+            <label htmlFor="review-search">البحث في التقييمات</label>
 
             <div className="reviews-input-wrap">
               <Search size={18} />
@@ -53,18 +52,18 @@ function Reviews() {
               <input
                 id="review-search"
                 type="text"
-                placeholder="Search by customer or product..."
+                placeholder="ابحث باسم العميل أو المنتج..."
               />
             </div>
           </div>
 
           <div className="reviews-filter">
-            <label htmlFor="review-status">Status</label>
+            <label htmlFor="review-status">الحالة</label>
 
             <select id="review-status">
-              <option value="all">All Status</option>
-              <option value="visible">Visible</option>
-              <option value="hidden">Hidden</option>
+              <option value="all">جميع الحالات</option>
+              <option value="visible">ظاهر</option>
+              <option value="hidden">مخفي</option>
             </select>
           </div>
         </section>
@@ -75,14 +74,14 @@ function Reviews() {
             <div>
               <div className="reviews-section-kicker">
                 <MessageSquare size={14} />
-                Customer Feedback
+                آراء العملاء
               </div>
 
-              <h2>All Reviews</h2>
+              <h2>جميع التقييمات</h2>
             </div>
 
             <div className="reviews-total">
-              {reviews.length} reviews
+              {reviews.length} تقييم
             </div>
           </div>
 
@@ -90,12 +89,12 @@ function Reviews() {
             <table>
               <thead>
                 <tr>
-                  <th>Customer</th>
-                  <th>Product</th>
-                  <th>Rating</th>
-                  <th>Review</th>
-                  <th>Status</th>
-                  <th>Actions</th>
+                  <th>العميل</th>
+                  <th>المنتج</th>
+                  <th>التقييم</th>
+                  <th>المراجعة</th>
+                  <th>الحالة</th>
+                  <th>الإجراءات</th>
                 </tr>
               </thead>
 
@@ -108,11 +107,10 @@ function Reviews() {
                           <Star size={27} />
                         </div>
 
-                        <h3>No reviews yet</h3>
+                        <h3>لا توجد تقييمات بعد</h3>
 
                         <p>
-                          Customer reviews will appear here once they are
-                          submitted.
+                          ستظهر تقييمات العملاء هنا بعد إرسالها.
                         </p>
                       </div>
                     </td>
@@ -161,7 +159,7 @@ function Reviews() {
 
                       <td>
                         <div className="review-actions">
-                          Actions
+                          الإجراءات
                         </div>
                       </td>
                     </tr>

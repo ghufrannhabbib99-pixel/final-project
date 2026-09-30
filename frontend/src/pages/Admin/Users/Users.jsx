@@ -18,16 +18,15 @@ function Users() {
           <div className="users-header-content">
             <div className="users-kicker">
               <span />
-              Administration
+              الإدارة
             </div>
 
             <h1>
-              Users <span>Management</span>
+              المستخدمون <span>والإدارة</span>
             </h1>
 
             <p>
-              Manage users and control their access to the AlHerfa
-              marketplace.
+              إدارة المستخدمين والتحكم في صلاحيات وصولهم إلى منصة الحرفة.
             </p>
           </div>
 
@@ -35,7 +34,7 @@ function Users() {
             <div className="users-count-icon">♙</div>
 
             <div className="users-count-content">
-              <span>Total Users</span>
+              <span>إجمالي المستخدمين</span>
               <strong>{users.length}</strong>
             </div>
           </div>
@@ -47,13 +46,13 @@ function Users() {
             <div className="users-search-symbol">⌕</div>
 
             <div>
-              <span>User Directory</span>
-              <h2>Find Users</h2>
+              <span>دليل المستخدمين</span>
+              <h2>البحث عن المستخدمين</h2>
             </div>
           </div>
 
           <div className="users-search">
-            <label htmlFor="user-search">Search Users</label>
+            <label htmlFor="user-search">البحث عن المستخدمين</label>
 
             <div className="users-input-wrapper">
               <span>⌕</span>
@@ -61,7 +60,7 @@ function Users() {
               <input
                 id="user-search"
                 type="text"
-                placeholder="Search by name or email..."
+                placeholder="ابحث بالاسم أو البريد الإلكتروني..."
               />
             </div>
           </div>
@@ -73,15 +72,15 @@ function Users() {
             <div>
               <div className="users-section-kicker">
                 <span />
-                Users
+                المستخدمون
               </div>
 
-              <h2>All Users</h2>
+              <h2>جميع المستخدمين</h2>
             </div>
 
             <div className="users-result-count">
               <strong>{users.length}</strong>
-              <span>users</span>
+              <span>مستخدم</span>
             </div>
           </div>
 
@@ -89,11 +88,11 @@ function Users() {
             <table>
               <thead>
                 <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Role</th>
-                  <th>Status</th>
-                  <th>Actions</th>
+                  <th>الاسم</th>
+                  <th>البريد الإلكتروني</th>
+                  <th>الدور</th>
+                  <th>الحالة</th>
+                  <th>الإجراءات</th>
                 </tr>
               </thead>
 
@@ -109,11 +108,10 @@ function Users() {
                         </div>
 
                         <div className="users-empty-content">
-                          <h3>No users available yet</h3>
+                          <h3>لا يوجد مستخدمون متاحون حالياً</h3>
 
                           <p>
-                            Users will appear here once they are added
-                            to the platform.
+                            سيظهر المستخدمون هنا بعد إضافتهم إلى المنصة.
                           </p>
                         </div>
 
@@ -157,7 +155,7 @@ function Users() {
                           type="button"
                           className="user-action-button"
                         >
-                          Actions
+                          الإجراءات
                         </button>
                       </td>
                     </tr>
@@ -173,7 +171,7 @@ function Users() {
           <span>✦</span>
 
           <p>
-            AlHerfa connects people with authentic Iraqi craftsmanship.
+            تربط الحرفة الناس بالحرف والصناعات العراقية الأصيلة.
           </p>
 
           <span>✦</span>

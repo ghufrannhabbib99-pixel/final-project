@@ -17,13 +17,13 @@ function Artisans() {
           <div className="artisans-header-content">
             <div className="artisans-kicker">
               <span className="artisans-kicker-line" />
-              Administration
+              الإدارة
             </div>
 
-            <h1>Artisans Management</h1>
+            <h1>إدارة الحرفيين</h1>
 
             <p>
-              Manage artisans and review their marketplace activity.
+              إدارة الحرفيين ومراجعة نشاطهم في المنصة.
             </p>
           </div>
 
@@ -31,7 +31,7 @@ function Artisans() {
             <div className="artisans-count-icon">♢</div>
 
             <div>
-              <span>Total Artisans</span>
+              <span>إجمالي الحرفيين</span>
               <strong>{artisans.length}</strong>
             </div>
           </div>
@@ -43,7 +43,7 @@ function Artisans() {
 
           <div className="artisans-search">
             <label htmlFor="artisan-search">
-              Search Artisans
+              البحث عن الحرفيين
             </label>
 
             <div className="artisans-input-wrap">
@@ -52,21 +52,21 @@ function Artisans() {
               <input
                 id="artisan-search"
                 type="text"
-                placeholder="Search by name or email..."
+                placeholder="ابحث بالاسم أو البريد الإلكتروني..."
               />
             </div>
           </div>
 
           <div className="artisans-filter">
             <label htmlFor="artisan-status">
-              Status
+              الحالة
             </label>
 
             <div className="artisans-select-wrap">
               <select id="artisan-status">
-                <option value="all">All Status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
+                <option value="all">جميع الحالات</option>
+                <option value="active">نشط</option>
+                <option value="inactive">غير نشط</option>
               </select>
 
               <span className="select-arrow">⌄</span>
@@ -80,15 +80,15 @@ function Artisans() {
             <div>
               <div className="section-kicker">
                 <span />
-                Artisans
+                الحرفيون
               </div>
 
-              <h2>All Artisans</h2>
+              <h2>جميع الحرفيين</h2>
             </div>
 
             <div className="artisans-result-count">
               <span>{artisans.length}</span>
-              artisans
+              حرفي
             </div>
           </div>
 
@@ -96,11 +96,11 @@ function Artisans() {
             <table>
               <thead>
                 <tr>
-                  <th>Artisan</th>
-                  <th>Email</th>
-                  <th>Craft</th>
-                  <th>Status</th>
-                  <th>Actions</th>
+                  <th>الحرفي</th>
+                  <th>البريد الإلكتروني</th>
+                  <th>الحرفة</th>
+                  <th>الحالة</th>
+                  <th>الإجراءات</th>
                 </tr>
               </thead>
 
@@ -118,11 +118,10 @@ function Artisans() {
 
                         <div className="artisans-empty-ring" />
 
-                        <h3>No artisans available yet.</h3>
+                        <h3>لا يوجد حرفيون متاحون حالياً.</h3>
 
                         <p>
-                          Artisans will appear here once they are
-                          registered.
+                          سيظهر الحرفيون هنا بعد تسجيلهم في المنصة.
                         </p>
 
                         <div className="artisans-empty-line">
@@ -165,7 +164,7 @@ function Artisans() {
                           type="button"
                           className="artisan-action"
                         >
-                          Actions
+                          الإجراءات
                         </button>
                       </td>
                     </tr>
@@ -181,8 +180,8 @@ function Artisans() {
           <span className="footer-note-symbol">✦</span>
 
           <p>
-            Every artisan adds another piece to the story of
-            Iraqi craftsmanship.
+            كل حرفي يضيف قطعة جديدة إلى قصة الحرف والصناعات
+            العراقية.
           </p>
 
           <span className="footer-note-symbol">✦</span>

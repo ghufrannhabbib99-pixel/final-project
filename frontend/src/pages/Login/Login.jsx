@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/auth.css";
@@ -26,11 +27,11 @@ function Login() {
 
       const { user, token } = response.data;
 
-      // Save authentication data
+      // حفظ بيانات تسجيل الدخول
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
 
-      // Redirect according to role
+      // الانتقال حسب نوع المستخدم
       if (user.role === "admin") {
         navigate("/admin");
       } else if (user.role === "artisan") {
@@ -39,29 +40,32 @@ function Login() {
         navigate("/");
       }
     } catch (err) {
-      setError(err.message || "Invalid email or password");
+      setError(err.message || "البريد الإلكتروني أو كلمة المرور غير صحيحة");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <main className="login-page min-h-screen bg-[#FDF0D5] px-5 py-12 md:px-8">
+    <main
+      className="login-page min-h-screen bg-[#FDF0D5] px-5 py-12 md:px-8"
+      dir="rtl"
+    >
       <div className="login-container">
 
-        {/* Logo */}
+        {/* الشعار */}
         <Link to="/" className="auth-logo">
           <div className="auth-logo-icon">
             𒀭
           </div>
 
           <div className="auth-logo-text">
-            <h1>AlHirfa</h1>
-            <span>IRAQI CRAFTS</span>
+            <h1>الحِرفة</h1>
+            <span>الحِرف العراقية</span>
           </div>
         </Link>
 
-        {/* Login Card */}
+        {/* بطاقة تسجيل الدخول */}
         <div className="login-card relative overflow-hidden rounded-[2rem] bg-white">
 
           <div className="login-decoration login-decoration-left">
@@ -85,19 +89,19 @@ function Login() {
             </div>
 
             <p className="login-label">
-              WELCOME BACK
+              أهلاً بعودتك
             </p>
 
             <h1 className="login-title">
-              Login
+              تسجيل الدخول
             </h1>
 
             <p className="login-description">
-              Sign in to your account and continue exploring
-              handmade products from Iraqi artisans.
+              سجّل الدخول إلى حسابك وتابع استكشاف المنتجات اليدوية
+              المصنوعة بأيادٍ عراقية.
             </p>
 
-            {/* Error message */}
+            {/* رسالة الخطأ */}
             {error && (
               <div className="mb-4 rounded-lg bg-red-100 px-4 py-3 text-sm text-red-700">
                 {error}
@@ -111,13 +115,13 @@ function Login() {
 
               <div className="login-field">
                 <label htmlFor="email">
-                  Email
+                  البريد الإلكتروني
                 </label>
 
                 <input
                   id="email"
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder="أدخل بريدك الإلكتروني"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -126,13 +130,13 @@ function Login() {
 
               <div className="login-field">
                 <label htmlFor="password">
-                  Password
+                  كلمة المرور
                 </label>
 
                 <input
                   id="password"
                   type="password"
-                  placeholder="Enter your password"
+                  placeholder="أدخل كلمة المرور"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -144,15 +148,15 @@ function Login() {
                 className="login-button"
                 disabled={loading}
               >
-                {loading ? "Logging in..." : "Login"}
+                {loading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
               </button>
 
             </form>
 
             <p className="login-register">
-              Don't have an account?{" "}
+              ليس لديك حساب؟{" "}
               <Link to="/signup">
-                Sign Up
+                إنشاء حساب
               </Link>
             </p>
 
@@ -163,4 +167,5 @@ function Login() {
   );
 }
 
-export default Login; 
+export default Login;
+

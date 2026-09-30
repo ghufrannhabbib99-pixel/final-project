@@ -1,0 +1,52 @@
+.home-hero {
+  min-height: calc(100vh - 76px);
+}
+.hero {
+  padding-bottom: 40px;
+  padding-right: 80px;
+ 
+}
+.home-content {
+  min-height: calc(100vh - 108px);
+}
+
+.home-image-section {
+  min-height: 400px;
+}
+
+.home-ring {
+  width: 330px;
+  height: 330px;
+}
+
+.home-image-shape {
+  width: 280px;
+  height: 330px;
+}
+
+.home-image {
+  height: 430px;
+  margin-left: auto;
+}
+
+@media (min-width: 768px) {
+  .home-ring {
+    width: 480px;
+    height: 480px;
+  }
+
+  .home-image-shape {
+    width: 390px;
+    height: 480px;
+  }
+
+  .home-image {
+    height: 540px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .home-image-section {
+    min-height: 560px;
+  }
+}

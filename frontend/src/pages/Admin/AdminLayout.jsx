@@ -25,7 +25,7 @@ function AdminLayout() {
             </h1>
 
             <p className="text-[9px] tracking-[0.2em] text-[#E6B566]">
-              ADMIN PANEL
+              لوحة الإدارة
             </p>
           </div>
         </Link>
@@ -42,7 +42,7 @@ function AdminLayout() {
             }`}
           >
             <span>⌂</span>
-            Dashboard
+            لوحة التحكم
           </Link>
 
           <Link
@@ -54,7 +54,7 @@ function AdminLayout() {
             }`}
           >
             <span>♙</span>
-            Users
+            المستخدمون
           </Link>
 
           <Link
@@ -62,7 +62,7 @@ function AdminLayout() {
             className="admin-nav-item flex items-center rounded-xl text-sm font-medium"
           >
             <span>♢</span>
-            Artisans
+            الحرفيون
           </Link>
 
           <Link
@@ -70,7 +70,7 @@ function AdminLayout() {
             className="admin-nav-item flex items-center rounded-xl text-sm font-medium"
           >
             <span>▣</span>
-            Products
+            المنتجات
           </Link>
 
           <Link
@@ -78,7 +78,7 @@ function AdminLayout() {
             className="admin-nav-item flex items-center rounded-xl text-sm font-medium"
           >
             <span>◆</span>
-            Categories
+            الفئات
           </Link>
 
           <Link
@@ -86,7 +86,7 @@ function AdminLayout() {
             className="admin-nav-item flex items-center rounded-xl text-sm font-medium"
           >
             <span>◷</span>
-            Orders
+            الطلبات
           </Link>
 
           <Link
@@ -94,7 +94,7 @@ function AdminLayout() {
             className="admin-nav-item flex items-center rounded-xl text-sm font-medium"
           >
             <span>★</span>
-            Reviews
+            التقييمات
           </Link>
 
         </nav>
@@ -105,7 +105,7 @@ function AdminLayout() {
           className="admin-logout flex items-center rounded-xl text-sm font-medium"
         >
           <span>↪</span>
-          Logout
+          تسجيل الخروج
         </button>
 
       </aside>

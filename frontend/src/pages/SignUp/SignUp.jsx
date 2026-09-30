@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/auth.css";
@@ -29,17 +30,17 @@ function Register() {
     setSuccess("");
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setError("كلمتا المرور غير متطابقتين");
       return;
     }
 
     if (password.length < 6) {
-      setError("Password must be at least 6 characters");
+      setError("يجب أن تتكون كلمة المرور من 6 أحرف على الأقل");
       return;
     }
 
     if (accountType === "artisan" && !craftName.trim()) {
-      setError("Please enter your craft name");
+      setError("يرجى إدخال اسم الحِرفة");
       return;
     }
 
@@ -69,7 +70,7 @@ function Register() {
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
 
-      setSuccess("Account created successfully");
+      setSuccess("تم إنشاء الحساب بنجاح");
 
       setTimeout(() => {
         if (user.role === "artisan") {
@@ -79,27 +80,32 @@ function Register() {
         }
       }, 500);
     } catch (err) {
-      setError(err.message || "Registration failed");
+      setError(err.message || "فشل إنشاء الحساب");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <main className="register-page min-h-screen bg-[#FDF0D5] px-5 py-12 md:px-8">
+    <main
+      className="register-page min-h-screen bg-[#FDF0D5] px-5 py-12 md:px-8"
+      dir="rtl"
+    >
       <div className="register-container">
 
+        {/* الشعار */}
         <Link to="/" className="auth-logo">
           <div className="auth-logo-icon">
             𒀭
           </div>
 
           <div className="auth-logo-text">
-            <h1>AlHirfa</h1>
-            <span>IRAQI CRAFTS</span>
+            <h1>الحِرفة</h1>
+            <span>الحِرف العراقية</span>
           </div>
         </Link>
 
+        {/* بطاقة إنشاء الحساب */}
         <div className="register-card relative overflow-hidden rounded-[2rem] bg-white">
 
           <div className="register-decoration register-decoration-left">
@@ -122,17 +128,17 @@ function Register() {
               <span className="register-line" />
             </div>
 
-            <p className="register-label">
-              JOIN OUR COMMUNITY
-            </p>
+            <p className="register-label !text-[15px]">
+  انضم إلى مجتمعنا
+</p>
 
             <h1 className="register-title">
-              Create Account
+              إنشاء حساب
             </h1>
 
             <p className="register-description">
-              Create your account and discover unique handmade products
-              from Iraqi artisans.
+              أنشئ حسابك واكتشف منتجات يدوية مميزة
+              من الحرفيين العراقيين.
             </p>
 
             {error && (
@@ -154,13 +160,13 @@ function Register() {
 
               <div className="register-field">
                 <label htmlFor="name">
-                  Full Name
+                  الاسم الكامل
                 </label>
 
                 <input
                   id="name"
                   type="text"
-                  placeholder="Enter your full name"
+                  placeholder="أدخل اسمك الكامل"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
@@ -169,24 +175,24 @@ function Register() {
 
               <div className="register-field">
                 <label htmlFor="email">
-                  Email
+                  البريد الإلكتروني
                 </label>
 
                 <input
                   id="email"
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder="أدخل بريدك الإلكتروني"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
 
-              {/* Account Type */}
+              {/* نوع الحساب */}
 
               <div className="register-field">
                 <label>
-                  Account Type
+                  نوع الحساب
                 </label>
 
                 <div className="grid grid-cols-2 gap-3">
@@ -200,7 +206,7 @@ function Register() {
                         : "border-gray-300 bg-white text-gray-700"
                     }`}
                   >
-                    Customer
+                    عميل
                   </button>
 
                   <button
@@ -212,26 +218,26 @@ function Register() {
                         : "border-gray-300 bg-white text-gray-700"
                     }`}
                   >
-                    Artisan
+                    حرفي
                   </button>
 
                 </div>
               </div>
 
-              {/* Artisan Fields */}
+              {/* معلومات الحرفي */}
 
               {accountType === "artisan" && (
                 <>
 
                   <div className="register-field">
                     <label htmlFor="craftName">
-                      Craft Name
+                      اسم الحِرفة
                     </label>
 
                     <input
                       id="craftName"
                       type="text"
-                      placeholder="Example: Iraqi Potter"
+                      placeholder="مثال: صناعة الفخار"
                       value={craftName}
                       onChange={(e) =>
                         setCraftName(e.target.value)
@@ -242,13 +248,13 @@ function Register() {
 
                   <div className="register-field">
                     <label htmlFor="city">
-                      City
+                      المدينة
                     </label>
 
                     <input
                       id="city"
                       type="text"
-                      placeholder="Example: Basra"
+                      placeholder="مثال: البصرة"
                       value={city}
                       onChange={(e) =>
                         setCity(e.target.value)
@@ -259,14 +265,14 @@ function Register() {
 
                   <div className="register-field">
                     <label htmlFor="experienceYears">
-                      Experience Years
+                      سنوات الخبرة
                     </label>
 
                     <input
                       id="experienceYears"
                       type="number"
                       min="0"
-                      placeholder="Example: 5"
+                      placeholder="مثال: 5"
                       value={experienceYears}
                       onChange={(e) =>
                         setExperienceYears(e.target.value)
@@ -276,12 +282,12 @@ function Register() {
 
                   <div className="register-field">
                     <label htmlFor="bio">
-                      Short Bio
+                      نبذة قصيرة
                     </label>
 
                     <textarea
                       id="bio"
-                      placeholder="Tell us about your craft..."
+                      placeholder="أخبرنا عن حِرفتك..."
                       value={bio}
                       onChange={(e) =>
                         setBio(e.target.value)
@@ -295,13 +301,13 @@ function Register() {
 
               <div className="register-field">
                 <label htmlFor="password">
-                  Password
+                  كلمة المرور
                 </label>
 
                 <input
                   id="password"
                   type="password"
-                  placeholder="Create a password"
+                  placeholder="أنشئ كلمة مرور"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -310,13 +316,13 @@ function Register() {
 
               <div className="register-field">
                 <label htmlFor="confirmPassword">
-                  Confirm Password
+                  تأكيد كلمة المرور
                 </label>
 
                 <input
                   id="confirmPassword"
                   type="password"
-                  placeholder="Confirm your password"
+                  placeholder="أعد إدخال كلمة المرور"
                   value={confirmPassword}
                   onChange={(e) =>
                     setConfirmPassword(e.target.value)
@@ -331,18 +337,18 @@ function Register() {
                 disabled={loading}
               >
                 {loading
-                  ? "Creating Account..."
+                  ? "جاري إنشاء الحساب..."
                   : accountType === "artisan"
-                  ? "Create Artisan Account"
-                  : "Create Account"}
+                  ? "إنشاء حساب حرفي"
+                  : "إنشاء الحساب"}
               </button>
 
             </form>
 
             <p className="register-login">
-              Already have an account?{" "}
+              لديك حساب بالفعل؟{" "}
               <Link to="/login">
-                Login
+                تسجيل الدخول
               </Link>
             </p>
 
@@ -354,3 +360,4 @@ function Register() {
 }
 
 export default Register;
+

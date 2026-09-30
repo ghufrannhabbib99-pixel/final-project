@@ -1,0 +1,146 @@
+.about-us {
+  padding-top: 110px;
+  padding-bottom: 110px;
+}
+
+.about-us__container {
+  width: min(1250px, calc(100% - 80px));
+  margin-left: auto;
+  margin-right: auto;
+}
+.about-us__frame {
+  min-height: 700px;
+  padding: 95px 100px;
+  border-radius: 28px;
+}
+
+.about-us__ornament {
+  width: calc(100% - 40px);
+  height: calc(100% - 40px);
+}
+
+.about-us__content {
+  width: min(900px, 100%);
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.about-us__heading {
+  margin-bottom: 70px;
+}
+
+.about-us__heading-line {
+  width: 70px;
+}
+
+.about-us__intro {
+  margin-bottom: 65px;
+}
+
+.about-us__values {
+  gap: 20px;
+}
+
+.about-us__value {
+  min-height: 155px;
+  padding: 25px;
+}
+
+.about-us__signature {
+  margin-top: 65px;
+}
+
+.about-us__signature-line {
+  width: 180px;
+}
+
+.about-us__signature-content {
+  margin-top: 20px;
+}
+.about-us__description {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .about-us {
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+
+  .about-us__container {
+    width: calc(100% - 40px);
+  }
+
+  .about-us__frame {
+    padding: 75px 55px;
+  }
+
+  .about-us__heading {
+    margin-bottom: 55px;
+  }
+
+  .about-us__intro {
+    margin-bottom: 50px;
+  }
+
+  .about-us__value {
+    padding: 20px;
+  }
+
+  .about-us__signature {
+    margin-top: 50px;
+  }
+}
+
+@media (max-width: 650px) {
+  .about-us {
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+
+  .about-us__container {
+    width: calc(100% - 30px);
+  }
+
+  .about-us__frame {
+    min-height: auto;
+    padding: 65px 30px;
+    border-radius: 20px;
+  }
+
+  .about-us__ornament {
+    width: calc(100% - 24px);
+    height: calc(100% - 24px);
+  }
+
+  .about-us__heading {
+    margin-bottom: 45px;
+  }
+
+  .about-us__intro {
+    margin-bottom: 40px;
+  }
+
+  .about-us__values {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .about-us__value {
+    min-height: auto;
+    padding: 20px;
+  }
+
+  .about-us__signature {
+    margin-top: 40px;
+  }
+
+  .about-us__signature-line {
+    width: 120px;
+  }
+}

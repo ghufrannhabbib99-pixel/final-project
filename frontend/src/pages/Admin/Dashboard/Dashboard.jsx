@@ -4,25 +4,25 @@ import "./Dashboard.css";
 function Dashboard() {
   const stats = [
     {
-      title: "Users",
+      title: "المستخدمون",
       value: "0",
       icon: "♙",
       className: "admin-stat-blue",
     },
     {
-      title: "Artisans",
+      title: "الحرفيون",
       value: "0",
       icon: "♢",
       className: "admin-stat-red",
     },
     {
-      title: "Products",
+      title: "المنتجات",
       value: "0",
       icon: "▣",
       className: "admin-stat-gold",
     },
     {
-      title: "Orders",
+      title: "الطلبات",
       value: "0",
       icon: "◷",
       className: "admin-stat-green",
@@ -47,15 +47,14 @@ function Dashboard() {
             <div>
               <div className="admin-kicker">
                 <span />
-                ALHERFA ADMIN
+                إدارة الحرفة
                 <span />
               </div>
 
-              <h1>Welcome back, Admin</h1>
+              <h1>مرحباً بعودتك، </h1>
 
               <p>
-                Manage your marketplace and keep track of
-                everything from one place.
+                أدر منصتك وتابع كل شيء من مكان واحد.
               </p>
             </div>
 
@@ -95,7 +94,7 @@ function Dashboard() {
                 <strong>{stat.value}</strong>
 
                 <span className="admin-stat-status">
-                  Current
+                  الحالي
                 </span>
               </div>
 
@@ -109,13 +108,13 @@ function Dashboard() {
           <div className="admin-orders-header">
             <div>
               <span className="admin-section-kicker">
-                OVERVIEW
+                نظرة عامة
               </span>
 
-              <h2>Recent Orders</h2>
+              <h2>أحدث الطلبات</h2>
 
               <p>
-                Keep track of the latest marketplace activity.
+                تابع أحدث نشاطات المنصة.
               </p>
             </div>
 
@@ -123,7 +122,7 @@ function Dashboard() {
               to="/admin/orders"
               className="admin-view-all"
             >
-              View All
+              عرض الكل
               <span>→</span>
             </Link>
           </div>
@@ -134,21 +133,21 @@ function Dashboard() {
             </div>
 
             <span className="admin-empty-label">
-              ORDER ACTIVITY
+              نشاط الطلبات
             </span>
 
-            <h3>No orders available yet</h3>
+            <h3>لا توجد طلبات متاحة حالياً</h3>
 
             <p>
-              Orders will appear here once customers start
-              making purchases.
+              ستظهر الطلبات هنا بعد أن يبدأ العملاء بإجراء
+              عمليات الشراء.
             </p>
 
             <Link
               to="/admin/orders"
               className="admin-empty-button"
             >
-              Go to Orders
+              الانتقال إلى الطلبات
               <span>→</span>
             </Link>
           </div>
@@ -161,9 +160,9 @@ function Dashboard() {
           </div>
 
           <div>
-            <span>ALHERFA MARKETPLACE</span>
+            <span>منصة الحرفة</span>
             <h3>
-              Supporting Iraqi craftsmanship
+              دعم الحرف والصناعات العراقية
             </h3>
           </div>
 

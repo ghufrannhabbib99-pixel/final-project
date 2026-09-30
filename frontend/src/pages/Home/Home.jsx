@@ -2,6 +2,10 @@ import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import BlurText from "../../components/BlurText/BlurText";
 import heroImage from "../../assets/images/Hero.jpg";
+import "./Home.css";
+import IraqiCraft from "./sections/IraqiCraft/IraqiCraft";
+import AboutUs from "./sections/AboutUs/AboutUs";
+import HomeCTA from "./sections/HomeCTA/HomeCTA";
 
 function Home() {
   const imageRef = useRef(null);
@@ -54,14 +58,15 @@ function Home() {
   }, []);
 
   return (
-    <main className="overflow-hidden bg-[#FDF0D5]">
-
+    <main
+      dir="rtl"
+      className="overflow-hidden bg-[#FDF0D5]"
+    >
       {/* ================= HERO ================= */}
       <section
         ref={heroRef}
-        className="relative min-h-[calc(100vh-76px)] overflow-hidden px-6 py-16 md:px-10 lg:px-16"
+        className="relative overflow-hidden px-6 py-16 md:px-10 lg:px-16 home-hero"
       >
-
         {/* Background glow */}
         <div className="pointer-events-none absolute -right-32 top-10 h-96 w-96 rounded-full bg-[#780000]/5 blur-3xl" />
 
@@ -77,29 +82,32 @@ function Home() {
         </div>
 
         {/* Main content */}
-        <div className="relative mx-auto grid min-h-[calc(100vh-108px)] max-w-7xl items-center gap-14 lg:grid-cols-2">
+        <div className="relative mx-auto grid items-center gap-14 lg:grid-cols-2 home-content">
 
           {/* ================= TEXT ================= */}
+          <div className="hero">
           <div className="relative z-10 max-w-2xl">
 
             <div className="mb-5 animate-[fadeInUp_0.7s_ease-out]">
-              <span className="inline-flex items-center gap-2 rounded-full border border-[#780000]/15 bg-white/40 px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-[#780000] backdrop-blur-sm">
+              <span className="inline-flex items-center gap-2 rounded-full border border-[#780000]/15 bg-white/40 px-4 py-2 text-xs font-semibold tracking-[0.1em] text-[#780000] backdrop-blur-sm">
                 <span className="h-2 w-2 rounded-full bg-[#780000] animate-pulse" />
-                Made in Iraq · Crafted by Hand
+
+                صُنع في العراق · بحِرفة يدوية
               </span>
             </div>
 
             <BlurText
-              text="Discover the Soul of Iraqi Handcrafts."
+              text="اكتشف روح الحِرف اليدوية العراقية"
               delay={100}
               animateBy="words"
               direction="top"
-              className="max-w-3xl text-5xl font-bold leading-[1.05] tracking-tight text-[#003049] md:text-6xl lg:text-7xl"
+              className="max-w-3xl text-5xl font-bold leading-[1.15] tracking-tight text-[#003049] md:text-6xl lg:text-7xl"
             />
 
             <p className="mt-7 max-w-xl animate-[fadeInUp_1s_ease-out] text-base leading-8 text-[#003049]/70 md:text-lg">
-              Discover unique handmade products and the stories behind
-              the Iraqi artisans who keep our heritage alive.
+              اكتشف منتجات يدوية مميزة، وتعرّف على القصص
+              وراء الحرفيين العراقيين الذين يحافظون على تراثنا
+              وينقلونه من جيل إلى آخر.
             </p>
 
             {/* Buttons */}
@@ -110,9 +118,10 @@ function Home() {
                 className="group rounded-full bg-[#780000] px-7 py-3.5 font-medium text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:bg-[#5f0000] hover:shadow-2xl"
               >
                 <span className="flex items-center gap-2">
-                  Explore Products
-                  <span className="transition-transform duration-300 group-hover:translate-x-1">
-                    →
+                  استكشف المنتجات
+
+                  <span className="transition-transform duration-300 group-hover:-translate-x-1">
+                    ←
                   </span>
                 </span>
               </Link>
@@ -122,9 +131,10 @@ function Home() {
                 className="group rounded-full border border-[#003049]/30 bg-white/20 px-7 py-3.5 font-medium text-[#003049] backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:bg-[#003049] hover:text-[#FDF0D5]"
               >
                 <span className="flex items-center gap-2">
-                  Meet the Artisans
-                  <span className="transition-transform duration-300 group-hover:translate-x-1">
-                    →
+                  تعرّف على الحرفيين
+
+                  <span className="transition-transform duration-300 group-hover:-translate-x-1">
+                    ←
                   </span>
                 </span>
               </Link>
@@ -138,8 +148,9 @@ function Home() {
                 <p className="text-2xl font-bold text-[#780000]">
                   100%
                 </p>
-                <p className="mt-1 text-xs uppercase tracking-wider text-[#003049]/55">
-                  Handmade
+
+                <p className="mt-1 text-xs tracking-wider text-[#003049]/55">
+                  صناعة يدوية
                 </p>
               </div>
 
@@ -147,10 +158,11 @@ function Home() {
 
               <div>
                 <p className="text-2xl font-bold text-[#003049]">
-                  Iraqi
+                  عراقي
                 </p>
-                <p className="mt-1 text-xs uppercase tracking-wider text-[#003049]/55">
-                  Heritage
+
+                <p className="mt-1 text-xs tracking-wider text-[#003049]/55">
+                  تراث أصيل
                 </p>
               </div>
 
@@ -158,24 +170,26 @@ function Home() {
 
               <div>
                 <p className="text-2xl font-bold text-[#780000]">
-                  Local
+                  محلي
                 </p>
-                <p className="mt-1 text-xs uppercase tracking-wider text-[#003049]/55">
-                  Artisans
+
+                <p className="mt-1 text-xs tracking-wider text-[#003049]/55">
+                  حرفيون عراقيون
                 </p>
               </div>
 
             </div>
           </div>
+          </div>
 
           {/* ================= IMAGE ================= */}
-          <div className="relative flex min-h-[400px] items-center justify-center lg:min-h-[560px]">
+          <div className="relative flex items-center justify-center home-image-section">
 
             {/* Rotating decorative ring */}
-            <div className="absolute h-[330px] w-[330px] rounded-full border border-dashed border-[#780000]/20 animate-[spin_30s_linear_infinite] md:h-[480px] md:w-[480px]" />
+            <div className="absolute rounded-full border border-dashed border-[#780000]/20 animate-[spin_30s_linear_infinite] home-ring" />
 
             {/* Background shape */}
-            <div className="absolute h-[330px] w-[280px] rotate-6 rounded-[60px] bg-[#780000]/10 blur-sm md:h-[480px] md:w-[390px]" />
+            <div className="absolute rotate-6 rounded-[60px] bg-[#780000]/10 blur-sm home-image-shape" />
 
             {/* Floating symbol */}
             <div className="absolute -right-2 top-8 z-20 flex h-16 w-16 animate-[float_4s_ease-in-out_infinite] items-center justify-center rounded-2xl border border-white/40 bg-white/50 text-2xl text-[#780000] shadow-xl backdrop-blur-md md:right-4 md:top-10">
@@ -195,19 +209,21 @@ function Home() {
               <img
                 ref={imageRef}
                 src={heroImage}
-                alt="Iraqi artisan creating traditional handmade crafts"
-                className="relative ml-auto h-[430px] w-full rounded-[40px] object-cover shadow-2xl transition-transform duration-300 ease-out md:h-[540px]"
+                alt="حرفي عراقي يصنع منتجات يدوية تقليدية"
+                className="relative w-full rounded-[40px] object-cover shadow-2xl transition-transform duration-300 ease-out home-image"
               />
 
               {/* Image caption */}
               <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-white/30 bg-black/20 px-5 py-4 text-white backdrop-blur-md">
-                <p className="text-xs uppercase tracking-[0.2em] text-white/70">
-                  Iraqi Craftsmanship
+
+                <p className="text-xs tracking-[0.15em] text-white/70">
+                  الحِرف اليدوية العراقية
                 </p>
 
                 <p className="mt-1 text-sm font-medium">
-                  Tradition shaped by human hands.
+                  تراث تصنعه أيادٍ عراقية.
                 </p>
+
               </div>
 
             </div>
@@ -217,15 +233,17 @@ function Home() {
 
         {/* Scroll indicator */}
         <div className="absolute bottom-5 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-[#003049]/40 md:flex">
-          <span className="text-[10px] uppercase tracking-[0.3em]">
-            Explore
+          <span className="text-[10px] tracking-[0.3em]">
+            اكتشف
           </span>
 
           <span className="h-8 w-px bg-[#003049]/30 animate-pulse" />
         </div>
 
       </section>
-
+      <IraqiCraft />
+      <AboutUs />
+      <HomeCTA />
     </main>
   );
 }
