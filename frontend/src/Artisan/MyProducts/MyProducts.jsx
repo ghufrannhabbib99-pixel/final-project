@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Plus,
@@ -74,13 +74,7 @@ const apiRequest = async (endpoint, options = {}) => {
     headers,
   });
 
-  let data = null;
-
-  try {
-    data = await response.json();
-  } catch {
-    data = null;
-  }
+  const data = await response.json().catch(() => null);
 
   if (!response.ok) {
     throw new Error(
@@ -135,7 +129,7 @@ export default function MyProducts() {
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
 
-  const loadProducts = async () => {
+  const loadProducts = useCallback(async () => {
     try {
       setLoading(true);
       setError("");
@@ -188,11 +182,15 @@ export default function MyProducts() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [navigate]);
 
   useEffect(() => {
-    loadProducts();
-  }, []);
+    const timeoutId = setTimeout(() => {
+      loadProducts();
+    }, 0);
+
+    return () => clearTimeout(timeoutId);
+  }, [loadProducts]);
 
   const filteredProducts = useMemo(() => {
     const value = search.trim().toLowerCase();
